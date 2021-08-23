@@ -58,7 +58,7 @@ public:
     unsigned int target_phenotype_index= 0 ;
     unsigned int fist_convert_flag = 1;
     QStringList fixed_effect_list ;
-    QStringList rondom_effect_list ;
+    QStringList random_effect_list ;
     void init();
 private slots:
     void on_csv_pushButton_clicked();
@@ -96,8 +96,6 @@ private slots:
 
     void on_fixed_select_Button_clicked();
 
-    void on_fixed_selected_PhenoListWidget_itemClicked(QListWidgetItem *item);
-
     void on_fixed_exclude_Button_clicked();
 
     void on_fixed_accept_pushButton_clicked();
@@ -105,7 +103,7 @@ private slots:
 
     void on_random_select_Button_clicked();
 
-    void on_fixed_selected_PhenoListWidget_itemChanged(QListWidgetItem *item);
+    void on_random_exclude_Button_clicked();
 
 private:
     Ui::MainWindow *ui;

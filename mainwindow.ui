@@ -1466,7 +1466,7 @@
               <item row="1" column="4">
                <layout class="QVBoxLayout" name="verticalLayout_4">
                 <item>
-                 <widget class="QListWidget" name="fixed_selected_PhenoListWidget">
+                 <widget class="QTableView" name="fixed_selected_TableView">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                     <horstretch>0</horstretch>
@@ -1706,7 +1706,7 @@
               <item row="1" column="4">
                <layout class="QVBoxLayout" name="verticalLayout_17">
                 <item>
-                 <widget class="QListWidget" name="random_selected_PhenoListWidgew">
+                 <widget class="QTableView" name="random_selected_TableView">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                     <horstretch>0</horstretch>

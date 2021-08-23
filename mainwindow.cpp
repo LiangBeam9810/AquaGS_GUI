@@ -24,7 +24,7 @@ void MainWindow::init()
     //ui->vcf_input_lineEdit->setText("Enter/Select the vcf file.");
     //ui->out_lineEdit->setText("Enter/Select the output folder.");
     csv_line->setText("/home/liang/Documents/AquaGS_GUI/Input/ABT20210617.csv");
-    vcf_line->setText("/home/liang/Documents/AquaGS_GUI/Input/snp_abt_630_imput_out_select48K.vcf");
+    vcf_line->setText("/home/liang/Documents/AquaGS_GUI (copy)/Input/snp_abt_630_imput_out_select48K.vcf");
     out_line->setText("/home/liang/Documents/AquaGS_GUI/Output");
     ui->tabWidget->setCurrentIndex(0);//Start index
     /*--------------------------------------------------------------*/
@@ -40,6 +40,7 @@ void MainWindow::init()
     /*--------------------------------------------------------------*/
 
     /*----------Effect init-----------------------------------------*/
+    fixed_effect_list.empty();
     ui->random_accept_pushButton->setEnabled(false);
     ui->random_exclude_Button->setEnabled(false);
     ui->random_select_Button->setEnabled(false);
@@ -114,9 +115,13 @@ void MainWindow::on_phenotype_run_Button_clicked()
 {
     unsigned int outlier_state = 0;
     check_all_path(ui->output_lineEdit,ui->csv_lineEdit,ui->vcf_lineEdit,&output_path,&csv_path,&vcf_path);//ever time click run,the path need to be reload.
-    init_ready_for_run(ui->skewnessdisplay_1,ui->kurtosisdisplay_1,ui->horizontallabel_1,ui->skewnessdisplay_2,ui->kurtosisdisplay_2,ui->horizontallabel_2,
-                        ui->outlier_swith,ui->phenotype_ComboBox,ui->phenotype_accept_Button,ui->convert_swith,
-                        &outlier_state,&fist_convert_flag,&target_phenotype_index);
+    init_ready_for_run(ui->skewnessdisplay_1,ui->kurtosisdisplay_1,ui->horizontallabel_1,
+                       ui->skewnessdisplay_2,ui->kurtosisdisplay_2,ui->horizontallabel_2,
+                       ui->outlier_swith,
+                       ui->phenotype_ComboBox,
+                       ui->phenotype_accept_Button,
+                       ui->convert_swith,
+                       &outlier_state,&fist_convert_flag,&target_phenotype_index);
     if(outlier_elimination(&csv_path,outlier_state,target_phenotype_index))
     {
         qDebug()<<endl<<"outlier completed!"<<endl;
@@ -193,7 +198,6 @@ void MainWindow::on_phenotype_accept_Button_clicked()
     return;
 }
 
-
 void MainWindow::on_phenotype_next_pushButton_clicked()
 {
      ui->tabWidget->setCurrentIndex(2);
@@ -203,11 +207,11 @@ void MainWindow::on_phenotype_next_pushButton_clicked()
 
 
 /*-------------------------------------- QC -----------------------------------------*/
-
-
 void MainWindow::on_qc_next_pushButton_clicked()
 {
-    if(prepare_effect(csv_path,output_path,ui->fixed_phenotype_pr_TableView,target_phenotype_index,0,fixed_effect_list))
+    if(prepare_effect(csv_path,output_path,
+                      ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
+                      target_phenotype_index,0,fixed_effect_list))
     {
         qDebug()<<endl<<"prepare fixed effect complete"<<endl;
         ui->tabWidget->setCurrentIndex(3);
@@ -228,77 +232,20 @@ void MainWindow::on_fixed_phenotype_pr_TableView_clicked(const QModelIndex &inde
     return;
 }
 
-void MainWindow::on_fixed_selected_PhenoListWidget_itemClicked(QListWidgetItem *item)
-{
-    if(ui->fixed_selected_PhenoListWidget->count())
-    {
-        ui->fixed_accept_pushButton->setEnabled(true);
-    }
-    else
-    {
-        ui->fixed_accept_pushButton->setEnabled(false);
-    }
-    ui->fixed_select_Button->setEnabled(false);
-    ui->fixed_exclude_Button->setEnabled(true);
-    qDebug()<<endl<<"fixed_selectedPhenoListWidget_clicked:" <<item<<endl;
-    return;
-}
-
-
 void MainWindow::on_fixed_select_Button_clicked()
 {
-    add_item2table_listwidget(ui->fixed_phenotype_pr_TableView,ui->fixed_selected_PhenoListWidget,phenotype_list,&fixed_effect_list);//write to fixed table and fixed seleced list widget
-    ui->fixed_accept_pushButton->setEnabled(true);
-    if(prepare_effect(csv_path,output_path,ui->fixed_phenotype_pr_TableView,target_phenotype_index,0,fixed_effect_list))
-    {
-        qDebug()<<endl<<"prepare fixed effect complete"<<endl;
-        return;
-    }
-    else {
-        qDebug()<<endl<<"error in preparing fixed effect "<<endl;
-        return;
-    }
-
+    add_item2fixed_effect_list(ui->fixed_phenotype_pr_TableView,phenotype_list,&fixed_effect_list);
+    prepare_effect(csv_path,output_path,ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,target_phenotype_index,0,fixed_effect_list);
 }
 void MainWindow::on_fixed_exclude_Button_clicked()
 {
-    remove_item2table_listwidget(ui->fixed_selected_PhenoListWidget,&fixed_effect_list);//
-    if(fixed_effect_list.isEmpty())
-    {
-        ui->fixed_accept_pushButton->setEnabled(false);
-    }
-    if(prepare_effect(csv_path,output_path,ui->fixed_phenotype_pr_TableView,target_phenotype_index,0,fixed_effect_list))
-    {
-        qDebug()<<endl<<"prepare fixed effect complete"<<endl;
-        return;
-    }
-    else {
-        qDebug()<<endl<<"error in preparing fixed effect "<<endl;
-        return;
-    }
+
 
 }
 
 void MainWindow::on_fixed_accept_pushButton_clicked()
 {
-    ui->fixed_select_Button->setEnabled(false);
-    ui->fixed_exclude_Button->setEnabled(false);
-    ui->fixed_accept_pushButton->setEnabled(false);
 
-    if(prepare_effect(csv_path,output_path,ui->random_phenotype_pr_TableView,target_phenotype_index,1,fixed_effect_list))
-    {
-        qDebug()<<endl<<"prepare fixed effect complete"<<endl;
-        return;
-    }
-    else {
-        qDebug()<<endl<<"error in preparing fixed effect "<<endl;
-        return;
-    }
-
-}
-
-void MainWindow::on_fixed_selected_PhenoListWidget_itemChanged(QListWidgetItem *item)
-{
 
 }
 
@@ -307,8 +254,14 @@ void MainWindow::on_random_select_Button_clicked()
 
 }
 
+void MainWindow::on_random_exclude_Button_clicked()
+{
+
+}
 
 /*----------------------------------------------------------------------------------------*/
+
+
 
 
 
