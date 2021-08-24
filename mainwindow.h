@@ -59,7 +59,14 @@ public:
     unsigned int fist_convert_flag = 1;
     QStringList fixed_effect_list ;
     QStringList random_effect_list ;
+
+    bool phenotype_converted_flag = false;
+
+    bool selected_fixed_flag = false;
+    bool selected_random_flag = false;
+
     void init();
+    void Effect_Init();
 private slots:
     void on_csv_pushButton_clicked();
 
@@ -100,10 +107,21 @@ private slots:
 
     void on_fixed_accept_pushButton_clicked();
 
+    void on_fixed_selected_TableView_clicked(const QModelIndex &index);
 
     void on_random_select_Button_clicked();
 
     void on_random_exclude_Button_clicked();
+
+
+
+    void on_random_phenotype_pr_TableView_clicked(const QModelIndex &index);
+
+    void on_random_selected_TableView_clicked(const QModelIndex &index);
+
+    void on_random_accept_pushButton_clicked();
+
+    void on_effect_reset_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

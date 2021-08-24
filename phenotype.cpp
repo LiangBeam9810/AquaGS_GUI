@@ -260,3 +260,19 @@ bool convert_phenotype(QString input_path,unsigned int target_phenotype_index,un
     }
     return true;
 }
+
+bool check_convert_path_of_phenotype(bool converted_flag ,QCheckBox* convert_swith)
+{
+    if((convert_swith->checkState() == Qt::Checked)&&(converted_flag))
+    {
+        return true;
+    }
+    else if((convert_swith->checkState() == Qt::Unchecked))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

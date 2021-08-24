@@ -30,6 +30,7 @@ void MainWindow::init()
     /*--------------------------------------------------------------*/
 
     /*----------phnotpye init---------------------------------------*/
+    phenotype_converted_flag =false;
     ui->phenotype_convert_Button->setEnabled(false);
     ui->phenotype_reset_Button->setEnabled(false);
     ui->phenotype_accept_Button->setEnabled(false);
@@ -40,13 +41,7 @@ void MainWindow::init()
     /*--------------------------------------------------------------*/
 
     /*----------Effect init-----------------------------------------*/
-    fixed_effect_list.empty();
-    ui->random_accept_pushButton->setEnabled(false);
-    ui->random_exclude_Button->setEnabled(false);
-    ui->random_select_Button->setEnabled(false);
-    ui->fixed_accept_pushButton->setEnabled(false);
-    ui->fixed_exclude_Button->setEnabled(false);
-    ui->fixed_select_Button->setEnabled(false);
+    Effect_Init();
     return;
 }
 
@@ -195,12 +190,21 @@ void MainWindow::on_phenotype_accept_Button_clicked()
     QMessageBox::information(NULL, "OK", "Phnotype ready");
     change_convert_wight_state(0, ui->phenotype_convert_Button,ui->phenotype_reset_Button,ui->phenotype_accept_Button,ui->phenotype_detial_Button);
     ui->convert_swith->setEnabled(false);
+    phenotype_converted_flag =true;
     return;
 }
 
 void MainWindow::on_phenotype_next_pushButton_clicked()
 {
-     ui->tabWidget->setCurrentIndex(2);
+
+     if(check_convert_path_of_phenotype(phenotype_converted_flag,ui->convert_swith))
+     {
+         ui->tabWidget->setCurrentIndex(2);
+     }
+     else
+     {
+          QMessageBox::warning(NULL, "OK", "The converted switch was checked, but no converted phenotype was accepted!");
+     }
      return;
 }
 
@@ -211,7 +215,7 @@ void MainWindow::on_qc_next_pushButton_clicked()
 {
     if(prepare_effect(csv_path,output_path,
                       ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
-                      target_phenotype_index,0,fixed_effect_list))
+                      target_phenotype_index,0,fixed_effect_list,random_effect_list))
     {
         qDebug()<<endl<<"prepare fixed effect complete"<<endl;
         ui->tabWidget->setCurrentIndex(3);
@@ -224,49 +228,139 @@ void MainWindow::on_qc_next_pushButton_clicked()
 /*---------------------------------------------------------------------------------------*/
 
 /*-------------------------------------- Effect -----------------------------------------*/
-void MainWindow::on_fixed_phenotype_pr_TableView_clicked(const QModelIndex &index)
+//Fixed effect part
+void MainWindow::Effect_Init()
 {
-    qDebug()<<endl<<"fixed_tableview_clicked:" <<index<<endl;
-    ui->fixed_select_Button->setEnabled(true);
+    fixed_effect_list.clear();
+    random_effect_list.clear();
+    selected_fixed_flag = false;
+    selected_random_flag = false;
+    ui->random_accept_pushButton->setEnabled(false);
+    ui->random_exclude_Button->setEnabled(false);
+    ui->random_select_Button->setEnabled(false);
+    ui->fixed_accept_pushButton->setEnabled(false);
     ui->fixed_exclude_Button->setEnabled(false);
-    return;
+    ui->fixed_select_Button->setEnabled(false);
+    if(ui->tabWidget->currentIndex() == 3)
+    {
+        clean_effect_table(ui->fixed_phenotype_pr_TableView);
+        clean_effect_table(ui->fixed_selected_TableView);
+        clean_effect_table(ui->random_phenotype_pr_TableView);
+        clean_effect_table(ui->random_selected_TableView);
+    }
+
 }
 
+void MainWindow::on_fixed_phenotype_pr_TableView_clicked(const QModelIndex &index)
+{
+    //qDebug()<<endl<<"fixed_tableview_clicked:" <<index<<endl;
+    change_select_exclude_Button(1,selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
+    return;
+}
+void MainWindow::on_fixed_selected_TableView_clicked(const QModelIndex &index)
+{
+    //qDebug()<<endl<<"fixed_tableview_clicked:" <<index<<endl;
+    change_select_exclude_Button(0,selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
+    return;
+}
 void MainWindow::on_fixed_select_Button_clicked()
 {
-    add_item2fixed_effect_list(ui->fixed_phenotype_pr_TableView,phenotype_list,&fixed_effect_list);
-    prepare_effect(csv_path,output_path,ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,target_phenotype_index,0,fixed_effect_list);
+    add_item2effect_list(ui->fixed_phenotype_pr_TableView,phenotype_list,&fixed_effect_list);
+    prepare_effect(csv_path,output_path,
+                   ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
+                   target_phenotype_index,0,
+                   fixed_effect_list,random_effect_list);
+    ui->fixed_accept_pushButton->setEnabled(true);
 }
 void MainWindow::on_fixed_exclude_Button_clicked()
 {
-
-
+    remove_item_from_effect_list(ui->fixed_selected_TableView, &fixed_effect_list);
+    prepare_effect(csv_path,output_path,
+                   ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
+                   target_phenotype_index,0,
+                   fixed_effect_list,random_effect_list);
+    if(isTableView_empty(ui->fixed_selected_TableView))
+    {
+        ui->fixed_accept_pushButton->setEnabled(false);
+        qDebug()<<endl<<"selected tableview is empty"<<endl;
+    }
+    else
+    {
+        ui->fixed_accept_pushButton->setEnabled(true);
+        qDebug()<<endl<<"selected tableview is  no empty"<<endl;
+    }
 }
-
 void MainWindow::on_fixed_accept_pushButton_clicked()
 {
-
-
+    selected_fixed_flag = true;
+    prepare_effect(csv_path,output_path,
+                   ui->random_phenotype_pr_TableView,ui->random_selected_TableView,
+                   target_phenotype_index,1,
+                   fixed_effect_list,random_effect_list);
+    change_select_exclude_Button(0,selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
+    ui->fixed_accept_pushButton->setEnabled(false);
 }
-
+//random effect part
+void MainWindow::on_random_phenotype_pr_TableView_clicked(const QModelIndex &index)
+{
+    change_select_exclude_Button(1,selected_random_flag,ui->random_select_Button,ui->random_exclude_Button);
+    return;
+}
+void MainWindow::on_random_selected_TableView_clicked(const QModelIndex &index)
+{
+    change_select_exclude_Button(0,selected_random_flag,ui->random_select_Button,ui->random_exclude_Button);
+    return;
+}
 void MainWindow::on_random_select_Button_clicked()
 {
-
+    if(random_effect_list.count())
+    {
+        QMessageBox::warning(NULL, "Error ","The maxium  of random effect is 1." );
+    }
+    else
+    {
+        add_item2effect_list(ui->random_phenotype_pr_TableView,phenotype_list,&random_effect_list);
+        prepare_effect(csv_path,output_path,
+                       ui->random_phenotype_pr_TableView,ui->random_selected_TableView,
+                       target_phenotype_index,1,
+                       fixed_effect_list,random_effect_list);
+    }
+    ui->random_accept_pushButton->setEnabled(true);
 }
-
 void MainWindow::on_random_exclude_Button_clicked()
 {
-
+    remove_item_from_effect_list(ui->random_selected_TableView, &random_effect_list);
+    prepare_effect(csv_path,output_path,
+                   ui->random_phenotype_pr_TableView,ui->random_selected_TableView,
+                   target_phenotype_index,1,
+                   fixed_effect_list,random_effect_list);
+    if(isTableView_empty(ui->random_selected_TableView))
+    {
+        ui->random_accept_pushButton->setEnabled(false);
+        qDebug()<<endl<<"selected tableview is empty"<<endl;
+    }
+    else
+    {
+        ui->random_accept_pushButton->setEnabled(true);
+        qDebug()<<endl<<"selected tableview is  no empty"<<endl;
+    }
+}
+void MainWindow::on_random_accept_pushButton_clicked()
+{
+    selected_random_flag = true;
+    change_select_exclude_Button(0,selected_random_flag,ui->random_select_Button,ui->random_exclude_Button);
+    ui->random_accept_pushButton->setEnabled(false);
 }
 
+void MainWindow::on_effect_reset_pushButton_clicked()
+{
+    Effect_Init();
+    prepare_effect(csv_path,output_path,
+                   ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
+                   target_phenotype_index,0,
+                   fixed_effect_list,random_effect_list);
+}
 /*----------------------------------------------------------------------------------------*/
-
-
-
-
-
-
-
 
 
 
