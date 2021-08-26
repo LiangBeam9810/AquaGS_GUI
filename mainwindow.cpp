@@ -42,6 +42,7 @@ void MainWindow::init()
 
     /*----------Effect init-----------------------------------------*/
     Effect_Init();
+
     return;
 }
 
@@ -71,7 +72,6 @@ void MainWindow::on_csv_lineEdit_editingFinished()
     return;
 }
 
-
 void MainWindow::on_vcf_lineEdit_editingFinished()
 {
     get_enter_path( vcf_line,2);
@@ -88,7 +88,8 @@ void MainWindow::on_output_lineEdit_editingFinished()
 void MainWindow::on_start_next_pushButton_clicked()
 {
     if(check_all_path(ui->output_lineEdit,ui->csv_lineEdit,ui->vcf_lineEdit,&output_path,&csv_path,&vcf_path)){
-            prepare_phenotype(csv_path,&phenotype_list,ui->phenotype_ComboBox,ui->tabWidget);
+            prepare_phenotype(csv_path,&phenotype_list,ui->phenotype_ComboBox);
+            ui->tabWidget->setCurrentIndex(1);//To the next index.
         }
     return ;
 }
@@ -213,11 +214,15 @@ void MainWindow::on_phenotype_next_pushButton_clicked()
 /*-------------------------------------- QC -----------------------------------------*/
 void MainWindow::on_qc_next_pushButton_clicked()
 {
-    if(prepare_effect(csv_path,output_path,
+    Effect_Init();
+    if(prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
                       ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
+                      ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
                       target_phenotype_index,0,fixed_effect_list,random_effect_list))
     {
         qDebug()<<endl<<"prepare fixed effect complete"<<endl;
+        QStringList NULL_List;
+        prepare_phenotype(csv_path,&NULL_List,ui->AnimalID_ComboBox);
         ui->tabWidget->setCurrentIndex(3);
     }
     else {
@@ -241,7 +246,15 @@ void MainWindow::Effect_Init()
     ui->fixed_accept_pushButton->setEnabled(false);
     ui->fixed_exclude_Button->setEnabled(false);
     ui->fixed_select_Button->setEnabled(false);
-    if(ui->tabWidget->currentIndex() == 3)
+    /*-------------------------------------------*/
+    A_matrix_path = output_path;
+    A_matrix_path.append("/A_matrix.txt");
+    G_matrix_path = output_path;
+    G_matrix_path.append("/G_matrix.txt");
+    qDebug()<<endl<<"A_matrix_path"<<A_matrix_path;
+    qDebug()<<"G_matrix_path"<<G_matrix_path<<endl;
+    /*-------------------------------------------*/
+    if(ui->tabWidget->currentIndex() == 3) //if at the effect page
     {
         clean_effect_table(ui->fixed_phenotype_pr_TableView);
         clean_effect_table(ui->fixed_selected_TableView);
@@ -266,8 +279,9 @@ void MainWindow::on_fixed_selected_TableView_clicked(const QModelIndex &index)
 void MainWindow::on_fixed_select_Button_clicked()
 {
     add_item2effect_list(ui->fixed_phenotype_pr_TableView,phenotype_list,&fixed_effect_list);
-    prepare_effect(csv_path,output_path,
+    prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
                    ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
+                   ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
                    target_phenotype_index,0,
                    fixed_effect_list,random_effect_list);
     ui->fixed_accept_pushButton->setEnabled(true);
@@ -275,8 +289,9 @@ void MainWindow::on_fixed_select_Button_clicked()
 void MainWindow::on_fixed_exclude_Button_clicked()
 {
     remove_item_from_effect_list(ui->fixed_selected_TableView, &fixed_effect_list);
-    prepare_effect(csv_path,output_path,
+    prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
                    ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
+                   ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
                    target_phenotype_index,0,
                    fixed_effect_list,random_effect_list);
     if(isTableView_empty(ui->fixed_selected_TableView))
@@ -293,8 +308,9 @@ void MainWindow::on_fixed_exclude_Button_clicked()
 void MainWindow::on_fixed_accept_pushButton_clicked()
 {
     selected_fixed_flag = true;
-    prepare_effect(csv_path,output_path,
+    prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
                    ui->random_phenotype_pr_TableView,ui->random_selected_TableView,
+                   ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
                    target_phenotype_index,1,
                    fixed_effect_list,random_effect_list);
     change_select_exclude_Button(0,selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
@@ -313,15 +329,17 @@ void MainWindow::on_random_selected_TableView_clicked(const QModelIndex &index)
 }
 void MainWindow::on_random_select_Button_clicked()
 {
-    if(random_effect_list.count())
+    if(random_effect_list.count()&&(!ui->random_effec_testing_ComboBox->currentIndex()))//ui->random_effec_testing_ComboBox->currentIndex()=0 is use
+                                                                                        //lemer to test random effect
     {
-        QMessageBox::warning(NULL, "Error ","The maxium  of random effect is 1." );
+        QMessageBox::warning(NULL, "Error ","The maxium  of random effect testing \n named  \"lmer\" is 1." );
     }
     else
     {
         add_item2effect_list(ui->random_phenotype_pr_TableView,phenotype_list,&random_effect_list);
-        prepare_effect(csv_path,output_path,
+        prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
                        ui->random_phenotype_pr_TableView,ui->random_selected_TableView,
+                       ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
                        target_phenotype_index,1,
                        fixed_effect_list,random_effect_list);
     }
@@ -330,8 +348,9 @@ void MainWindow::on_random_select_Button_clicked()
 void MainWindow::on_random_exclude_Button_clicked()
 {
     remove_item_from_effect_list(ui->random_selected_TableView, &random_effect_list);
-    prepare_effect(csv_path,output_path,
+    prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
                    ui->random_phenotype_pr_TableView,ui->random_selected_TableView,
+                   ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
                    target_phenotype_index,1,
                    fixed_effect_list,random_effect_list);
     if(isTableView_empty(ui->random_selected_TableView))
@@ -355,8 +374,9 @@ void MainWindow::on_random_accept_pushButton_clicked()
 void MainWindow::on_effect_reset_pushButton_clicked()
 {
     Effect_Init();
-    prepare_effect(csv_path,output_path,
+    prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
                    ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
+                   ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
                    target_phenotype_index,0,
                    fixed_effect_list,random_effect_list);
 }

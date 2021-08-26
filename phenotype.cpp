@@ -4,8 +4,7 @@
 /*--------------------------phenotype index------------------------------------*/
 void prepare_phenotype(QString csv_path,
                        QStringList* phenotype_list ,
-                       QComboBox*  ComboBox,
-                       QTabWidget* tabWidget)
+                       QComboBox*  ComboBox)
 {
     qDebug()<<endl<< "All path are correct." << endl;
     *phenotype_list =(get_csv_title(csv_path)); //Reading  phenotypes.
@@ -13,7 +12,6 @@ void prepare_phenotype(QString csv_path,
     for(int i =0 ;i< (*phenotype_list).length();i++){
         ComboBox->addItem((*phenotype_list)[i]);
     }
-    tabWidget->setCurrentIndex(1);//To the next index.
 }
 
 void init_ready_for_run(QTextBrowser* skewnessddisplay_1,

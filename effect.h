@@ -2,10 +2,12 @@
 
 #ifndef EFFECT_H
 #define EFFECT_H
-bool prepare_effect(QString input_path,QString output_path,
+bool prepare_effect(QString input_path,QString output_path,QString A_matrix_path,QString G_matrix_path,
                     QTableView* original_tableview,QTableView* selected_tableview,
+                    QComboBox* animal_combobox,
+                    QComboBox* randeff_testing_combobox,
                     unsigned int target_index,
-                    unsigned  int random_flag,
+                    unsigned  int process_random_flag,
                     QStringList fixed_effect_list,
                     QStringList random_effect_list);
 void clean_effect_table(QTableView* tableview);

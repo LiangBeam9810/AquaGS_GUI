@@ -20,7 +20,13 @@ paste("fixed_index :",fixed_index)
 #index = 7
 
 require(data.table)
-data = read.csv(input_path)
+#data = read.csv(input_path)
+data <- fread(
+  input = input_path,
+  sep = ",",
+  header = TRUE,
+  stringsAsFactors = FALSE)
+
 col_list = colnames(data)
 target_item = col_list[index]
 table = data.frame(

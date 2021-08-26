@@ -6,8 +6,7 @@
 /*--------------------------------------*/
 void prepare_phenotype(QString csv_path,
                        QStringList* phenotype_list ,
-                       QComboBox*  ComboBox,
-                       QTabWidget* tabWidget);
+                       QComboBox*  ComboBox);
 
 void init_ready_for_run(QTextBrowser* skewnessddisplay_1,
                         QTextBrowser* kurtosisdisplay_1,

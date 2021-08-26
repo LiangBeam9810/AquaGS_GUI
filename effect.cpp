@@ -34,32 +34,34 @@ void display_effect(QString pr_csv_path,QTableView* original_tableview,QTableVie
        QStringList valsplit = str.split(",");
        valsplit[0] = (valsplit[0].mid(1,valsplit[0].length()-2));
        valsplit[1] = (valsplit[1].mid(1,valsplit[1].length()-2));
-       qDebug()<<"valsplit[0]"<<valsplit[0]<<"--"<<"valsplit[1]"<<valsplit[1];
+       //qDebug()<<"valsplit[0]"<<valsplit[0]<<"--"<<"valsplit[1]"<<valsplit[1];
        //qDebug()<<"count:"<<count;
-       if((!(-1 == effect_list.indexOf(QString::number(count)))))
+       if((!(-1 == effect_list.indexOf(QString::number(count)))))  // if the effect in the fixed_effect_list already
        {
            qDebug()<<endl<<"find the effect in the fixed_effect_list already,index is "<<effect_list.indexOf(QString::number(count))<<endl;
            selected_model->setItem(i, 0, new QStandardItem(valsplit[0]));//deleted ""
-           if((!valsplit[1].count())||(valsplit[1] == "NA")||(valsplit[1] == "Err")||(valsplit[1] == "Fixed")||(valsplit[1] == "NA"))//NA or error happend,can't convert to double class
-           {
-               selected_model->setItem(i, 1, new QStandardItem("-"+valsplit[1]+"-"));
-           }
-           else {
-               selected_model->setItem(i, 1, new QStandardItem(QString::number(valsplit[1].toDouble(),'f',6)));
-           }
-           //str->double->str
+           //if((!valsplit[1].count())||(valsplit[1] == "NA")||(valsplit[1] == "Err")||(valsplit[1] == "Fixed")||(valsplit[1] == "NA"))//NA or error happend,can't convert to double class
+           //{
+           //    selected_model->setItem(i, 1, new QStandardItem("-"+valsplit[1]+"-"));
+           // }
+           // else {//inpu : number type value //str->double->str
+           //    selected_model->setItem(i, 1, new QStandardItem(QString::number(valsplit[1].toDouble(),'f',6)));
+           // }
+           selected_model->setItem(i, 1, new QStandardItem(valsplit[1]));
+
            i++;
        }
        else
        {
            original_model->setItem(j, 0, new QStandardItem(valsplit[0]));
-           if((!valsplit[1].count())||valsplit[1] == "NA"||(valsplit[1] == "Err")||(valsplit[1] == "Fixed")||(valsplit[1] == "NaN"))
-           {
-               original_model->setItem(j, 1, new QStandardItem("-"+valsplit[1]+"-"));
-           }
-           else {
-               original_model->setItem(j, 1, new QStandardItem(QString::number(valsplit[1].toDouble(),'f',6)));
-           }
+           //if((!valsplit[1].count())||valsplit[1] == "NA"||(valsplit[1] == "Err")||(valsplit[1] == "Fixed")||(valsplit[1] == "NaN"))
+           //{
+           //    original_model->setItem(j, 1, new QStandardItem("-"+valsplit[1]+"-"));
+           //}
+           //else {
+           //    original_model->setItem(j, 1, new QStandardItem(QString::number(valsplit[1].toDouble(),'f',6)));
+           //}
+           original_model->setItem(j, 1, new QStandardItem(valsplit[1]));
            j++;
        }
        count++;
@@ -121,7 +123,12 @@ bool fixed_effect_testing(QString input_path,QString output_path,unsigned int ta
     return true;
 }
 
-bool random_effect_testing(QString input_path,QString output_path,unsigned int target_phenotype_index,QStringList fixed_effect_list)
+bool random_effect_testing(QString input_path,QString output_path,QString A_matrix_path,QString G_matrix_path,
+                           unsigned int AnimalID_index,
+                           unsigned int target_phenotype_index,
+                           unsigned  int method_flag,
+                           QStringList fixed_effect_list,
+                           QStringList random_effect_list)
 {
     QString runPath = QDir::currentPath();
     runPath.append("/rscript/rondom_effect_testing.R");
@@ -133,16 +140,34 @@ bool random_effect_testing(QString input_path,QString output_path,unsigned int t
     param.append(" ");
     param.append("/home/liang/Documents/AquaGS_GUI/rscript/random_effect_testing.R");
     param.append(" ");
-    param.append(input_path);
+    param.append(input_path);//1
     param.append(" ");
-    param.append(output_path);
+    param.append(output_path);//2
+    param.append(" ");
+    param.append(A_matrix_path);//3
+    param.append(" ");
+    param.append(G_matrix_path);//4
+    param.append(" ");
+    param.append(QString::number(AnimalID_index));
     param.append(" ");
     param.append(QString::number(target_phenotype_index));
     param.append(" ");
+    param.append(QString::number(method_flag));
+    param.append(" ");
+
     param.append(QString::number(fixed_effect_list.length()));
+    qDebug()<< endl<<"display fixed_effect_list :"<<fixed_effect_list<< endl;
     param.append(" ");
     for(int i = 0;i < fixed_effect_list.length();i++){
         param.append(fixed_effect_list[i]);
+        param.append(" ");
+    }
+
+    param.append(QString::number(random_effect_list.length()));
+    qDebug()<< endl<<"display random_effect_list :"<<random_effect_list<< endl;
+    param.append(" ");
+    for(int i = 0;i < random_effect_list.length();i++){
+        param.append(random_effect_list[i]);
         param.append(" ");
     }
 
@@ -165,22 +190,29 @@ bool random_effect_testing(QString input_path,QString output_path,unsigned int t
     return true;
 }
 
-bool prepare_effect(QString input_path,QString output_path,
+bool prepare_effect(QString input_path,QString output_path,QString A_matrix_path,QString G_matrix_path,
                     QTableView* original_tableview,QTableView* selected_tableview,
+                    QComboBox* animal_combobox,
+                    QComboBox* randeff_testing_combobox,
                     unsigned int target_index,
-                    unsigned  int random_flag,
+                    unsigned  int process_random_flag,
                     QStringList fixed_effect_list,
-                    QStringList random_feefct_list)
+                    QStringList random_effect_list)
 {
     QString effect_path = output_path;
     bool callbake = false;
-    if(random_flag){
+    if(process_random_flag){
         effect_path.append("/random_effect.csv");
         qDebug() << endl << "random_effect_path:" << effect_path <<endl;
-        callbake =  random_effect_testing(input_path,effect_path,target_index,fixed_effect_list);
+        unsigned method_flag = randeff_testing_combobox->currentIndex();
+        unsigned AnimalID_index = animal_combobox->currentIndex();
+        callbake =  random_effect_testing(input_path,effect_path,A_matrix_path,G_matrix_path,
+                                          AnimalID_index,target_index,
+                                          method_flag,
+                                          fixed_effect_list,random_effect_list);
         if(callbake)
         {
-            display_effect(effect_path,original_tableview,selected_tableview,random_feefct_list);
+            display_effect(effect_path,original_tableview,selected_tableview,random_effect_list);
         }
     }
     else{
@@ -213,23 +245,23 @@ bool isTableView_empty(QTableView* tableview)
     else    return false;
 }
 
-void add_item2effect_list(QTableView* original_tableview,QStringList phenotypelist,QStringList* fixed_effect_list)
+void add_item2effect_list(QTableView* original_tableview,QStringList phenotypelist,QStringList* effect_list)
 {
     unsigned int selected_row = original_tableview->currentIndex().row();
     int select_phenotype_index =  get_phenotype_index(original_tableview,phenotypelist);
 
     bool Norepetition_flag = true;  //check the item is selected already or not
-    unsigned int count_fixed_effect_list = (*fixed_effect_list).length();
+    unsigned int count_effect_list = (*effect_list).length();
 
     qDebug()<<endl<<"selected row of  effect is"<<selected_row;
     qDebug()<<endl<<"selected index of phenotypelist is "<<select_phenotype_index;
-    qDebug()<<endl<<"the num of effect_list:"<<count_fixed_effect_list;
+    qDebug()<<endl<<"the num of effect_list:"<<count_effect_list;
 
-    if(count_fixed_effect_list) //check the new effect is selected already?
+    if(count_effect_list) //check the new effect is selected already?
     {
-        for(int i = 0;i < ((*fixed_effect_list).length());i++)
+        for(int i = 0;i < ((*effect_list).length());i++)
         {
-            if(QString::number(select_phenotype_index) == (*fixed_effect_list)[i])
+            if(QString::number(select_phenotype_index) == (*effect_list)[i])
             {
                 Norepetition_flag = false;
             }
@@ -237,8 +269,8 @@ void add_item2effect_list(QTableView* original_tableview,QStringList phenotypeli
     }
     if(Norepetition_flag)
     {
-        *fixed_effect_list << QString::number(select_phenotype_index);
-        qDebug()<<endl<<"effect_list:"<<*fixed_effect_list;
+        *effect_list << QString::number(select_phenotype_index);
+        qDebug()<<endl<<"effect_list:"<<*effect_list;
     }
 
 }

@@ -53,6 +53,8 @@ public:
 
     QString csv_path = "";
     QString vcf_path = "";
+    QString A_matrix_path = "";
+    QString G_matrix_path = "";
     QString output_path = "";
     QStringList phenotype_list ;
     unsigned int target_phenotype_index= 0 ;
@@ -112,7 +114,6 @@ private slots:
     void on_random_select_Button_clicked();
 
     void on_random_exclude_Button_clicked();
-
 
 
     void on_random_phenotype_pr_TableView_clicked(const QModelIndex &index);
