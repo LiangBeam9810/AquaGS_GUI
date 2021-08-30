@@ -2,14 +2,24 @@
 
 #ifndef EFFECT_H
 #define EFFECT_H
-bool prepare_effect(QString input_path,QString output_path,QString A_matrix_path,QString G_matrix_path,
-                    QTableView* original_tableview,QTableView* selected_tableview,
-                    QComboBox* animal_combobox,
-                    QComboBox* randeff_testing_combobox,
-                    unsigned int target_index,
-                    unsigned  int process_random_flag,
-                    QStringList fixed_effect_list,
-                    QStringList random_effect_list);
+
+struct prepare_effect_input
+{
+    QString input_path;
+    QString output_path;
+    QString A_matrix_path;
+    QString G_matrix_path;
+    QTableView* original_tableview;
+    QTableView* selected_tableview;
+    QComboBox* animal_combobox;
+    QComboBox* randeff_testing_combobox;
+    unsigned int target_index;
+    unsigned  int process_random_flag;
+    QStringList* fixed_effect_list ;
+    QStringList* random_effect_list;
+};
+
+bool prepare_effect(prepare_effect_input effect_input);
 void clean_effect_table(QTableView* tableview);
 void add_item2effect_list(QTableView* original_tableview,QStringList phenotypelist,QStringList* fixed_effect_list);
 void remove_item_from_effect_list(QTableView* selected_tableview,QStringList* fixed_effect_list);

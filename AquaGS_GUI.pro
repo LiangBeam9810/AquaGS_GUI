@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    BLUP.cpp \
     effect.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -16,6 +17,7 @@ SOURCES += \
     start.cpp
 
 HEADERS += \
+    BLUP.h \
     effect.h \
     mainwindow.h \
     phenotype.h \
@@ -23,6 +25,8 @@ HEADERS += \
 
 FORMS += \
     mainwindow.ui
+
+QMAKE_LFLAGS += -no-pie
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -215,10 +215,7 @@ void MainWindow::on_phenotype_next_pushButton_clicked()
 void MainWindow::on_qc_next_pushButton_clicked()
 {
     Effect_Init();
-    if(prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
-                      ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
-                      ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
-                      target_phenotype_index,0,fixed_effect_list,random_effect_list))
+    if(prepare_effect(fixed_effect_input))
     {
         qDebug()<<endl<<"prepare fixed effect complete"<<endl;
         QStringList NULL_List;
@@ -236,6 +233,39 @@ void MainWindow::on_qc_next_pushButton_clicked()
 //Fixed effect part
 void MainWindow::Effect_Init()
 {
+
+    /*-------------------------------------------*/
+    A_matrix_path = output_path+"/A_matrix.txt";
+    G_matrix_path = output_path+"/G_matrix.txt";
+    qDebug()<<endl<<"A_matrix_path"<<A_matrix_path;
+    qDebug()<<"G_matrix_path"<<G_matrix_path<<endl;
+    /*-------------------------------------------*/
+    fixed_effect_input.input_path = csv_path;
+    fixed_effect_input.output_path = output_path;
+    fixed_effect_input.A_matrix_path = A_matrix_path;
+    fixed_effect_input.G_matrix_path = G_matrix_path;
+    fixed_effect_input.original_tableview = ui->fixed_phenotype_pr_TableView;
+    fixed_effect_input.selected_tableview = ui->fixed_selected_TableView;
+    fixed_effect_input.animal_combobox = ui->AnimalID_ComboBox;
+    fixed_effect_input.randeff_testing_combobox = ui->random_effec_testing_ComboBox;
+    fixed_effect_input.target_index = target_phenotype_index;
+    fixed_effect_input.process_random_flag = 0;
+    fixed_effect_input.fixed_effect_list = &fixed_effect_list;
+    fixed_effect_input.random_effect_list = &random_effect_list;
+
+    random_effect_input.input_path = csv_path;
+    random_effect_input.output_path = output_path;
+    random_effect_input.A_matrix_path = A_matrix_path;
+    random_effect_input.G_matrix_path = G_matrix_path;
+    random_effect_input.original_tableview = ui->random_phenotype_pr_TableView;
+    random_effect_input.selected_tableview = ui->random_selected_TableView;
+    random_effect_input.animal_combobox = ui->AnimalID_ComboBox;
+    random_effect_input.randeff_testing_combobox = ui->random_effec_testing_ComboBox;
+    random_effect_input.target_index = target_phenotype_index;
+    random_effect_input.process_random_flag = 1;
+    random_effect_input.fixed_effect_list = &fixed_effect_list;
+    random_effect_input.random_effect_list = &random_effect_list;
+
     fixed_effect_list.clear();
     random_effect_list.clear();
     selected_fixed_flag = false;
@@ -246,21 +276,10 @@ void MainWindow::Effect_Init()
     ui->fixed_accept_pushButton->setEnabled(false);
     ui->fixed_exclude_Button->setEnabled(false);
     ui->fixed_select_Button->setEnabled(false);
-    /*-------------------------------------------*/
-    A_matrix_path = output_path;
-    A_matrix_path.append("/A_matrix.txt");
-    G_matrix_path = output_path;
-    G_matrix_path.append("/G_matrix.txt");
-    qDebug()<<endl<<"A_matrix_path"<<A_matrix_path;
-    qDebug()<<"G_matrix_path"<<G_matrix_path<<endl;
-    /*-------------------------------------------*/
-    if(ui->tabWidget->currentIndex() == 3) //if at the effect page
-    {
-        clean_effect_table(ui->fixed_phenotype_pr_TableView);
-        clean_effect_table(ui->fixed_selected_TableView);
-        clean_effect_table(ui->random_phenotype_pr_TableView);
-        clean_effect_table(ui->random_selected_TableView);
-    }
+
+
+
+
 
 }
 
@@ -279,21 +298,14 @@ void MainWindow::on_fixed_selected_TableView_clicked(const QModelIndex &index)
 void MainWindow::on_fixed_select_Button_clicked()
 {
     add_item2effect_list(ui->fixed_phenotype_pr_TableView,phenotype_list,&fixed_effect_list);
-    prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
-                   ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
-                   ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
-                   target_phenotype_index,0,
-                   fixed_effect_list,random_effect_list);
+    qDebug()<<endl<<"fixed_effect_list  is "<<fixed_effect_list<<endl;
+    prepare_effect(fixed_effect_input);
     ui->fixed_accept_pushButton->setEnabled(true);
 }
 void MainWindow::on_fixed_exclude_Button_clicked()
 {
     remove_item_from_effect_list(ui->fixed_selected_TableView, &fixed_effect_list);
-    prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
-                   ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
-                   ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
-                   target_phenotype_index,0,
-                   fixed_effect_list,random_effect_list);
+    prepare_effect(fixed_effect_input);
     if(isTableView_empty(ui->fixed_selected_TableView))
     {
         ui->fixed_accept_pushButton->setEnabled(false);
@@ -308,11 +320,7 @@ void MainWindow::on_fixed_exclude_Button_clicked()
 void MainWindow::on_fixed_accept_pushButton_clicked()
 {
     selected_fixed_flag = true;
-    prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
-                   ui->random_phenotype_pr_TableView,ui->random_selected_TableView,
-                   ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
-                   target_phenotype_index,1,
-                   fixed_effect_list,random_effect_list);
+    prepare_effect(random_effect_input);
     change_select_exclude_Button(0,selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
     ui->fixed_accept_pushButton->setEnabled(false);
 }
@@ -337,22 +345,14 @@ void MainWindow::on_random_select_Button_clicked()
     else
     {
         add_item2effect_list(ui->random_phenotype_pr_TableView,phenotype_list,&random_effect_list);
-        prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
-                       ui->random_phenotype_pr_TableView,ui->random_selected_TableView,
-                       ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
-                       target_phenotype_index,1,
-                       fixed_effect_list,random_effect_list);
+        prepare_effect(random_effect_input);
     }
     ui->random_accept_pushButton->setEnabled(true);
 }
 void MainWindow::on_random_exclude_Button_clicked()
 {
     remove_item_from_effect_list(ui->random_selected_TableView, &random_effect_list);
-    prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
-                   ui->random_phenotype_pr_TableView,ui->random_selected_TableView,
-                   ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
-                   target_phenotype_index,1,
-                   fixed_effect_list,random_effect_list);
+    prepare_effect(random_effect_input);
     if(isTableView_empty(ui->random_selected_TableView))
     {
         ui->random_accept_pushButton->setEnabled(false);
@@ -374,13 +374,40 @@ void MainWindow::on_random_accept_pushButton_clicked()
 void MainWindow::on_effect_reset_pushButton_clicked()
 {
     Effect_Init();
-    prepare_effect(csv_path,output_path,A_matrix_path,G_matrix_path,
-                   ui->fixed_phenotype_pr_TableView,ui->fixed_selected_TableView,
-                   ui->AnimalID_ComboBox,ui->random_effec_testing_ComboBox,
-                   target_phenotype_index,0,
-                   fixed_effect_list,random_effect_list);
+    prepare_effect(fixed_effect_input);
 }
+
+void MainWindow::on_effect_next_pushButton_clicked()
+{
+    AnimalID_phenotype_index = ui->AnimalID_ComboBox->currentIndex();
+
+}
+
 /*----------------------------------------------------------------------------------------*/
+/*---------------------------------class_method-------------------------------------------*/
+void MainWindow::classical_method_Init()
+{
+    blup_mode.fiexd_effect_listView = ui ->fiexd_effect_listView;
+    blup_mode.random_effect_listView = ui->random_effect_listView;
+    blup_mode.BLUP_accept_pushButtom = ui->BLUP_accept_pushButtom;
+    blup_mode.BLUP_mode_ComboBox = ui->BLUP_mode_ComboBox;
+    blup_mode.trans_formula_1_ComboBox = ui->trans_formula_1_ComboBox;
+    blup_mode.trans_formula_2_ComboBox = ui->trans_formula_2_ComboBox;
+    blup_mode.Matrix_path = "";
+    blup_mode.csv_path = csv_path;
+    blup_mode.output_path = output_path;
+    blup_mode.fixed_effect_list = fixed_effect_list;
+    blup_mode.random_effect_list = random_effect_list;
+
+    blup_fold_validate.accuracyA_textBrowser = ui->accuracyA_textBrowser;
+    blup_fold_validate.accuracyG_textBrowser = ui->accuracyG_textBrowser;
+    blup_fold_validate.cross_validation_checkBox = ui->cross_validation_checkBox;
+    blup_fold_validate.k_flod_times_ComboBox = ui->k_flod_times_ComboBox;
+    blup_fold_validate.Matrix_path = "";
+    blup_fold_validate.csv_path = csv_path;
+    blup_fold_validate.fixed_effect_list = fixed_effect_list;
+    blup_fold_validate.random_effect_list = random_effect_list;
+}
 
 
 
@@ -390,6 +417,6 @@ void MainWindow::on_effect_reset_pushButton_clicked()
 
 
 
-
+/*----------------------------------------------------------------------------------------*/
 
 

@@ -34,6 +34,7 @@
 #include "start.h"
 #include "effect.h"
 #include "phenotype.h"
+#include "BLUP.h"
 #include "ui_mainwindow.h"
 
 QT_BEGIN_NAMESPACE
@@ -47,6 +48,13 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    prepare_effect_input fixed_effect_input;
+    prepare_effect_input random_effect_input;
+
+    blup blup_mode ;
+    fold_validate blup_fold_validate ;
+
     QLineEdit* out_line;
     QLineEdit* csv_line;
     QLineEdit* vcf_line;
@@ -58,6 +66,8 @@ public:
     QString output_path = "";
     QStringList phenotype_list ;
     unsigned int target_phenotype_index= 0 ;
+    unsigned int AnimalID_phenotype_index= 0 ;
+
     unsigned int fist_convert_flag = 1;
     QStringList fixed_effect_list ;
     QStringList random_effect_list ;
@@ -69,6 +79,7 @@ public:
 
     void init();
     void Effect_Init();
+    void classical_method_Init();
 private slots:
     void on_csv_pushButton_clicked();
 
@@ -123,6 +134,8 @@ private slots:
     void on_random_accept_pushButton_clicked();
 
     void on_effect_reset_pushButton_clicked();
+
+    void on_effect_next_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

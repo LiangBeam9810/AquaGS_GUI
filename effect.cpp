@@ -84,13 +84,13 @@ bool fixed_effect_testing(QString input_path,QString output_path,unsigned int ta
 {
     QString runPath = QDir::currentPath();
     runPath.append("/rscript/fixed_effect_testing.R");
-    qDebug() << endl <<"runPath;" << runPath << endl;
+    qDebug() << endl <<"runPath:" << runPath << endl;
     QString param;
     // The sequence of param is not changeable
     param.clear();
     param.append("Rscript");
     param.append(" ");
-    param.append("/home/liang/Documents/AquaGS_GUI/rscript/fixed_effect_testing.R");
+    param.append(runPath);
     param.append(" ");
     param.append(input_path);
     param.append(" ");
@@ -131,14 +131,14 @@ bool random_effect_testing(QString input_path,QString output_path,QString A_matr
                            QStringList random_effect_list)
 {
     QString runPath = QDir::currentPath();
-    runPath.append("/rscript/rondom_effect_testing.R");
-    qDebug() << endl <<"runPath;" << runPath << endl;
+    runPath.append("/rscript/random_effect_testing.R");
+    qDebug() << endl <<"runPath:" << runPath << endl;
     QString param;
     // The sequence of param is not changeable
     param.clear();
     param.append("Rscript");
     param.append(" ");
-    param.append("/home/liang/Documents/AquaGS_GUI/rscript/random_effect_testing.R");
+    param.append(runPath);
     param.append(" ");
     param.append(input_path);//1
     param.append(" ");
@@ -190,38 +190,33 @@ bool random_effect_testing(QString input_path,QString output_path,QString A_matr
     return true;
 }
 
-bool prepare_effect(QString input_path,QString output_path,QString A_matrix_path,QString G_matrix_path,
-                    QTableView* original_tableview,QTableView* selected_tableview,
-                    QComboBox* animal_combobox,
-                    QComboBox* randeff_testing_combobox,
-                    unsigned int target_index,
-                    unsigned  int process_random_flag,
-                    QStringList fixed_effect_list,
-                    QStringList random_effect_list)
+bool prepare_effect(prepare_effect_input effect_input)
 {
-    QString effect_path = output_path;
+    QString effect_path = effect_input.output_path;
     bool callbake = false;
-    if(process_random_flag){
+    if(effect_input.process_random_flag)
+    {
         effect_path.append("/random_effect.csv");
         qDebug() << endl << "random_effect_path:" << effect_path <<endl;
-        unsigned method_flag = randeff_testing_combobox->currentIndex();
-        unsigned AnimalID_index = animal_combobox->currentIndex();
-        callbake =  random_effect_testing(input_path,effect_path,A_matrix_path,G_matrix_path,
-                                          AnimalID_index,target_index,
+        unsigned method_flag = effect_input.randeff_testing_combobox->currentIndex();
+        unsigned AnimalID_index = effect_input.animal_combobox->currentIndex();
+        callbake =  random_effect_testing(effect_input.input_path,effect_path,effect_input.A_matrix_path,effect_input.G_matrix_path,
+                                          AnimalID_index,effect_input.target_index,
                                           method_flag,
-                                          fixed_effect_list,random_effect_list);
+                                          *(effect_input.fixed_effect_list),*(effect_input.random_effect_list));
         if(callbake)
         {
-            display_effect(effect_path,original_tableview,selected_tableview,random_effect_list);
+            display_effect(effect_path,effect_input.original_tableview,effect_input.selected_tableview,*(effect_input.random_effect_list));
         }
     }
-    else{
+    else
+    {
         effect_path.append("/fixed_effect.csv");
         qDebug() << endl << "fixed_effect_path:" << effect_path <<endl;
-        callbake =  fixed_effect_testing(input_path,effect_path,target_index,fixed_effect_list);
+        callbake =  fixed_effect_testing(effect_input.input_path,effect_path,effect_input.target_index,*(effect_input.fixed_effect_list));
         if(callbake)
         {
-            display_effect(effect_path,original_tableview,selected_tableview,fixed_effect_list);
+            display_effect(effect_path,effect_input.original_tableview,effect_input.selected_tableview,*(effect_input.fixed_effect_list));
         }
     }
     return callbake;

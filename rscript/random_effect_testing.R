@@ -64,6 +64,8 @@ paste("AnimalID_item:",AnimalID_item)
 ################################################################################
 A_read <- read.table(A_matrix_path)[,-1]
 A = as.matrix(A_read)
+pama = paste("colnames(A) <-rownames(A) <-  as.character(data$",AnimalID_item,")",sep = "")
+print(paste("pama:",pama))
 colnames(A) <-rownames(A) <-  as.character(data$AnimalID)
 ################################################################################
 G_read <- read.table(G_matrix_path)[,-1]

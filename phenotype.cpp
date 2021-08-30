@@ -64,13 +64,13 @@ bool outlier_elimination(QString* csv_path,
 {
     QString runPath = QDir::currentPath();
     runPath.append("/rscript/outiler_eliminatuon.R");
-    qDebug() << endl <<"runPath;" << runPath << endl;
+    qDebug() << endl <<"runPath:" << runPath << endl;
     QString param;
         // The sequence of param is not changeable
         param.clear();
         param.append("Rscript");
         param.append(" ");
-        param.append("/home/liang/Documents/AquaGS_GUI/rscript/outlier_elimination.R");
+        param.append(runPath);
         param.append(" ");
         param.append(*csv_path);
         param.append(" ");
@@ -132,13 +132,13 @@ bool display_normality(QString input_path,
 {
     QString runPath = QDir::currentPath();
     runPath.append("/rscript/check_normality.R");
-    qDebug() << endl <<"runPath;" << runPath << endl;
+    qDebug() << endl <<"runPath:" << runPath << endl;
     QString param;
     // The sequence of param is not changeable
     param.clear();
     param.append("Rscript");
     param.append(" ");
-    param.append("/home/liang/Documents/AquaGS_GUI/rscript/check_normality.R");
+    param.append(runPath);
     param.append(" ");
     param.append(input_path);
     param.append(" ");
@@ -215,13 +215,13 @@ bool convert_phenotype(QString input_path,unsigned int target_phenotype_index,un
 {
     QString runPath = QDir::currentPath();
     runPath.append("/rscript/convert_normality.R");
-    qDebug() << endl <<"runPath;" << runPath << endl;
+    qDebug() << endl <<"runPath:" << runPath << endl;
     QString param;
     // The sequence of param is not changeable
     param.clear();
     param.append("Rscript");
     param.append(" ");
-    param.append("/home/liang/Documents/AquaGS_GUI/rscript/convert_normality.R");
+    param.append(runPath);
     param.append(" ");
     param.append(input_path);
     param.append(" ");
