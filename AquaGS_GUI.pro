@@ -1,5 +1,5 @@
 QT       += core gui
-
+QT       += concurrent
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -9,19 +9,25 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    BLUP.cpp \
+    blup.cpp \
     effect.cpp \
     main.cpp \
     mainwindow.cpp \
     phenotype.cpp \
-    start.cpp
+    plink.cpp \
+    process.cpp \
+    start.cpp \
+    tool.cpp
 
 HEADERS += \
-    BLUP.h \
+    blup.h \
     effect.h \
     mainwindow.h \
     phenotype.h \
-    start.h
+    plink.h \
+    process.h \
+    start.h \
+    tool.h
 
 FORMS += \
     mainwindow.ui

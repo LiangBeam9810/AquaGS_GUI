@@ -63,7 +63,7 @@ bool outlier_elimination(QString* csv_path,
                     unsigned inttarget_phenotype_index)
 {
     QString runPath = QDir::currentPath();
-    runPath.append("/rscript/outiler_eliminatuon.R");
+    runPath.append("/rscript/outiler_elimination.R");
     qDebug() << endl <<"runPath:" << runPath << endl;
     QString param;
         // The sequence of param is not changeable

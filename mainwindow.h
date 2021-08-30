@@ -34,8 +34,13 @@
 #include "start.h"
 #include "effect.h"
 #include "phenotype.h"
-#include "BLUP.h"
+#include "blup.h"
 #include "ui_mainwindow.h"
+
+#include "plink.h"
+#include "process.h"
+#include <QtConcurrent>
+#include <QFuture>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -80,6 +85,12 @@ public:
     void init();
     void Effect_Init();
     void classical_method_Init();
+
+signals:
+    void resetWindowSig();
+    void setMsgBoxSig(const QString &title, const QString &text);
+
+
 private slots:
     void on_csv_pushButton_clicked();
 
@@ -137,7 +148,15 @@ private slots:
 
     void on_effect_next_pushButton_clicked();
 
+    //for QC
+    bool runExTool(QString tool, QStringList param);
+    void on_outMessageReady(QString text);
+    void on_errMessageReady(QString text);
+    bool callPlinkGwas(QString phenotype, QString genotype, QString out);
+
 private:
     Ui::MainWindow *ui;
+
+    volatile bool runningFlag = false;
 };
 #endif // MAINWINDOW_H

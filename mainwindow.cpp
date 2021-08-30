@@ -24,7 +24,7 @@ void MainWindow::init()
     //ui->vcf_input_lineEdit->setText("Enter/Select the vcf file.");
     //ui->out_lineEdit->setText("Enter/Select the output folder.");
     csv_line->setText("/home/liang/Documents/AquaGS_GUI/Input/ABT20210617.csv");
-    vcf_line->setText("/home/liang/Documents/AquaGS_GUI (copy)/Input/snp_abt_630_imput_out_select48K.vcf");
+    vcf_line->setText("/home/liang/Documents/AquaGS_GUI/snp_abt_630_imput_out_select48K.vcf");
     out_line->setText("/home/liang/Documents/AquaGS_GUI/Output");
     ui->tabWidget->setCurrentIndex(0);//Start index
     /*--------------------------------------------------------------*/
@@ -214,6 +214,37 @@ void MainWindow::on_phenotype_next_pushButton_clicked()
 /*-------------------------------------- QC -----------------------------------------*/
 void MainWindow::on_qc_next_pushButton_clicked()
 {
+
+    QString phenotype = csv_path;
+    QString genotype = vcf_path;
+    QString out = output_path;
+
+    this->runningFlag = true;
+    ui->qc_next_pushButton->setDisabled(true);
+    qApp->processEvents();
+
+    QFuture<void> fu = QtConcurrent::run(QThreadPool::globalInstance(), [&]()
+    {
+        if (!this->callPlinkGwas(phenotype, genotype, out))
+        {
+            emit resetWindowSig();
+            QThread::msleep(10);
+            return;
+        }
+        qDebug()  << "After callPlinkGwas" << endl;
+
+   });
+    while (!fu.isFinished())
+    {
+        qApp->processEvents(QEventLoop::AllEvents, 50);
+        QThread::msleep(10);
+    }
+
+    this->runningFlag = false;
+    ui->qc_next_pushButton->setEnabled(true);
+    ui->tabWidget->setCurrentIndex(3);//To the next index.
+
+    /*-----------------*/
     Effect_Init();
     if(prepare_effect(fixed_effect_input))
     {
@@ -225,7 +256,128 @@ void MainWindow::on_qc_next_pushButton_clicked()
     else {
         qDebug()<<endl<<"error in preparing fixed effect "<<endl;
     }
+}
 
+bool MainWindow::callPlinkGwas(QString phenotype, QString genotype, QString out)
+{
+
+    QString runPath1 = QDir::currentPath();
+//    runPath.append("/rscript/fixed_effect_testing.R");
+    qDebug() << endl <<"runPath1:" << runPath1 << endl;
+
+    QString maf = ui->mafcheckBox->isChecked()? ui->mafdoubleSpinBox->text():nullptr;
+    QString mind = ui->mindcheckBox->isChecked()? ui->minddoubleSpinBox->text():nullptr;
+    QString geno = ui->genocheckBox->isChecked()? ui->genodoubleSpinBox->text():nullptr;
+    QString hwe = ui->hwcheckBox->isChecked()? ui->hwdoubleSpinBox->text():nullptr;
+
+    QString plinkpath = runPath1.append("/plink/");
+//    QString plinkpath = "/home/zhi/Desktop/AquaGS_GUI-main/plink/";
+    //这里修改生成的中间文件和输出raw的路径
+    QString file2=plinkpath+"files/"+"file2";
+    QString file3=plinkpath+"files/"+"file3";
+    QString file4=plinkpath+"files/"+"file4";
+    QString file5=plinkpath+"files/"+"file5";
+    QString outfile=out+"/raw_output";
+
+    Plink plink;
+
+    plink.part1(genotype, file2);
+    if (!runExTool(plinkpath+"plink", plink.getParamList()))
+    {
+        return false;
+    }
+
+    plink.part2(file2, geno, maf, mind, file3);
+    if (!runExTool(plinkpath+"plink", plink.getParamList()))
+    {
+        return false;
+    }
+
+    plink.part3(file3, hwe, file4);
+    if (!runExTool(plinkpath+"plink", plink.getParamList()))
+    {
+        return false;
+    }
+
+    if (ui->swcheckBox->isChecked())
+    {
+        QString winSize, stepLen, r2Threshold;
+
+        winSize = ui->winsizedoubleSpinBox->text();
+        stepLen = ui->steplengthdoubleSpinBox->text();
+        r2Threshold = ui->r2doubleSpinBox->text();
+        plink.part4(file4, winSize, stepLen, r2Threshold, file5);
+        if (!runExTool(plinkpath+"plink", plink.getParamList()))
+        {
+            return false;
+        }
+        plink.part5(file5, outfile);
+        if (!runExTool(plinkpath+"plink", plink.getParamList()))
+        {
+            return false;
+        }
+
+    }
+    else
+    {
+        plink.part6(file4, outfile);
+        if (!runExTool(plinkpath+"plink", plink.getParamList()))
+        {
+            return false;
+        }
+
+    }
+
+    return true;
+
+}
+bool MainWindow::runExTool(QString tool, QStringList param)
+{
+    Process *proc = new Process;
+
+    // Read message form Process and display in RunningMsgWidget
+    connect(proc, SIGNAL(outMessageReady(QString)), this, SLOT(on_outMessageReady(QString)));
+    connect(proc, SIGNAL(errMessageReady(QString)), this, SLOT(on_errMessageReady(QString)));
+   // connect(this, SIGNAL(terminateProcess()), proc, SLOT(on_terminateProcess()), Qt::DirectConnection);
+
+    // proc->execute(tool, param);
+    static int i = 0;
+    proc->start(tool, param);
+    if (!proc->waitForStarted())
+    {
+        emit setMsgBoxSig("Error", "Can't open " + tool);
+        delete proc;
+        proc = nullptr;
+        return false;
+    }
+    proc->waitForFinished(-1);
+
+    ++i;
+    qDebug() << "i: " << i << endl
+             << tool << endl << param << endl;
+
+    bool ret = true;
+    proc->close();
+    delete proc;
+    proc = nullptr;
+
+    return ret;
+}
+void MainWindow::on_outMessageReady(const QString text)
+{
+    if (this->runningFlag)
+    {
+        qDebug() << "Out: " << text << endl;
+        qApp->processEvents();
+    }
+}
+
+void MainWindow::on_errMessageReady(const QString text)
+{
+    if (this->runningFlag)
+    {
+        qDebug() << "Error: " << text << endl;
+    }
 }
 /*---------------------------------------------------------------------------------------*/
 
@@ -380,15 +532,23 @@ void MainWindow::on_effect_reset_pushButton_clicked()
 void MainWindow::on_effect_next_pushButton_clicked()
 {
     AnimalID_phenotype_index = ui->AnimalID_ComboBox->currentIndex();
-
+    if(ui->fixed_accept_pushButton->isEnabled()||ui->fixed_accept_pushButton->isEnabled())
+    {
+       QMessageBox::warning(NULL, "Error ","pleas accept this effect." );
+    }
+    else
+    {
+        classical_method_Init();
+        ui->tabWidget->setCurrentIndex(4);
+    }
 }
 
 /*----------------------------------------------------------------------------------------*/
 /*---------------------------------class_method-------------------------------------------*/
 void MainWindow::classical_method_Init()
 {
-    blup_mode.fiexd_effect_listView = ui ->fiexd_effect_listView;
-    blup_mode.random_effect_listView = ui->random_effect_listView;
+    blup_mode.fiexd_effect_listwidget = ui ->blup_fixed_listWidget;
+    blup_mode.random_effect_listwidget = ui->blup_random_listWidget;
     blup_mode.BLUP_accept_pushButtom = ui->BLUP_accept_pushButtom;
     blup_mode.BLUP_mode_ComboBox = ui->BLUP_mode_ComboBox;
     blup_mode.trans_formula_1_ComboBox = ui->trans_formula_1_ComboBox;
@@ -396,9 +556,18 @@ void MainWindow::classical_method_Init()
     blup_mode.Matrix_path = "";
     blup_mode.csv_path = csv_path;
     blup_mode.output_path = output_path;
+
     blup_mode.fixed_effect_list = fixed_effect_list;
     blup_mode.random_effect_list = random_effect_list;
+    for(int i = 0;i < (fixed_effect_list.count());i++){
+         blup_mode.fixed_effect_list[i] = phenotype_list[(fixed_effect_list[i].toInt())];
+         qDebug()<<phenotype_list[(fixed_effect_list[i].toInt())];
+    }
 
+    for(int i = 0;i < random_effect_list.length();i++){
+         blup_mode.random_effect_list[i] = phenotype_list[(random_effect_list[i].toInt())];
+         qDebug()<<blup_mode.random_effect_list[i];
+    }
     blup_fold_validate.accuracyA_textBrowser = ui->accuracyA_textBrowser;
     blup_fold_validate.accuracyG_textBrowser = ui->accuracyG_textBrowser;
     blup_fold_validate.cross_validation_checkBox = ui->cross_validation_checkBox;
@@ -407,6 +576,9 @@ void MainWindow::classical_method_Init()
     blup_fold_validate.csv_path = csv_path;
     blup_fold_validate.fixed_effect_list = fixed_effect_list;
     blup_fold_validate.random_effect_list = random_effect_list;
+
+    blup_Init(blup_mode);
+    blup_fold_validate_Init(blup_fold_validate);
 }
 
 
