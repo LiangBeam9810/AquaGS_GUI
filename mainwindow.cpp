@@ -41,7 +41,7 @@ void MainWindow::init()
     /*--------------------------------------------------------------*/
 
     /*----------Effect init-----------------------------------------*/
-    Effect_Init();
+    //Effect_Init();
 
     return;
 }
@@ -87,14 +87,33 @@ void MainWindow::on_output_lineEdit_editingFinished()
 
 void MainWindow::on_start_next_pushButton_clicked()
 {
-    if(check_all_path(ui->output_lineEdit,ui->csv_lineEdit,ui->vcf_lineEdit,&output_path,&csv_path,&vcf_path)){
-            prepare_phenotype(csv_path,&phenotype_list,ui->phenotype_ComboBox);
-            ui->tabWidget->setCurrentIndex(1);//To the next index.
-        }
+    if(check_all_path(ui->output_lineEdit,ui->csv_lineEdit,ui->vcf_lineEdit,&output_path,&csv_path,&vcf_path))
+    {
+        start_complete_flag = true;
+        Phenotype_Init();
+        ui->tabWidget->setCurrentIndex(1);//To the next index.
+    }
     return ;
 }
 
 /*---------------------------------phenotype--------------------------------------*/
+void MainWindow::Phenotype_Init()
+{
+    if(!start_complete_flag)
+    {
+
+    }
+    else
+    {
+        phenotype_select_line.AnimalID_ComboBox = ui->AnimalID_ComboBox;
+        phenotype_select_line.Dam_ComboBox = ui->Dam_ComboBox;
+        phenotype_select_line.Sire_ComboBox = ui->Sire_ComboBox;
+        phenotype_select_line.target_phenotype_ComboBox = ui->phenotype_ComboBox;
+        phenotype_select_line.outlier_CheckBox = ui->outlier_swith;
+        phenotype_select_line_init(phenotype_select_line,csv_path,&phenotype_list);
+    }
+}
+
 void MainWindow::on_outlier_swith_stateChanged(int arg1)
 {
     qDebug()<< endl << "outlier swith state :"<< arg1 << endl;
@@ -118,10 +137,15 @@ void MainWindow::on_phenotype_run_Button_clicked()
                        ui->phenotype_accept_Button,
                        ui->convert_swith,
                        &outlier_state,&fist_convert_flag,&target_phenotype_index);
+    phenotype_select_line_get_index(phenotype_select_line,&target_phenotype_index,&AnimalID_phenotype_index,&Dam_phenotype_index,&Sire_phenotype_index);
     if(outlier_elimination(&csv_path,outlier_state,target_phenotype_index))
     {
         qDebug()<<endl<<"outlier completed!"<<endl;
         qDebug()<<endl<<"csv path:"<<csv_path<<endl;
+        qDebug()<<"target_index:"<<target_phenotype_index;
+        qDebug()<<"ID_index:"<<AnimalID_phenotype_index;
+        qDebug()<<"Dam_index:"<<Dam_phenotype_index;
+        qDebug()<<"Sire_index:"<<Sire_phenotype_index;
     }
     else {
         qDebug()<<endl<<"outlier error!"<<endl;
@@ -212,6 +236,8 @@ void MainWindow::on_phenotype_next_pushButton_clicked()
 
 
 /*-------------------------------------- QC -----------------------------------------*/
+
+
 void MainWindow::on_qc_next_pushButton_clicked()
 {
 
@@ -231,7 +257,7 @@ void MainWindow::on_qc_next_pushButton_clicked()
             QThread::msleep(10);
             return;
         }
-        qDebug()  << "After callPlinkGwas" << endl;
+        qDebug()  << "After callPlinkGs" << endl;
 
    });
     while (!fu.isFinished())
@@ -242,9 +268,9 @@ void MainWindow::on_qc_next_pushButton_clicked()
 
     this->runningFlag = false;
     ui->qc_next_pushButton->setEnabled(true);
-    ui->tabWidget->setCurrentIndex(3);//To the next index.
 
     /*-----------------*/
+    A_G_matirx_build();
     Effect_Init();
     if(prepare_effect(fixed_effect_input))
     {
@@ -256,6 +282,8 @@ void MainWindow::on_qc_next_pushButton_clicked()
     else {
         qDebug()<<endl<<"error in preparing fixed effect "<<endl;
     }
+    /*--------------------------------------------------------------------*/
+
 }
 
 bool MainWindow::callPlinkGwas(QString phenotype, QString genotype, QString out)
@@ -278,7 +306,7 @@ bool MainWindow::callPlinkGwas(QString phenotype, QString genotype, QString out)
     QString file4=plinkpath+"files/"+"file4";
     QString file5=plinkpath+"files/"+"file5";
     QString outfile=out+"/raw_output";
-
+    raw_path = outfile+".raw";
     Plink plink;
 
     plink.part1(genotype, file2);
@@ -380,19 +408,76 @@ void MainWindow::on_errMessageReady(const QString text)
     }
 }
 /*---------------------------------------------------------------------------------------*/
+bool MainWindow::A_G_matirx_build()
+{
+
+    /*-------------------------------------------*/
+    Rdata_path = output_path;
+    Rdata_path.append("/Rbuffer.Rdata");
+    A_matrix_path = output_path+"/A_matrix.txt";
+    G_matrix_path = output_path+"/G_matrix.txt";
+    qDebug()<<endl<<"Rdata_path"<<Rdata_path;
+    qDebug()<<endl<<"A_matrix_path"<<A_matrix_path;
+    qDebug()<<"G_matrix_path"<<G_matrix_path<<endl;
+    /*-------------------------------------------*/
+
+    QString runPath = QDir::currentPath();
+    runPath.append("/rscript/A_G_matirx_build.R");
+    qDebug() << endl <<"runPath:" << runPath << endl;
+    QString param;
+    // The sequence of param is not changeable
+    param.clear();
+    param.append("Rscript");
+    param.append(" ");
+    param.append(runPath);
+    param.append(" ");
+    param.append(csv_path);
+    param.append(" ");
+    param.append(raw_path);
+    param.append(" ");
+    param.append(Rdata_path);
+    param.append(" ");
+    param.append(A_matrix_path);
+    param.append(" ");
+    param.append(G_matrix_path);
+    param.append(" ");
+    param.append(QString::number(target_phenotype_index));
+    param.append(" ");
+    param.append(QString::number(AnimalID_phenotype_index));
+    param.append(" ");
+    param.append(QString::number(Dam_phenotype_index));
+    param.append(" ");
+    param.append(QString::number(Sire_phenotype_index));
+    param.append(" ");
+    qDebug()<< endl<<"display param :"<<param<< endl;
+    QProcess display_process;
+    display_process.execute(param);
+    if(display_process.waitForStarted())
+    {
+        qDebug()<<"OUTLIER PROCESS STRATED";
+        display_process.close();
+        return false;
+    }
+    if(display_process.waitForFinished())
+    {
+        qDebug()<<"OUTLIER PROCESS FINISHED";
+        display_process.close();
+        return false;
+    }
+    display_process.close();
+    return true;
+}
+
+
+
 
 /*-------------------------------------- Effect -----------------------------------------*/
 //Fixed effect part
 void MainWindow::Effect_Init()
 {
 
-    /*-------------------------------------------*/
-    A_matrix_path = output_path+"/A_matrix.txt";
-    G_matrix_path = output_path+"/G_matrix.txt";
-    qDebug()<<endl<<"A_matrix_path"<<A_matrix_path;
-    qDebug()<<"G_matrix_path"<<G_matrix_path<<endl;
-    /*-------------------------------------------*/
-    fixed_effect_input.input_path = csv_path;
+
+    fixed_effect_input.input_path = Rdata_path;
     fixed_effect_input.output_path = output_path;
     fixed_effect_input.A_matrix_path = A_matrix_path;
     fixed_effect_input.G_matrix_path = G_matrix_path;
@@ -405,7 +490,7 @@ void MainWindow::Effect_Init()
     fixed_effect_input.fixed_effect_list = &fixed_effect_list;
     fixed_effect_input.random_effect_list = &random_effect_list;
 
-    random_effect_input.input_path = csv_path;
+    random_effect_input.input_path = Rdata_path;
     random_effect_input.output_path = output_path;
     random_effect_input.A_matrix_path = A_matrix_path;
     random_effect_input.G_matrix_path = G_matrix_path;
@@ -413,6 +498,7 @@ void MainWindow::Effect_Init()
     random_effect_input.selected_tableview = ui->random_selected_TableView;
     random_effect_input.animal_combobox = ui->AnimalID_ComboBox;
     random_effect_input.randeff_testing_combobox = ui->random_effec_testing_ComboBox;
+    random_effect_input.AnimalID_index = &AnimalID_phenotype_index;
     random_effect_input.target_index = target_phenotype_index;
     random_effect_input.process_random_flag = 1;
     random_effect_input.fixed_effect_list = &fixed_effect_list;
@@ -428,11 +514,6 @@ void MainWindow::Effect_Init()
     ui->fixed_accept_pushButton->setEnabled(false);
     ui->fixed_exclude_Button->setEnabled(false);
     ui->fixed_select_Button->setEnabled(false);
-
-
-
-
-
 }
 
 void MainWindow::on_fixed_phenotype_pr_TableView_clicked(const QModelIndex &index)
@@ -522,12 +603,16 @@ void MainWindow::on_random_accept_pushButton_clicked()
     change_select_exclude_Button(0,selected_random_flag,ui->random_select_Button,ui->random_exclude_Button);
     ui->random_accept_pushButton->setEnabled(false);
 }
-
 void MainWindow::on_effect_reset_pushButton_clicked()
 {
     Effect_Init();
     prepare_effect(fixed_effect_input);
 }
+void MainWindow::on_AnimalID_ComboBox_currentIndexChanged(int index)
+{
+    AnimalID_phenotype_index = index;
+}
+
 
 void MainWindow::on_effect_next_pushButton_clicked()
 {
@@ -553,12 +638,18 @@ void MainWindow::classical_method_Init()
     blup_mode.BLUP_mode_ComboBox = ui->BLUP_mode_ComboBox;
     blup_mode.trans_formula_1_ComboBox = ui->trans_formula_1_ComboBox;
     blup_mode.trans_formula_2_ComboBox = ui->trans_formula_2_ComboBox;
-    blup_mode.Matrix_path = "";
-    blup_mode.csv_path = csv_path;
+    blup_mode.A_matrix_path = A_matrix_path;
+    blup_mode.G_matrix_path = G_matrix_path;
+    blup_mode.Rdata_path = Rdata_path;
     blup_mode.output_path = output_path;
+    blup_mode.output_path.append("/GEBV.txt");
+    blup_mode.AnimalID_index = AnimalID_phenotype_index;
+    blup_mode.target_index = target_phenotype_index;
 
     blup_mode.fixed_effect_list = fixed_effect_list;
     blup_mode.random_effect_list = random_effect_list;
+    blup_mode.fixed_effect_list2R = fixed_effect_list;
+    blup_mode.random_effect_list2R= random_effect_list;
     for(int i = 0;i < (fixed_effect_list.count());i++){
          blup_mode.fixed_effect_list[i] = phenotype_list[(fixed_effect_list[i].toInt())];
          qDebug()<<phenotype_list[(fixed_effect_list[i].toInt())];
@@ -581,14 +672,29 @@ void MainWindow::classical_method_Init()
     blup_fold_validate_Init(blup_fold_validate);
 }
 
+void MainWindow::on_BLUP_accept_pushButtom_clicked()
+{
 
-
-
-
+    blup_build(blup_mode);
+}
+void MainWindow::on_cross_validation_checkBox_stateChanged(int arg1)
+{
+    if(arg1 == 2)
+    {
+        blup_fold_validate.k_flod_times_ComboBox->setEnabled(true);
+    }
+}
 
 
 
 
 /*----------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
 
 

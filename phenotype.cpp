@@ -2,6 +2,26 @@
 
 
 /*--------------------------phenotype index------------------------------------*/
+void phenotype_select_line_init(phenotype_select phenotype_select_line,QString csv_path,QStringList* phenotype_list)
+{
+    prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.AnimalID_ComboBox);
+    prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.Dam_ComboBox);
+    prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.Sire_ComboBox);
+    prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.target_phenotype_ComboBox);
+    phenotype_select_line.outlier_CheckBox->setCheckState(Qt::Unchecked);
+}
+
+void phenotype_select_line_get_index(phenotype_select phenotype_select_line,unsigned int * target_index,
+                                     unsigned int * ID_index,
+                                     unsigned int * Dam_index,
+                                     unsigned int * Sire_index)
+{
+    *target_index = phenotype_select_line.target_phenotype_ComboBox->currentIndex();
+    *ID_index = phenotype_select_line.AnimalID_ComboBox->currentIndex();
+    *Dam_index = phenotype_select_line.Dam_ComboBox->currentIndex();
+    *Sire_index = phenotype_select_line.Sire_ComboBox->currentIndex();
+}
+
 void prepare_phenotype(QString csv_path,
                        QStringList* phenotype_list ,
                        QComboBox*  ComboBox)
@@ -63,7 +83,7 @@ bool outlier_elimination(QString* csv_path,
                     unsigned inttarget_phenotype_index)
 {
     QString runPath = QDir::currentPath();
-    runPath.append("/rscript/outiler_elimination.R");
+    runPath.append("/rscript/outlier_elimination.R");
     qDebug() << endl <<"runPath:" << runPath << endl;
     QString param;
         // The sequence of param is not changeable

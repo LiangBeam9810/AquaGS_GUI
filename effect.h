@@ -13,6 +13,7 @@ struct prepare_effect_input
     QTableView* selected_tableview;
     QComboBox* animal_combobox;
     QComboBox* randeff_testing_combobox;
+    unsigned int* AnimalID_index;
     unsigned int target_index;
     unsigned  int process_random_flag;
     QStringList* fixed_effect_list ;

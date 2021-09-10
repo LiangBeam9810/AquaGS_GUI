@@ -1,19 +1,24 @@
 rm(list = ls())
-print("-----------random_effect.R output begin--------------")
+print("-----------random_effect_testing (Rdata).R output begin--------------")
 args=commandArgs(T)
 
 input_path = args[1]
+print(paste("input_path :",input_path))
 output_path = args[2]
-A_matrix_path = args[3]
-G_matrix_path = args[4]
+print(paste("output_path :",output_path))
+#A_matrix_path = args[3]
+#G_matrix_path = args[4]
 
-AnimalID_index = as.integer(args[5]) +1  # C++ start at 0, R at 1
+AnimalID_index = as.integer(args[3]) +1  # C++ start at 0, R at 1
+print(paste("AnimalID_index :",AnimalID_index))
 
-target_index = as.integer(args[6]) + 1  # C++ start at 0, R at 1
+target_index = as.integer(args[4]) + 1  # C++ start at 0, R at 1
+print(paste("target_index :",target_index))
 
-method_flag = as.integer(args[7])
+method_flag = as.integer(args[5])
+print(paste("method_flag :",method_flag))
 ##########################fixed#################################################
-j = 8
+j = 6
 fixed_num = as.integer(args[j]) 
 print(paste("fixed_num :",fixed_num))
 fixed_index = c(0)
@@ -33,7 +38,7 @@ for(i in 1:random_num){
 }
 print(paste("random_index :",random_index))
 ################################################################################
-#input_path= "/home/liang/Documents/AquaGS_GUI/Input/ABT20210617.csv"
+#input_path= "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
 #output_path = "/home/liang/Documents/AquaGS_GUI/Output/random_effect.csv"
 #A_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/A_matrix.txt"
 #G_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/G_matrix.txt"
@@ -47,11 +52,7 @@ print(paste("random_index :",random_index))
 
 require(data.table)
 #data = read.csv(input_path)
-data <- fread(
-  input = input_path,
-  sep = ",",
-  header = TRUE,
-  stringsAsFactors = FALSE)
+load(input_path)
 col_list = colnames(data)
 target_item = col_list[target_index]
 AnimalID_item = col_list[AnimalID_index]
@@ -61,17 +62,7 @@ table = data.frame(
 )
 paste("target_item:",target_item)
 paste("AnimalID_item:",AnimalID_item)
-################################################################################
-A_read <- read.table(A_matrix_path)[,-1]
-A = as.matrix(A_read)
-pama = paste("colnames(A) <-rownames(A) <-  as.character(data$",AnimalID_item,")",sep = "")
-print(paste("pama:",pama))
-colnames(A) <-rownames(A) <-  as.character(data$AnimalID)
-################################################################################
-G_read <- read.table(G_matrix_path)[,-1]
-G = as.matrix(G_read)
-colnames(G) <-rownames(G) <-  as.character(data$AnimalID)
-################################################################################
+
 
 
 fixed_part_pama = ""
@@ -229,5 +220,5 @@ if(!method_flag) # using lmer to test
   }
 }
 write.table(table,output_path, row.names = FALSE,col.names = FALSE,sep=",")
-print("-----------random_effect.R output end--------------")
+print("-----------random_effect_testing (Rdata).R output end--------------")
 

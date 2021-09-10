@@ -53,6 +53,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    phenotype_select phenotype_select_line;
+    phenotype_display original_display;
+    phenotype_display converted_display;
 
     prepare_effect_input fixed_effect_input;
     prepare_effect_input random_effect_input;
@@ -66,12 +69,16 @@ public:
 
     QString csv_path = "";
     QString vcf_path = "";
+    QString raw_path = "";
     QString A_matrix_path = "";
     QString G_matrix_path = "";
     QString output_path = "";
+    QString Rdata_path = "";
     QStringList phenotype_list ;
     unsigned int target_phenotype_index= 0 ;
     unsigned int AnimalID_phenotype_index= 0 ;
+    unsigned int Dam_phenotype_index= 0 ;
+    unsigned int Sire_phenotype_index= 0 ;
 
     unsigned int fist_convert_flag = 1;
     QStringList fixed_effect_list ;
@@ -82,9 +89,15 @@ public:
     bool selected_fixed_flag = false;
     bool selected_random_flag = false;
 
+    bool start_complete_flag = false;
+    bool phenotype_complete_flag = false;
+    bool effect_complete_flag = false;
+
     void init();
+    void Phenotype_Init();
     void Effect_Init();
     void classical_method_Init();
+    bool A_G_matirx_build();
 
 signals:
     void resetWindowSig();
@@ -153,6 +166,12 @@ private slots:
     void on_outMessageReady(QString text);
     void on_errMessageReady(QString text);
     bool callPlinkGwas(QString phenotype, QString genotype, QString out);
+
+    void on_BLUP_accept_pushButtom_clicked();
+
+    void on_AnimalID_ComboBox_currentIndexChanged(int index);
+
+    void on_cross_validation_checkBox_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

@@ -12,11 +12,16 @@ struct blup
     QComboBox* trans_formula_2_ComboBox = NULL;
     QPushButton* BLUP_accept_pushButtom = NULL;
 
-    QString csv_path = "";
-    QString Matrix_path = "";
+    QString Rdata_path = "";
+    QString A_matrix_path = "";
+    QString G_matrix_path = "";
+    unsigned int AnimalID_index;
+    unsigned int target_index;
     QString output_path = "";
     QStringList fixed_effect_list ;
     QStringList random_effect_list ;
+    QStringList fixed_effect_list2R ;
+    QStringList random_effect_list2R ;
 };
 
 struct fold_validate{
@@ -33,4 +38,6 @@ struct fold_validate{
 };
 void blup_Init(blup blup_input);
 void blup_fold_validate_Init(fold_validate fold_validate_input);
+
+bool blup_build(blup blup_input);
 #endif // BLUP_H

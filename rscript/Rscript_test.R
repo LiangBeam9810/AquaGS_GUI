@@ -1,5 +1,0 @@
-args=commandArgs(T)
-print (args[1])
-print (args[2])
-print(args[3])
-print(args[4])

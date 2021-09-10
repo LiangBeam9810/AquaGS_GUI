@@ -1,48 +1,43 @@
 rm(list = ls())
 
-print("-----------fixed_effect.R output begin--------------")
+print("-----------fixed_effect_testing(Rdata).R output begin--------------")
 
 args=commandArgs(T)
-input_path = args[1]
+rdata_path = args[1]
 output_path = args[2]
-index = as.integer(args[3]) + 1##C++ start at 0, R at 1
+target_index = as.integer(args[3]) + 1##C++ start at 0, R at 1
 num = as.integer(args[4]) 
-
 fixed_index = c(0)
 j = 5
 for(i in 1:num){
   fixed_index[i]  =  as.integer(args[j])+1
   j = j+1
 }
-paste("fixed_index :",fixed_index)
-#input_path= "E:/AquaGS/process/Input/ABT20210617.csv"
-# output_path = "E:/AquaGS/process/Input/fixed_effect.csv"
-#index = 7
 
-require(data.table)
-#data = read.csv(input_path)
-data <- fread(
-  input = input_path,
-  sep = ",",
-  header = TRUE,
-  stringsAsFactors = FALSE)
+#rdata_path = "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
+#output_path = "/home/liang/Documents/AquaGS_GUI/Input/fixed_effect.csv"
+#target_index = 8 + 1  # C++ start at 0, R at 1
+#AnimalID_index = 0 +1 # C++ start at 0, R at 1
+#num = 1
+#fixed_index  =  c(10)
+
+load(rdata_path)
 
 col_list = colnames(data)
-target_item = col_list[index]
+target_item = col_list[target_index]
 table = data.frame(
   phenotype = c(col_list),
   pr = c(0)
 )
+
 if(num)
 {
   fixed_part_pama = ""
-for(i in fixed_index){
-  fixed_part_pama = paste(fixed_part_pama,col_list[i],"+",sep="")
+  for(i in fixed_index){
+    fixed_part_pama = paste(fixed_part_pama,col_list[i],"+",sep="")
+  }
+  paste("fixed_part_pama",fixed_part_pama)
 }
-  
-paste("fixed_part_pama",fixed_part_pama)
-}
-
 
 i = 1
 for(item in col_list){
@@ -111,4 +106,4 @@ for(item in col_list){
   i = i+1
 }
 write.table(table,output_path, row.names = FALSE,col.names = FALSE,sep=",")
-print("-----------fixed_effect.R output end--------------")
+print("-----------fixed_effect_testing(Rdata). output end--------------")

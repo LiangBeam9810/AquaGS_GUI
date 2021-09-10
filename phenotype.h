@@ -4,6 +4,26 @@
 #define PHENOTYPE_H
 
 /*--------------------------------------*/
+struct phenotype_select{
+    QComboBox* target_phenotype_ComboBox = NULL;
+    QComboBox* AnimalID_ComboBox = NULL;
+    QComboBox* Dam_ComboBox = NULL;
+    QComboBox* Sire_ComboBox = NULL;
+    QCheckBox* outlier_CheckBox = NULL;
+};
+
+
+struct phenotype_display{
+    QTextBrowser* skewnessddisplay = NULL;
+    QTextBrowser* kurtosisdisplay = NULL;
+    QLabel* horizontallabel = NULL;
+};
+void phenotype_select_line_init(phenotype_select phenotype_select_line,QString csv_path,QStringList* phenotype_list);
+void phenotype_select_line_get_index(phenotype_select phenotype_select_line,unsigned int * target_index,
+                                     unsigned int * ID_index,
+                                     unsigned int * Dam_index,
+                                     unsigned int * Sire_index);
+
 void prepare_phenotype(QString csv_path,
                        QStringList* phenotype_list ,
                        QComboBox*  ComboBox);
