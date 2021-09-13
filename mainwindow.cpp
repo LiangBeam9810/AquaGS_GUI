@@ -659,14 +659,15 @@ void MainWindow::classical_method_Init()
          blup_mode.random_effect_list[i] = phenotype_list[(random_effect_list[i].toInt())];
          qDebug()<<blup_mode.random_effect_list[i];
     }
-    blup_fold_validate.accuracyA_textBrowser = ui->accuracyA_textBrowser;
-    blup_fold_validate.accuracyG_textBrowser = ui->accuracyG_textBrowser;
+    blup_fold_validate.ACC_lineEdit = ui->class_val_accuracy_lineEdit;
+    blup_fold_validate.STD_lineEdit = ui->class_val_std_lineEdit;
     blup_fold_validate.cross_validation_checkBox = ui->cross_validation_checkBox;
     blup_fold_validate.k_flod_times_ComboBox = ui->k_flod_times_ComboBox;
     blup_fold_validate.Matrix_path = "";
     blup_fold_validate.csv_path = csv_path;
     blup_fold_validate.fixed_effect_list = fixed_effect_list;
     blup_fold_validate.random_effect_list = random_effect_list;
+    blup_fold_validate.cross_validation_pushbutton = ui->classical_validate_pushButtom;
 
     blup_Init(blup_mode);
     blup_fold_validate_Init(blup_fold_validate);
@@ -682,13 +683,21 @@ void MainWindow::on_cross_validation_checkBox_stateChanged(int arg1)
     if(arg1 == 2)
     {
         blup_fold_validate.k_flod_times_ComboBox->setEnabled(true);
+        blup_fold_validate.cross_validation_pushbutton->setEnabled(true);
+
     }
+}
+
+void MainWindow::on_classical_next_pushButton_clicked()
+{
+    classical_method_cross_validation_and_display(blup_mode,blup_fold_validate);
 }
 
 
 
-
 /*----------------------------------------------------------------------------------------*/
+
+
 
 
 

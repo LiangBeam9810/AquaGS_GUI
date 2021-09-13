@@ -173,6 +173,8 @@ private slots:
 
     void on_cross_validation_checkBox_stateChanged(int arg1);
 
+    void on_classical_next_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 

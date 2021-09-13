@@ -10,7 +10,7 @@ void blup_Init(blup blup_input)
 void blup_fold_validate_Init(fold_validate fold_validate_input)
 {
     fold_validate_input.k_flod_times_ComboBox->setEnabled(false);
-
+    fold_validate_input.cross_validation_pushbutton->setEnabled(false);
 }
 
 bool blup_build(blup blup_input)
@@ -70,5 +70,11 @@ bool blup_build(blup blup_input)
     }
     display_process.close();
     return true;
+
+}
+
+
+void classical_method_cross_validation_and_display(blup blup_mode,fold_validate blup_fold_validate)
+{
 
 }

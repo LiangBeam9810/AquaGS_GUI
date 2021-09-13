@@ -27,8 +27,9 @@ struct blup
 struct fold_validate{
    QCheckBox* cross_validation_checkBox = NULL;
    QComboBox* k_flod_times_ComboBox = NULL;
-   QTextBrowser* accuracyA_textBrowser = NULL;
-   QTextBrowser* accuracyG_textBrowser = NULL;
+   QLineEdit* ACC_lineEdit = NULL;
+   QLineEdit* STD_lineEdit = NULL;
+   QPushButton* cross_validation_pushbutton = NULL;
 
    QString csv_path = "";
    QString Matrix_path = "";
@@ -40,4 +41,6 @@ void blup_Init(blup blup_input);
 void blup_fold_validate_Init(fold_validate fold_validate_input);
 
 bool blup_build(blup blup_input);
+
+void classical_method_cross_validation_and_display(blup blup_mode,fold_validate blup_fold_validate);
 #endif // BLUP_H

@@ -14,12 +14,12 @@ for(i in 1:num){
   j = j+1
 }
 
-#rdata_path = "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
-#output_path = "/home/liang/Documents/AquaGS_GUI/Input/fixed_effect.csv"
-#target_index = 8 + 1  # C++ start at 0, R at 1
-#AnimalID_index = 0 +1 # C++ start at 0, R at 1
-#num = 1
-#fixed_index  =  c(10)
+rdata_path = "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
+output_path = "/home/liang/Documents/AquaGS_GUI/Input/fixed_effect.csv"
+target_index = 8 + 1  # C++ start at 0, R at 1
+AnimalID_index = 0 +1 # C++ start at 0, R at 1
+num = 1
+fixed_index  =  c(10)
 
 load(rdata_path)
 
@@ -30,11 +30,15 @@ table = data.frame(
   pr = c(0)
 )
 
+
 if(num)
 {
   fixed_part_pama = ""
   for(i in fixed_index){
+    pama = ""
     fixed_part_pama = paste(fixed_part_pama,col_list[i],"+",sep="")
+    pama = paste("data$",col_list[i],"<-","as.factor(data$",col_list[i],")",sep = "")
+    eval(parse(text = pama))
   }
   paste("fixed_part_pama",fixed_part_pama)
 }
