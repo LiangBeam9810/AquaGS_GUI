@@ -165,4 +165,7 @@ if(mode_flag)
 if(file.exists(output_path)){
   print("GEBV building is completed.")
 }
+#######################    ##################################################
+save(file = "/home/liang/Documents/GEBVRbuffer.Rdata")
+
 print("-----------blup_gblup_build.R output end--------------")

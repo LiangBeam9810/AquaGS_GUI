@@ -14,12 +14,12 @@ for(i in 1:num){
   j = j+1
 }
 
-rdata_path = "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
-output_path = "/home/liang/Documents/AquaGS_GUI/Input/fixed_effect.csv"
-target_index = 8 + 1  # C++ start at 0, R at 1
-AnimalID_index = 0 +1 # C++ start at 0, R at 1
-num = 1
-fixed_index  =  c(10)
+#rdata_path = "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
+#output_path = "/home/liang/Documents/AquaGS_GUI/Input/fixed_effect.csv"
+#target_index = 8 + 1  # C++ start at 0, R at 1
+#AnimalID_index = 0 +1 # C++ start at 0, R at 1
+#num = 1
+#fixed_index  =  c(10)
 
 load(rdata_path)
 

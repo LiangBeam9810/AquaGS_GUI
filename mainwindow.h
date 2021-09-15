@@ -29,6 +29,8 @@
 #include <QTableView>
 #include <QStandardItemModel>
 #include <QListWidget>
+#include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <sstream>
 
 #include "start.h"
@@ -36,6 +38,7 @@
 #include "phenotype.h"
 #include "blup.h"
 #include "ui_mainwindow.h"
+#include "alphamate.h"
 
 #include "plink.h"
 #include "process.h"
@@ -62,6 +65,7 @@ public:
 
     blup blup_mode ;
     fold_validate blup_fold_validate ;
+    alphamate_edge blup_alphamate_all;
 
     QLineEdit* out_line;
     QLineEdit* csv_line;
@@ -74,11 +78,17 @@ public:
     QString G_matrix_path = "";
     QString output_path = "";
     QString Rdata_path = "";
+
+    QString classical_GEBV_path = "";
+    QString Gender_path = "";
+    QString Alphamate_running_path="";
+
     QStringList phenotype_list ;
     unsigned int target_phenotype_index= 0 ;
     unsigned int AnimalID_phenotype_index= 0 ;
     unsigned int Dam_phenotype_index= 0 ;
     unsigned int Sire_phenotype_index= 0 ;
+
 
     unsigned int fist_convert_flag = 1;
     QStringList fixed_effect_list ;
@@ -173,11 +183,21 @@ private slots:
 
     void on_cross_validation_checkBox_stateChanged(int arg1);
 
-    void on_classical_next_pushButton_clicked();
+    void on_classical_validate_pushButtom_clicked();
+
+    void on_alphmate_checkBox_stateChanged(int arg1);
+
+    void on_classical_more_Button_3_clicked();
+
+    void on_BLUP_mode_ComboBox_currentIndexChanged(int index);
+
+    void on_GenderFile_checkBox_3_stateChanged(int arg1);
+
+    void on_classical_mate_Button_3_clicked();
+
 
 private:
     Ui::MainWindow *ui;
-
     volatile bool runningFlag = false;
 };
 #endif // MAINWINDOW_H

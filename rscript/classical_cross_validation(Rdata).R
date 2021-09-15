@@ -33,23 +33,23 @@ for(i in 1:random_num){
 }
 print(paste("random_index :",random_index))
 j = j+1
-rep = as.integer(args[j])
+rep = as.integer(args[j])+1
 print(paste("rep :",rep))
 j = j+1
-fold_num = as.integer(args[j])
+fold_num = as.integer(args[j])+1
 print(paste("fold_num :",fold_num))
 ################################################################################
-input_path= "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
-output_path = "/home/liang/Documents/AquaGS_GUI/Output/random_effect.csv"
-AnimalID_index = 1
-target_index = 9
-method_flag = 1
-fixed_num = 1
-fixed_index = c(2)
-random_num = 0
-random_index = c(0)
-rep = 2
-fold_num = 5
+#input_path= "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
+#output_path = "/home/liang/Documents/AquaGS_GUI/Output/classical_accuracy.csv"
+#AnimalID_index = 1
+#target_index = 9
+#method_flag = 1
+#fixed_num = 1
+#fixed_index = c(5)
+#random_num = 1
+#random_index = c(8)
+#rep = 2
+#fold_num = 5
 
 require(data.table)
 #data = read.csv(input_path)
@@ -69,6 +69,7 @@ if(fixed_num)
     eval(parse(text = pama))
   }
 }
+fixed_part_pama = substr(fixed_part_pama,1,nchar(fixed_part_pama)-1)#delete the final "+"
 paste("fixed_part_pama:",fixed_part_pama)
 
 random_part_pama = ""
@@ -80,36 +81,98 @@ if(random_num)
     eval(parse(text = pama))
   }
 }
+random_part_pama = substr(random_part_pama,1,nchar(random_part_pama)-1)#delete the final "+"
 paste("random_part_pama:",random_part_pama)
 
 
 pheno <- copy(data)
 y <- copy(pheno)
-rep_accuracyA <-  matrix(nrow=fold_num, ncol=rep)
+rep_accuracy <-  matrix(nrow=fold_num, ncol=rep)
 
 library(sommer)
+
 for(i in 1:rep) {
   animal_pos <- seq(nrow(pheno))
   s = matrix(sample(animal_pos, (floor(nrow(pheno) * (1/fold_num)) * fold_num)), ncol = fold_num)
   for (r in 1:fold_num) {
     y <- copy(pheno)
-    test = pheno[s[, r]]$AnimalID
-    y[AnimalID %in% test, "ABT_t"] = NA
-    y[,AnimalID := as.factor(AnimalID)]
-    y$poolID <- as.factor(y$poolID)
-    y$famID <- as.factor(y$famID)
-    ans_A <- mmer(ABT_t ~ 1 + poolID,
-                  random =  ~ vs(AnimalID, Gu = A),
-                  rcov =  ~ units,
-                  data = y)
-    ans_A$U$`u:AnimalID`$ABT_t <-as.data.frame(ans_A$U$`u:AnimalID`$ABT_t)
-    rownames(ans_A$U$`u:AnimalID`$ABT_t) <-gsub("AnimalID", "", rownames(ans_A$U$`u:AnimalID`$ABT_t))
-    Y <- ans_A$U$`u:AnimalID`$ABT_t[test, ]
-    rep_accuracyA[r, i] <- cor(Y, pheno[match(test,AnimalID), "ABT_t"], use = "complete")
+    
+    #test = pheno[s[, r]]$AnimalID
+    pama = paste("test = pheno[s[, r]]$",AnimalID_item,sep = "")
+    print(pama)
+    eval(parse(text = pama))
+    A
+    #y[AnimalID %in% test, "ABT_t"] = NA
+    pama = paste("y[",AnimalID_item, " %in% test,","\"",target_item,"\"","]= NA",sep = "")
+    print(pama)
+    eval(parse(text = pama))
+    
+    #y[,AnimalID := as.factor(AnimalID)]
+    pama = paste("y[,",AnimalID_item, " := as.factor(",AnimalID_item,")]",sep = "")
+    print(pama)
+    eval(parse(text = pama))
+  
+    #ans_A <- mmer(ABT_t ~ 1 + poolID,
+    #              random =  ~ vs(AnimalID, Gu = A),
+    #              rcov =  ~ units,
+    #             data = y)
+    if(random_num){
+      if(method_flag)
+      {
+          pama =paste(" ans_A <- mmer(",target_item,"~",fixed_part_pama,","
+                    ,"random = ~ vs(",AnimalID_item,", Gu = G)+",random_part_pama,","
+                    ,"rcov = ~ units, data = y)",sep="")
+        
+      }else
+      {
+        pama =paste(" ans_A <- mmer(",target_item,"~",fixed_part_pama,","
+                    ,"random = ~ vs(",AnimalID_item,", Gu = A)+",random_part_pama,","
+                    ,"rcov = ~ units, data = y)",sep="")
+      }
+    }else{
+      if(method_flag)
+      {
+        pama =paste(" ans_A <- mmer(",target_item,"~",fixed_part_pama,","
+                    ,"random = ~ vs(",AnimalID_item,", Gu = G),"
+                    ,"rcov = ~ units, data = y)",sep="")
+        
+      }else
+      {
+        pama =paste(" ans_A <- mmer(",target_item,"~",fixed_part_pama,","
+                    ,"random = ~ vs(",AnimalID_item,", Gu = A),"
+                    ,"rcov = ~ units, data = y)",sep="")
+      }
+    }
+    print(pama)
+    eval(parse(text = pama))
+      
+    #ans_A$U$`u:AnimalID`$ABT_t <-as.data.frame(ans_A$U$`u:AnimalID`$ABT_t)
+    pama = paste("ans_A$U$`u:",AnimalID_item,"`$",target_item,"<-as.data.frame(ans_A$U$`u:",AnimalID_item,"`$",target_item,")",sep = "")
+    print(pama)
+    eval(parse(text = pama))
+    
+    #rownames(ans_A$U$`u:AnimalID`$ABT_t) <-gsub("AnimalID", "", rownames(ans_A$U$`u:AnimalID`$ABT_t))
+    pama = paste("rownames(ans_A$U$`u:",AnimalID_item,"`$",target_item,")","<-gsub(\"AnimalID\",","\"\",","rownames(ans_A$U$`u:",AnimalID_item,"`$",target_item,"))",sep = "")
+    print(pama)
+    eval(parse(text = pama))
+    
+    #Y <- ans_A$U$`u:AnimalID`$ABT_t[test, ]
+    pama = paste("Y <- ans_A$U$`u:",AnimalID_item,"`$",target_item,"[test,]",sep = "")
+    print(pama)
+    eval(parse(text = pama))
+    
+    #rep_accuracy[r, i] <- cor(Y, pheno[match(test,AnimalID), "ABT_t"], use = "complete")
+    pama = paste("rep_accuracy[r, i] <- cor(Y, pheno[match(test,",AnimalID_item,"),","\"",target_item,"\"],","use = \"complete\")",sep = "")
+    print(pama)
+    eval(parse(text = pama))
   }
 } 
-final_accuracyA <- cbind(mean(apply(rep_accuracyA,2,mean)),mean(apply(rep_accuracyA,2,sd)))
-ans = c(final_accuracyA)
+final_accuracy <- cbind(mean(apply(rep_accuracy,2,mean)),mean(apply(rep_accuracy,2,sd)))
+ans = c(final_accuracy)
 write.table (ans, output_path, sep =",", row.names =FALSE, col.names =FALSE, quote =FALSE)
 
-print("-----------check_normality.R output end--------------")
+#######################    ##################################################
+save(file = "/home/liang/Documents/Rbuffer.Rdata")
+#######################  G  ##################################################
+print("-----------classical_cross_validation(Rdata).R output end--------------")
+

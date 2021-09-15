@@ -632,8 +632,9 @@ void MainWindow::on_effect_next_pushButton_clicked()
 /*---------------------------------class_method-------------------------------------------*/
 void MainWindow::classical_method_Init()
 {
-    blup_mode.fiexd_effect_listwidget = ui ->blup_fixed_listWidget;
-    blup_mode.random_effect_listwidget = ui->blup_random_listWidget;
+    blup_mode.fiexd_effect_lineedit = ui->blup_fixed_lineEdit;
+    blup_mode.random_effect_lineedit = ui->blup_random_lineEdit;
+
     blup_mode.BLUP_accept_pushButtom = ui->BLUP_accept_pushButtom;
     blup_mode.BLUP_mode_ComboBox = ui->BLUP_mode_ComboBox;
     blup_mode.trans_formula_1_ComboBox = ui->trans_formula_1_ComboBox;
@@ -643,6 +644,7 @@ void MainWindow::classical_method_Init()
     blup_mode.Rdata_path = Rdata_path;
     blup_mode.output_path = output_path;
     blup_mode.output_path.append("/GEBV.txt");
+    classical_GEBV_path = blup_mode.output_path;
     blup_mode.AnimalID_index = AnimalID_phenotype_index;
     blup_mode.target_index = target_phenotype_index;
 
@@ -659,43 +661,139 @@ void MainWindow::classical_method_Init()
          blup_mode.random_effect_list[i] = phenotype_list[(random_effect_list[i].toInt())];
          qDebug()<<blup_mode.random_effect_list[i];
     }
+    blup_fold_validate.Rdata_path = Rdata_path;
+    blup_fold_validate.output_path = output_path;
+    blup_fold_validate.output_path.append("/classical_accuracy.csv");
     blup_fold_validate.ACC_lineEdit = ui->class_val_accuracy_lineEdit;
     blup_fold_validate.STD_lineEdit = ui->class_val_std_lineEdit;
     blup_fold_validate.cross_validation_checkBox = ui->cross_validation_checkBox;
     blup_fold_validate.k_flod_times_ComboBox = ui->k_flod_times_ComboBox;
-    blup_fold_validate.Matrix_path = "";
-    blup_fold_validate.csv_path = csv_path;
     blup_fold_validate.fixed_effect_list = fixed_effect_list;
     blup_fold_validate.random_effect_list = random_effect_list;
     blup_fold_validate.cross_validation_pushbutton = ui->classical_validate_pushButtom;
 
+    blup_alphamate_all.alphmate_checkBox = ui->alphmate_checkBox;
+    blup_alphamate_all.classical_more_Button = ui->classical_more_Button_3;
+    blup_alphamate_all.classical_mate_Button = ui->classical_mate_Button_3;
+    blup_alphamate_all.TargetDegree_spinBox = ui-> TargetDegree_spinBox_3;
+    blup_alphamate_all.TargetCoancestryRate_doubleSpinBox = ui->TargetCoancestryRate_doubleSpinBox_3;
+    blup_alphamate_all.SelCriterionFile_lineEdit = ui->SelCriterionFile_lineEdit_3 ;
+    blup_alphamate_all.NumberOfMatings_spinBox = ui->NumberOfMatings_spinBox_3;
+    blup_alphamate_all.NumberOfMaleParents_spinBox = ui->NumberOfMaleParents_spinBox_3;
+    blup_alphamate_all.NumberOfFemaleParents_spinBox = ui -> NumberOfFemaleParents_spinBox_3;
+    blup_alphamate_all.NrmMatrix_lineEdit = ui->NrmMatrix_lineEdit_3;
+    blup_alphamate_all.ModeOpt_checkBox = ui->ModeOpt_checkBox_3;
+    blup_alphamate_all.ModeMinInbreeding_checkBox= ui->ModeMinInbreeding_checkBox_3;
+    blup_alphamate_all.ModeMinCoancestry_checkBox= ui->ModeMinCoancestry_checkBox_3;
+    blup_alphamate_all.ModeMaxCriterion_checkBox = ui->ModeMaxCriterion_checkBox_3;
+    blup_alphamate_all.GenderFile_lineEdit = ui->GenderFile_lineEdit_3;
+    blup_alphamate_all.EvaluateFrontier_checkBox = ui->EvaluateFrontier_checkBox_3;
+    blup_alphamate_all.EqualizeMaleContributions_checkBox = ui->EqualizeFemaleContributions_checkBox_3;
+    blup_alphamate_all.EqualizeFemaleContributions_checkBox = ui->EqualizeFemaleContributions_checkBox_3;
+    blup_alphamate_all.GenderFile_CheckBox = ui->GenderFile_checkBox_3;
+    QString runPath = QDir::currentPath();
+    Alphamate_running_path =  runPath;
+    Alphamate_running_path.append("/AlphaMateLinux");
+
+    if(blup_mode.BLUP_mode_ComboBox->currentIndex())
+    {
+        blup_alphamate_all.NrmMatrix_lineEdit->setText(G_matrix_path);
+        qDebug()<<"GBLUP  NrmMatrix PATH : "<<G_matrix_path;
+    }else{
+        blup_alphamate_all.NrmMatrix_lineEdit->setText(A_matrix_path);
+
+        qDebug()<<"BLUP  NrmMatrix PATH : "<<A_matrix_path;
+    }
+    blup_alphamate_all.SelCriterionFile_lineEdit->setText(classical_GEBV_path);
+    qDebug()<<"SelCriterionFile PATH : "<<classical_GEBV_path;
+    Gender_path =  "/home/liang/Documents/AquaGS_GUI/Output/gender.txt";//
+    blup_alphamate_all.GenderFile_lineEdit->setText(Gender_path);
+
     blup_Init(blup_mode);
     blup_fold_validate_Init(blup_fold_validate);
+    blup_alphamate_Init(blup_alphamate_all);
 }
+
+void MainWindow::on_BLUP_mode_ComboBox_currentIndexChanged(int index)
+{
+    classical_method_Init();
+}
+
 
 void MainWindow::on_BLUP_accept_pushButtom_clicked()
 {
-
     blup_build(blup_mode);
 }
+
 void MainWindow::on_cross_validation_checkBox_stateChanged(int arg1)
 {
     if(arg1 == 2)
     {
         blup_fold_validate.k_flod_times_ComboBox->setEnabled(true);
         blup_fold_validate.cross_validation_pushbutton->setEnabled(true);
-
     }
 }
 
-void MainWindow::on_classical_next_pushButton_clicked()
+void MainWindow::on_classical_validate_pushButtom_clicked()
 {
-    classical_method_cross_validation_and_display(blup_mode,blup_fold_validate);
+    if(classical_method_cross_validation_and_display(blup_mode,blup_fold_validate))
+    {
+        qDebug()<<"cross validation complete!";
+    }
+}
+void MainWindow::on_alphmate_checkBox_stateChanged(int arg1)
+{
+    if(arg1 == 2)
+    {
+        alphmate_enable_all(blup_alphamate_all);
+    }else{
+        alphmate_disable_all(blup_alphamate_all);
+    }
+}
+void MainWindow::on_classical_more_Button_3_clicked()
+{
+    alphamate *alphamate_window = new alphamate(this);
+    alphamate_window->show();
+}
+
+void MainWindow::on_GenderFile_checkBox_3_stateChanged(int arg1)
+{
+    if((ui->alphmate_checkBox->checkState() == Qt::Checked)&& arg1 == 2)
+    {
+        alphmate_able_gender(blup_alphamate_all,true);
+    }else
+    {
+        alphmate_able_gender(blup_alphamate_all,false);
+    }
+}
+
+void MainWindow::on_classical_mate_Button_3_clicked()
+{
+     running_alphamate(blup_alphamate_all,Alphamate_running_path,output_path);
 }
 
 
 
 /*----------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

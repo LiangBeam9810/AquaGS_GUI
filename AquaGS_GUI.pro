@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    alphamate.cpp \
     blup.cpp \
     effect.cpp \
     main.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
     tool.cpp
 
 HEADERS += \
+    alphamate.h \
     blup.h \
     effect.h \
     mainwindow.h \
@@ -30,6 +32,7 @@ HEADERS += \
     tool.h
 
 FORMS += \
+    alphamate.ui \
     mainwindow.ui
 
 QMAKE_LFLAGS += -no-pie
