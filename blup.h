@@ -69,6 +69,7 @@ void blup_alphamate_Init(alphamate_edge blup_alphamate_all);
 bool blup_build(blup blup_input);
 
 bool classical_method_cross_validation_and_display(blup blup_mode,fold_validate blup_fold_validate);
+void Process_runing_gif(QProcess* Process,QString title);
 
 void alphmate_enable_all(alphamate_edge blup_alphamate_all);
 void alphmate_disable_all(alphamate_edge blup_alphamate_all);

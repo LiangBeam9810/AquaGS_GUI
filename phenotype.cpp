@@ -99,22 +99,12 @@ bool outlier_elimination(QString* csv_path,
         param.append(QString::number(inttarget_phenotype_index));
         param.append(" ");
     qDebug()<<endl<<"outlier param :"<<param<<endl;
-    QProcess outlier_process;
-    outlier_process.execute(param);
 
-    if(outlier_process.waitForStarted())
-    {
-        qDebug()<<"OUTLIER PROCESS STRATED";
-        outlier_process.close();
-        return false;
-    }
-    if(outlier_process.waitForFinished())
-    {
-        qDebug()<<"OUTLIER PROCESS FINISHED";
-        outlier_process.close();
-        return false;
-    }
-    outlier_process.close();
+    QProcess* outlier_process;
+    outlier_process = new QProcess;
+    outlier_process->start(param);
+    Process_runing_gif(outlier_process,"Reading phenotype");
+    outlier_process->close();
 
     //Check the existion of the file after outlier
     QString path = *csv_path;
@@ -169,21 +159,12 @@ bool display_normality(QString input_path,
     param.append(type);
     param.append(" ");
     qDebug()<< endl<<"display param :"<<param<< endl;
-    QProcess display_process;
-    display_process.execute(param);
-    if(display_process.waitForStarted())
-    {
-        qDebug()<<"OUTLIER PROCESS STRATED";
-        display_process.close();
-        return false;
-    }
-    if(display_process.waitForFinished())
-    {
-        qDebug()<<"OUTLIER PROCESS FINISHED";
-        display_process.close();
-        return false;
-    }
-    display_process.close();
+
+    QProcess* display_process;
+    display_process = new QProcess;
+    display_process->start(param);
+    Process_runing_gif(display_process,"Ploting phenotype");
+    display_process->close();
 
     QString ske_kur_ans_path = output_path;
     QString histogram_ans_path = output_path;
@@ -250,21 +231,12 @@ bool convert_phenotype(QString input_path,unsigned int target_phenotype_index,un
     param.append(QString::number(fist_convert_flag));
     param.append(" ");
     qDebug()<< endl<<"display param :"<<param<< endl;
-    QProcess display_process;
-    display_process.execute(param);
-    if(display_process.waitForStarted())
-    {
-        qDebug()<<"OUTLIER PROCESS STRATED";
-        display_process.close();
-        return false;
-    }
-    if(display_process.waitForFinished())
-    {
-        qDebug()<<"OUTLIER PROCESS FINISHED";
-        display_process.close();
-        return false;
-    }
-    display_process.close();
+
+    QProcess* display_process;
+    display_process = new QProcess;
+    display_process->start(param);
+    Process_runing_gif(display_process,"Converting");
+    display_process->close();
     QString path = input_path;
     path.replace(".csv","_converted.csv");
     if(isFileExist(path)){

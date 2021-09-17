@@ -123,7 +123,7 @@ if(mode_flag)
 
     setnames(GEBV,"rn","AnimalID")
     setnames(GEBV,"ans_G$U$`u:AnimalID`$ABT_t","GEBV")
-    fwrite(GEBV,file = output_path,sep = " ",col.names = T)
+    fwrite(GEBV,file = output_path,sep = " ",col.names = F)
   }
 }else{
   if(random_num==0)
@@ -157,7 +157,7 @@ if(mode_flag)
     
     setnames(GEBV,"rn","AnimalID")
     setnames(GEBV,"ans_G$U$`u:AnimalID`$ABT_t","GEBV")
-    fwrite(GEBV,file = output_path,sep = " ",col.names = T)
+    fwrite(GEBV,file = output_path,sep = " ",col.names = F)
     
   }
 }

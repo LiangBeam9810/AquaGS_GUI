@@ -450,21 +450,12 @@ bool MainWindow::A_G_matirx_build()
     param.append(QString::number(Sire_phenotype_index));
     param.append(" ");
     qDebug()<< endl<<"display param :"<<param<< endl;
-    QProcess display_process;
-    display_process.execute(param);
-    if(display_process.waitForStarted())
-    {
-        qDebug()<<"OUTLIER PROCESS STRATED";
-        display_process.close();
-        return false;
-    }
-    if(display_process.waitForFinished())
-    {
-        qDebug()<<"OUTLIER PROCESS FINISHED";
-        display_process.close();
-        return false;
-    }
-    display_process.close();
+    QProcess *A_G_matirx_build_process;
+    A_G_matirx_build_process = new QProcess;
+    A_G_matirx_build_process->setWorkingDirectory(Alphamate_running_path);
+    A_G_matirx_build_process->start(param);
+    Process_runing_gif(A_G_matirx_build_process," Building A and G matirx ");
+    A_G_matirx_build_process->close();
     return true;
 }
 
@@ -688,7 +679,7 @@ void MainWindow::classical_method_Init()
     blup_alphamate_all.ModeMaxCriterion_checkBox = ui->ModeMaxCriterion_checkBox_3;
     blup_alphamate_all.GenderFile_lineEdit = ui->GenderFile_lineEdit_3;
     blup_alphamate_all.EvaluateFrontier_checkBox = ui->EvaluateFrontier_checkBox_3;
-    blup_alphamate_all.EqualizeMaleContributions_checkBox = ui->EqualizeFemaleContributions_checkBox_3;
+    blup_alphamate_all.EqualizeMaleContributions_checkBox = ui->EqualizeMaleContributions_checkBox_3;
     blup_alphamate_all.EqualizeFemaleContributions_checkBox = ui->EqualizeFemaleContributions_checkBox_3;
     blup_alphamate_all.GenderFile_CheckBox = ui->GenderFile_checkBox_3;
     QString runPath = QDir::currentPath();

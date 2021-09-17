@@ -37,7 +37,7 @@
        <enum>QTabWidget::South</enum>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="Start">
        <attribute name="title">
@@ -2070,6 +2070,11 @@
                   <property name="cursor">
                    <cursorShape>PointingHandCursor</cursorShape>
                   </property>
+                  <item>
+                   <property name="text">
+                    <string>aov</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                </layout>
