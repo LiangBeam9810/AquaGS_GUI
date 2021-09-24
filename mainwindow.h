@@ -66,6 +66,7 @@ public:
     blup blup_mode ;
     fold_validate blup_fold_validate ;
     alphamate_edge blup_alphamate_all;
+    alphamate_edge bayes_alphamate_all;
 
     QLineEdit* out_line;
     QLineEdit* csv_line;
@@ -80,6 +81,7 @@ public:
     QString Rdata_path = "";
 
     QString classical_GEBV_path = "";
+    QString bayes_GEBV_path = "";
     QString Gender_path = "";
     QString Alphamate_running_path="";
 
@@ -195,6 +197,16 @@ private slots:
 
     void on_classical_mate_Button_3_clicked();
 
+
+    void on_bayesrunpushButton_clicked();
+
+    void on_alphmate_checkBox_2_stateChanged(int arg1);
+
+    void on_classical_more_Button_4_clicked();
+
+    void on_GenderFile_checkBox_4_stateChanged(int arg1);
+
+    void on_classical_mate_Button_4_clicked();
 
 private:
     Ui::MainWindow *ui;

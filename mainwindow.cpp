@@ -23,9 +23,9 @@ void MainWindow::init()
     //ui->csv_input_lineEdit->setText("Enter/Select the csv file.");
     //ui->vcf_input_lineEdit->setText("Enter/Select the vcf file.");
     //ui->out_lineEdit->setText("Enter/Select the output folder.");
-    csv_line->setText("/home/liang/Documents/AquaGS_GUI/Input/ABT20210617.csv");
-    vcf_line->setText("/home/liang/Documents/AquaGS_GUI/snp_abt_630_imput_out_select48K.vcf");
-    out_line->setText("/home/liang/Documents/AquaGS_GUI/Output");
+    csv_line->setText("/home/zhi/Desktop/AquaGS_GUI/Input/ABT20210617.csv");
+    vcf_line->setText("/home/zhi/Desktop/AquaGS_GUI/snp_abt_630_imput_out_select48K.vcf");
+    out_line->setText("/home/zhi/Desktop/AquaGS_GUI/Output");
     ui->tabWidget->setCurrentIndex(0);//Start index
     /*--------------------------------------------------------------*/
 
@@ -636,6 +636,7 @@ void MainWindow::classical_method_Init()
     blup_mode.output_path = output_path;
     blup_mode.output_path.append("/GEBV.txt");
     classical_GEBV_path = blup_mode.output_path;
+    bayes_GEBV_path = output_path+"/bayes_GEBV.txt";
     blup_mode.AnimalID_index = AnimalID_phenotype_index;
     blup_mode.target_index = target_phenotype_index;
 
@@ -682,6 +683,27 @@ void MainWindow::classical_method_Init()
     blup_alphamate_all.EqualizeMaleContributions_checkBox = ui->EqualizeMaleContributions_checkBox_3;
     blup_alphamate_all.EqualizeFemaleContributions_checkBox = ui->EqualizeFemaleContributions_checkBox_3;
     blup_alphamate_all.GenderFile_CheckBox = ui->GenderFile_checkBox_3;
+
+    bayes_alphamate_all.alphmate_checkBox = ui->alphmate_checkBox_2;
+    bayes_alphamate_all.classical_more_Button = ui->classical_more_Button_4;
+    bayes_alphamate_all.classical_mate_Button = ui->classical_mate_Button_4;
+    bayes_alphamate_all.TargetDegree_spinBox = ui-> TargetDegree_spinBox_4;
+    bayes_alphamate_all.TargetCoancestryRate_doubleSpinBox = ui->TargetCoancestryRate_doubleSpinBox_4;
+    bayes_alphamate_all.SelCriterionFile_lineEdit = ui->SelCriterionFile_lineEdit_4 ;
+    bayes_alphamate_all.NumberOfMatings_spinBox = ui->NumberOfMatings_spinBox_4;
+    bayes_alphamate_all.NumberOfMaleParents_spinBox = ui->NumberOfMaleParents_spinBox_4;
+    bayes_alphamate_all.NumberOfFemaleParents_spinBox = ui -> NumberOfFemaleParents_spinBox_4;
+    bayes_alphamate_all.NrmMatrix_lineEdit = ui->NrmMatrix_lineEdit_4;
+    bayes_alphamate_all.ModeOpt_checkBox = ui->ModeOpt_checkBox_4;
+    bayes_alphamate_all.ModeMinInbreeding_checkBox= ui->ModeMinInbreeding_checkBox_4;
+    bayes_alphamate_all.ModeMinCoancestry_checkBox= ui->ModeMinCoancestry_checkBox_4;
+    bayes_alphamate_all.ModeMaxCriterion_checkBox = ui->ModeMaxCriterion_checkBox_4;
+    bayes_alphamate_all.GenderFile_lineEdit = ui->GenderFile_lineEdit_4;
+    bayes_alphamate_all.EvaluateFrontier_checkBox = ui->EvaluateFrontier_checkBox_4;
+    bayes_alphamate_all.EqualizeMaleContributions_checkBox = ui->EqualizeMaleContributions_checkBox_4;
+    bayes_alphamate_all.EqualizeFemaleContributions_checkBox = ui->EqualizeFemaleContributions_checkBox_4;
+    bayes_alphamate_all.GenderFile_CheckBox = ui->GenderFile_checkBox_4;
+
     QString runPath = QDir::currentPath();
     Alphamate_running_path =  runPath;
     Alphamate_running_path.append("/AlphaMateLinux");
@@ -689,20 +711,24 @@ void MainWindow::classical_method_Init()
     if(blup_mode.BLUP_mode_ComboBox->currentIndex())
     {
         blup_alphamate_all.NrmMatrix_lineEdit->setText(G_matrix_path);
+        bayes_alphamate_all.NrmMatrix_lineEdit->setText(G_matrix_path);
         qDebug()<<"GBLUP  NrmMatrix PATH : "<<G_matrix_path;
     }else{
         blup_alphamate_all.NrmMatrix_lineEdit->setText(A_matrix_path);
-
+        bayes_alphamate_all.NrmMatrix_lineEdit->setText(A_matrix_path);
         qDebug()<<"BLUP  NrmMatrix PATH : "<<A_matrix_path;
     }
     blup_alphamate_all.SelCriterionFile_lineEdit->setText(classical_GEBV_path);
+    bayes_alphamate_all.SelCriterionFile_lineEdit->setText(classical_GEBV_path);
     qDebug()<<"SelCriterionFile PATH : "<<classical_GEBV_path;
     Gender_path =  "/home/liang/Documents/AquaGS_GUI/Output/gender.txt";//
     blup_alphamate_all.GenderFile_lineEdit->setText(Gender_path);
+    bayes_alphamate_all.GenderFile_lineEdit->setText(Gender_path);
 
     blup_Init(blup_mode);
     blup_fold_validate_Init(blup_fold_validate);
     blup_alphamate_Init(blup_alphamate_all);
+    blup_alphamate_Init(bayes_alphamate_all);
 }
 
 void MainWindow::on_BLUP_mode_ComboBox_currentIndexChanged(int index)
@@ -766,33 +792,114 @@ void MainWindow::on_classical_mate_Button_3_clicked()
 
 
 /*----------------------------------------------------------------------------------------*/
+/*---------------------------------bayes_method-------------------------------------------*/
 
 
 
+void MainWindow::on_bayesrunpushButton_clicked()
+{
+
+    QString runPath = QDir::currentPath();
+    runPath.append("/rscript/bayes1.R");
+    qDebug() << endl <<"runPath:" << runPath << endl;
+    QString param;
+    // The sequence of param is not changeable
+    param.clear();
+    param.append("Rscript");
+    param.append(" ");
+    param.append(runPath);
+    param.append(" ");
+    param.append(csv_path);
+    param.append(" ");
+    param.append(output_path);
+    param.append(" ");
+    param.append(output_path+"/raw_output.raw");
+    param.append(" ");
+    param.append(ui->modelcomboBox->currentText());
+    param.append(" ");
+    param.append(ui->k_flod_ComboBox->currentText());
+    param.append(" ");
+    param.append(ui->iterationspinBox->text());
+    param.append(" ");
+    param.append(ui->dropoutspinBox->text());
+    param.append(" ");
+
+    qDebug()<< endl<<"display param :"<<param<< endl;
+
+    //QMessageBox::information(NULL, "Massage", "This will take a few minutes");
+
+    QProcess display_process;
+
+    display_process.execute(param);
+    if(display_process.waitForStarted())
+    {
+        qDebug()<<"OUTLIER PROCESS STRATED";
+        display_process.close();
+
+    }
+    if(display_process.waitForFinished())
+    {
+        qDebug()<<"OUTLIER PROCESS FINISHED";
+        display_process.close();
+
+    }
+    display_process.close();
+
+    QFile f(output_path+"/bayes_output.txt");
+    if(!f.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug()<<"Can't open the file!"<<endl;
+    }
+
+    QTextStream txtInput(&f);
+    QStringList bayesoutput;
+    QString lineStr;
+    while(!txtInput.atEnd())
+    {
+        lineStr = txtInput.readLine();
+          bayesoutput.append(lineStr);
+        qDebug() << lineStr << endl;
+    }
+
+    f.close();
+
+    ui->accuracytextBrowser->insertPlainText(bayesoutput[0]);
+    ui->herittextBrowser->insertPlainText(bayesoutput[1]);
+    ui->varcomp1textBrowser->insertPlainText(bayesoutput[2]);
+    ui->varcomp2textBrowser->insertPlainText(bayesoutput[3]);
+
+}
 
 
+void MainWindow::on_alphmate_checkBox_2_stateChanged(int arg1)
+{
+    if(arg1 == 2)
+    {
+        alphmate_enable_all(bayes_alphamate_all);
+    }else{
+        alphmate_disable_all(bayes_alphamate_all);
+    }
+}
+void MainWindow::on_classical_more_Button_4_clicked()
+{
+    alphamate *alphamate_window = new alphamate(this);
+    alphamate_window->show();
+}
 
+void MainWindow::on_GenderFile_checkBox_4_stateChanged(int arg1)
+{
+    if((ui->alphmate_checkBox->checkState() == Qt::Checked)&& arg1 == 2)
+    {
+        alphmate_able_gender(bayes_alphamate_all,true);
+    }else
+    {
+        alphmate_able_gender(bayes_alphamate_all,false);
+    }
+}
 
+void MainWindow::on_classical_mate_Button_4_clicked()
+{
 
+    running_alphamate(bayes_alphamate_all,Alphamate_running_path,output_path);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
