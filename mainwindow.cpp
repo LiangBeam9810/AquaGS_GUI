@@ -23,9 +23,9 @@ void MainWindow::init()
     //ui->csv_input_lineEdit->setText("Enter/Select the csv file.");
     //ui->vcf_input_lineEdit->setText("Enter/Select the vcf file.");
     //ui->out_lineEdit->setText("Enter/Select the output folder.");
-    csv_line->setText("/home/zhi/Desktop/AquaGS_GUI/Input/ABT20210617.csv");
-    vcf_line->setText("/home/zhi/Desktop/AquaGS_GUI/snp_abt_630_imput_out_select48K.vcf");
-    out_line->setText("/home/zhi/Desktop/AquaGS_GUI/Output");
+    csv_line->setText("/home/liang/Documents/AquaGS_GUI/Input/ABT20210617.csv");
+    vcf_line->setText("/home/liang/Documents/AquaGS_GUI/snp_abt_630_imput_out_select48K.vcf");
+    out_line->setText("/home/liang/Documents/AquaGS_GUI/Output");
     ui->tabWidget->setCurrentIndex(0);//Start index
     /*--------------------------------------------------------------*/
 
@@ -466,8 +466,6 @@ bool MainWindow::A_G_matirx_build()
 //Fixed effect part
 void MainWindow::Effect_Init()
 {
-
-
     fixed_effect_input.input_path = Rdata_path;
     fixed_effect_input.output_path = output_path;
     fixed_effect_input.A_matrix_path = A_matrix_path;
