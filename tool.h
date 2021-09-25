@@ -1,3 +1,4 @@
+#include "mainwindow.h"
 #ifndef TOOL_H
 #define TOOL_H
 

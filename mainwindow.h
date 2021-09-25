@@ -18,7 +18,6 @@
 #include <QThread>
 #include <QMessageBox>
 #include <QComboBox>
-#include <QProcess>
 #include <QTextBrowser>
 #include <QLabel>
 #include <QPushButton>
@@ -39,9 +38,9 @@
 #include "blup.h"
 #include "ui_mainwindow.h"
 #include "alphamate.h"
-
 #include "plink.h"
 #include "process.h"
+#include "tool.h"
 #include <QtConcurrent>
 #include <QFuture>
 
@@ -91,7 +90,6 @@ public:
     unsigned int Dam_phenotype_index= 0 ;
     unsigned int Sire_phenotype_index= 0 ;
 
-
     unsigned int fist_convert_flag = 1;
     QStringList fixed_effect_list ;
     QStringList random_effect_list ;
@@ -110,6 +108,9 @@ public:
     void Effect_Init();
     void classical_method_Init();
     bool A_G_matirx_build();
+
+    //for QC
+    bool callPlinkGwas(QString phenotype, QString genotype, QString out);
 
 signals:
     void resetWindowSig();
@@ -172,12 +173,6 @@ private slots:
     void on_effect_reset_pushButton_clicked();
 
     void on_effect_next_pushButton_clicked();
-
-    //for QC
-    bool runExTool(QString tool, QStringList param);
-    void on_outMessageReady(QString text);
-    void on_errMessageReady(QString text);
-    bool callPlinkGwas(QString phenotype, QString genotype, QString out);
 
     void on_BLUP_accept_pushButtom_clicked();
 

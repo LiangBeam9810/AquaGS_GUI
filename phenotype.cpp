@@ -100,12 +100,13 @@ bool outlier_elimination(QString* csv_path,
         param.append(" ");
     qDebug()<<endl<<"outlier param :"<<param<<endl;
 
-    QProcess* outlier_process;
-    outlier_process = new QProcess;
-    outlier_process->start(param);
-    Process_runing_gif(outlier_process,"Reading phenotype");
-    outlier_process->close();
-
+    Process* outlier_process;
+    outlier_process = new Process;
+    if(!(outlier_process->runRscript(param,"Reading and handle phenotype")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open outlier process!");
+        return false;
+    }
     //Check the existion of the file after outlier
     QString path = *csv_path;
     path.replace(".csv", "_outlier.csv");
@@ -117,6 +118,7 @@ bool outlier_elimination(QString* csv_path,
     }
     else
     {
+        QMessageBox::warning(NULL, "File error:", "Can't find "+path+" !");
         return false;
     }
 
@@ -160,12 +162,13 @@ bool display_normality(QString input_path,
     param.append(" ");
     qDebug()<< endl<<"display param :"<<param<< endl;
 
-    QProcess* display_process;
-    display_process = new QProcess;
-    display_process->start(param);
-    Process_runing_gif(display_process,"Ploting phenotype");
-    display_process->close();
-
+    Process* display_process;
+    display_process = new Process;
+    if(!(display_process->runRscript(param,"Plotting the histogram")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the display process!");
+        return false;
+    }
     QString ske_kur_ans_path = output_path;
     QString histogram_ans_path = output_path;
     ske_kur_ans_path.append("/ske_kur_of_");
@@ -194,19 +197,19 @@ bool display_normality(QString input_path,
         }
         else
         {
-             QMessageBox::about(NULL, "csv file", "Can't open csv file!");
+             QMessageBox::warning(NULL, "File error", "Can't opend "+ske_kur_ans_path+"!");
              return false;
         }
 
-         qDebug()<< "showing img..." ;
-        QImage *img =new QImage;;
+        qDebug()<< "showing img..." ;
+        QImage *img =new QImage;
         img->load(histogram_ans_path);
         graphicedisplay->setScaledContents(true);
         graphicedisplay->setPixmap(QPixmap::fromImage(*img));
     }
     else
     {
-         QMessageBox::about(NULL, "csv file", "NO EXIST csv file!");
+         QMessageBox::warning(NULL, "File error", "Can't find "+ske_kur_ans_path+"!");
          return false;
     }
     return true;
@@ -232,11 +235,14 @@ bool convert_phenotype(QString input_path,unsigned int target_phenotype_index,un
     param.append(" ");
     qDebug()<< endl<<"display param :"<<param<< endl;
 
-    QProcess* display_process;
-    display_process = new QProcess;
-    display_process->start(param);
-    Process_runing_gif(display_process,"Converting");
-    display_process->close();
+    Process* convert_process;
+    convert_process = new Process;
+    if(!(convert_process->runRscript(param,"Plotting the histogram")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the convert process!");
+        return false;
+    }
+
     QString path = input_path;
     path.replace(".csv","_converted.csv");
     if(isFileExist(path)){
@@ -245,7 +251,8 @@ bool convert_phenotype(QString input_path,unsigned int target_phenotype_index,un
     }
     else
     {
-        qDebug()<<endl<<"convert error :"<<endl;
+        //qDebug()<<endl<<"convert error :"<<endl;
+        QMessageBox::warning(NULL, "File error", "Can't find "+path+"!");
         return false;
     }
     return true;

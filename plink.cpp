@@ -1,5 +1,4 @@
 #include "plink.h"
-#include "process.h"
 
 Plink::Plink()
 {
@@ -62,7 +61,7 @@ bool Plink::part2(QString file2, QString geno, QString maf, QString mind, QStrin
     this->paramlist.append("--recode");
     this->paramlist.append("--out");
     this->paramlist.append(file3);
-
+    return true;
 }
 
 bool Plink::part3(QString file3, QString hwe,QString file4)
@@ -86,7 +85,7 @@ bool Plink::part3(QString file3, QString hwe,QString file4)
     this->paramlist.append("--recode");
     this->paramlist.append("--out");
     this->paramlist.append(file4);
-
+    return true;
 }
 
 bool Plink::part4(QString file4, QString winsize, QString steplength, QString r2, QString file5)
@@ -110,7 +109,7 @@ bool Plink::part4(QString file4, QString winsize, QString steplength, QString r2
     this->paramlist.append("--recode");
     this->paramlist.append("--out");
     this->paramlist.append(file5);
-
+    return true;
 
 }
 
@@ -128,7 +127,7 @@ bool Plink::part5(QString file5, QString out)
     this->paramlist.append("--recodeA");
     this->paramlist.append("--out");
     this->paramlist.append(out);
-
+    return true;
 }
 
 bool Plink::part6(QString file4, QString out)
@@ -144,6 +143,7 @@ bool Plink::part6(QString file4, QString out)
     this->paramlist.append("--recodeA");
     this->paramlist.append("--out");
     this->paramlist.append(out);
+    return true;
 }
 
 

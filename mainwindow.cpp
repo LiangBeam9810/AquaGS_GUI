@@ -13,7 +13,12 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+/*-------------------------------------- Global auxiliary function -----------------------------------------*/
 
+
+
+
+/*------------------------------------------------------------------------ */
 void MainWindow::init()
 {
     out_line = ui->output_lineEdit;
@@ -45,7 +50,6 @@ void MainWindow::init()
 
     return;
 }
-
 /*-------------------------------------- start -----------------------------------------*/
 void MainWindow::on_csv_pushButton_clicked()
 {
@@ -65,7 +69,6 @@ void MainWindow::on_output_pushButton_clicked()
     return;
 }
 
-
 void MainWindow::on_csv_lineEdit_editingFinished()
 {
     get_enter_path( csv_line,1);
@@ -77,7 +80,6 @@ void MainWindow::on_vcf_lineEdit_editingFinished()
     get_enter_path( vcf_line,2);
     return;
 }
-
 
 void MainWindow::on_output_lineEdit_editingFinished()
 {
@@ -112,11 +114,13 @@ void MainWindow::Phenotype_Init()
         phenotype_select_line.outlier_CheckBox = ui->outlier_swith;
         phenotype_select_line_init(phenotype_select_line,csv_path,&phenotype_list);
     }
+    return;
 }
 
 void MainWindow::on_outlier_swith_stateChanged(int arg1)
 {
     qDebug()<< endl << "outlier swith state :"<< arg1 << endl;
+    return;
 }
 
 void MainWindow::on_convert_swith_stateChanged(int arg1)
@@ -163,8 +167,6 @@ void MainWindow::on_phenotype_run_Button_clicked()
     }
 }
 
-
-
 void MainWindow::on_phenotype_convert_Button_clicked()
 {
     QString csv_path_new = csv_path;
@@ -198,14 +200,12 @@ void MainWindow::on_phenotype_convert_Button_clicked()
        return;
 }
 
-
 void MainWindow::on_phenotype_reset_Button_clicked()
 {
     clean_normality_index(ui->skewnessdisplay_2,ui->kurtosisdisplay_2,ui->horizontallabel_2);
     fist_convert_flag = 1 ;//The new start from now on,need to init flag&path
     return;
 }
-
 
 void MainWindow::on_phenotype_accept_Button_clicked()
 {
@@ -308,21 +308,22 @@ bool MainWindow::callPlinkGwas(QString phenotype, QString genotype, QString out)
     QString outfile=out+"/raw_output";
     raw_path = outfile+".raw";
     Plink plink;
-
+    Process* plink_process;
+    plink_process = new Process;
     plink.part1(genotype, file2);
-    if (!runExTool(plinkpath+"plink", plink.getParamList()))
+    if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
     {
         return false;
     }
 
     plink.part2(file2, geno, maf, mind, file3);
-    if (!runExTool(plinkpath+"plink", plink.getParamList()))
+    if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
     {
         return false;
     }
 
     plink.part3(file3, hwe, file4);
-    if (!runExTool(plinkpath+"plink", plink.getParamList()))
+    if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
     {
         return false;
     }
@@ -335,12 +336,12 @@ bool MainWindow::callPlinkGwas(QString phenotype, QString genotype, QString out)
         stepLen = ui->steplengthdoubleSpinBox->text();
         r2Threshold = ui->r2doubleSpinBox->text();
         plink.part4(file4, winSize, stepLen, r2Threshold, file5);
-        if (!runExTool(plinkpath+"plink", plink.getParamList()))
+        if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
         {
             return false;
         }
         plink.part5(file5, outfile);
-        if (!runExTool(plinkpath+"plink", plink.getParamList()))
+        if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
         {
             return false;
         }
@@ -349,7 +350,7 @@ bool MainWindow::callPlinkGwas(QString phenotype, QString genotype, QString out)
     else
     {
         plink.part6(file4, outfile);
-        if (!runExTool(plinkpath+"plink", plink.getParamList()))
+        if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
         {
             return false;
         }
@@ -359,108 +360,8 @@ bool MainWindow::callPlinkGwas(QString phenotype, QString genotype, QString out)
     return true;
 
 }
-bool MainWindow::runExTool(QString tool, QStringList param)
-{
-    Process *proc = new Process;
 
-    // Read message form Process and display in RunningMsgWidget
-    connect(proc, SIGNAL(outMessageReady(QString)), this, SLOT(on_outMessageReady(QString)));
-    connect(proc, SIGNAL(errMessageReady(QString)), this, SLOT(on_errMessageReady(QString)));
-   // connect(this, SIGNAL(terminateProcess()), proc, SLOT(on_terminateProcess()), Qt::DirectConnection);
-
-    // proc->execute(tool, param);
-    static int i = 0;
-    proc->start(tool, param);
-    if (!proc->waitForStarted())
-    {
-        emit setMsgBoxSig("Error", "Can't open " + tool);
-        delete proc;
-        proc = nullptr;
-        return false;
-    }
-    proc->waitForFinished(-1);
-
-    ++i;
-    qDebug() << "i: " << i << endl
-             << tool << endl << param << endl;
-
-    bool ret = true;
-    proc->close();
-    delete proc;
-    proc = nullptr;
-
-    return ret;
-}
-void MainWindow::on_outMessageReady(const QString text)
-{
-    if (this->runningFlag)
-    {
-        qDebug() << "Out: " << text << endl;
-        qApp->processEvents();
-    }
-}
-
-void MainWindow::on_errMessageReady(const QString text)
-{
-    if (this->runningFlag)
-    {
-        qDebug() << "Error: " << text << endl;
-    }
-}
 /*---------------------------------------------------------------------------------------*/
-bool MainWindow::A_G_matirx_build()
-{
-
-    /*-------------------------------------------*/
-    Rdata_path = output_path;
-    Rdata_path.append("/Rbuffer.Rdata");
-    A_matrix_path = output_path+"/A_matrix.txt";
-    G_matrix_path = output_path+"/G_matrix.txt";
-    qDebug()<<endl<<"Rdata_path"<<Rdata_path;
-    qDebug()<<endl<<"A_matrix_path"<<A_matrix_path;
-    qDebug()<<"G_matrix_path"<<G_matrix_path<<endl;
-    /*-------------------------------------------*/
-
-    QString runPath = QDir::currentPath();
-    runPath.append("/rscript/A_G_matirx_build.R");
-    qDebug() << endl <<"runPath:" << runPath << endl;
-    QString param;
-    // The sequence of param is not changeable
-    param.clear();
-    param.append("Rscript");
-    param.append(" ");
-    param.append(runPath);
-    param.append(" ");
-    param.append(csv_path);
-    param.append(" ");
-    param.append(raw_path);
-    param.append(" ");
-    param.append(Rdata_path);
-    param.append(" ");
-    param.append(A_matrix_path);
-    param.append(" ");
-    param.append(G_matrix_path);
-    param.append(" ");
-    param.append(QString::number(target_phenotype_index));
-    param.append(" ");
-    param.append(QString::number(AnimalID_phenotype_index));
-    param.append(" ");
-    param.append(QString::number(Dam_phenotype_index));
-    param.append(" ");
-    param.append(QString::number(Sire_phenotype_index));
-    param.append(" ");
-    qDebug()<< endl<<"display param :"<<param<< endl;
-    QProcess *A_G_matirx_build_process;
-    A_G_matirx_build_process = new QProcess;
-    A_G_matirx_build_process->setWorkingDirectory(Alphamate_running_path);
-    A_G_matirx_build_process->start(param);
-    Process_runing_gif(A_G_matirx_build_process," Building A and G matirx ");
-    A_G_matirx_build_process->close();
-    return true;
-}
-
-
-
 
 /*-------------------------------------- Effect -----------------------------------------*/
 //Fixed effect part
@@ -767,8 +668,7 @@ void MainWindow::on_alphmate_checkBox_stateChanged(int arg1)
 }
 void MainWindow::on_classical_more_Button_3_clicked()
 {
-    alphamate *alphamate_window = new alphamate(this);
-    alphamate_window->show();
+
 }
 
 void MainWindow::on_GenderFile_checkBox_3_stateChanged(int arg1)
@@ -839,7 +739,6 @@ void MainWindow::on_bayesrunpushButton_clicked()
     {
         qDebug()<<"OUTLIER PROCESS FINISHED";
         display_process.close();
-
     }
     display_process.close();
 
@@ -880,8 +779,7 @@ void MainWindow::on_alphmate_checkBox_2_stateChanged(int arg1)
 }
 void MainWindow::on_classical_more_Button_4_clicked()
 {
-    alphamate *alphamate_window = new alphamate(this);
-    alphamate_window->show();
+
 }
 
 void MainWindow::on_GenderFile_checkBox_4_stateChanged(int arg1)

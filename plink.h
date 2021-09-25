@@ -1,3 +1,4 @@
+#include "mainwindow.h"
 #ifndef PLINK_H
 #define PLINK_H
 

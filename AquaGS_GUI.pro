@@ -32,7 +32,6 @@ HEADERS += \
     tool.h
 
 FORMS += \
-    alphamate.ui \
     mainwindow.ui
 
 QMAKE_LFLAGS += -no-pie
