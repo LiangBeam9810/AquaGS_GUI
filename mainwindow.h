@@ -31,6 +31,13 @@
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <sstream>
+#include <QFile>
+#include <QtConcurrent>
+#include <QFuture>
+#include <QMovie>
+#include <QDialog>
+#include <QPainter>
+#include <QGraphicsDropShadowEffect>
 
 #include "start.h"
 #include "effect.h"
@@ -41,6 +48,7 @@
 #include "plink.h"
 #include "process.h"
 #include "tool.h"
+#include "loadingwight.h"
 #include <QtConcurrent>
 #include <QFuture>
 

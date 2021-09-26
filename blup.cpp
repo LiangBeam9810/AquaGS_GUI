@@ -42,12 +42,13 @@ bool MainWindow::A_G_matirx_build()
     param.append(QString::number(Sire_phenotype_index));
     param.append(" ");
     qDebug()<< endl<<"display param :"<<param<< endl;
-    QProcess *A_G_matirx_build_process;
-    A_G_matirx_build_process = new QProcess;
-    A_G_matirx_build_process->setWorkingDirectory(Alphamate_running_path);
-    A_G_matirx_build_process->start(param);
-    Process_runing_gif(A_G_matirx_build_process," Building A and G matirx ");
-    A_G_matirx_build_process->close();
+    Process *A_G_matirx_build_process;
+    A_G_matirx_build_process = new Process;
+    if(!A_G_matirx_build_process->runRscript(param," Building A and G matirx "))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the A&G matirx build process!");
+        return false;
+    }
     return true;
 }
 
@@ -104,12 +105,14 @@ bool blup_build(blup blup_input)
         param.append(" ");
     }
 
-    qDebug()<< endl<<"display param :"<<param<< endl;
-    QProcess* build_process;
-    build_process = new QProcess;
-    build_process->start(param);
-    Process_runing_gif(build_process,"BULP/GULP building");
-    build_process->close();
+    qDebug()<< endl<<"display blup build param :"<<param<< endl;
+    Process* blup_build_process;
+    blup_build_process = new Process;
+    if(!(blup_build_process->runRscript(param,"Building")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the blup build process!");
+        return false;
+    }
     return true;
 
 }
@@ -157,11 +160,13 @@ bool classical_method_cross_validation_and_display(blup blup_mode,fold_validate 
     param.append(QString::number(blup_fold_validate.k_flod_times_ComboBox->currentIndex()));//k_num
     param.append(" ");
     qDebug()<< endl<<"display param :"<<param<< endl;
-    QProcess* validate_process;
+    Process* validate_process;
     validate_process = new Process;
-    validate_process->start(param);
-    Process_runing_gif(validate_process,"Validating");
-    validate_process->close();
+    if(!(validate_process->runRscript(param,"Validating")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the validate process!");
+        return false;
+    }
 
     QFile csv_file(blup_fold_validate.output_path);
     QStringList csv_list;

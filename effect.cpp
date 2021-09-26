@@ -105,11 +105,13 @@ bool fixed_effect_testing(QString Rdata_path,QString output_path,unsigned int ta
         param.append(" ");
     }
     qDebug()<< endl<<"display param :"<<param<< endl;
-    QProcess* fixed_effect_process;
-    fixed_effect_process = new QProcess;
-    fixed_effect_process->start(param);
-    Process_runing_gif(fixed_effect_process," Fixed effect testing");
-    fixed_effect_process->close();
+    Process* fixed_effect_process;
+    fixed_effect_process = new Process;
+    if(!(fixed_effect_process->runRscript(param,"Fixed effect testing")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the fixed effect process!");
+        return false;
+    }
     return true;
 }
 
@@ -158,11 +160,13 @@ bool random_effect_testing(QString input_path,QString output_path,QString A_matr
     }
 
     qDebug()<< endl<<"display param :"<<param<< endl;
-    QProcess* random_effect_process;
-    random_effect_process = new QProcess;
-    random_effect_process->start(param);
-    Process_runing_gif(random_effect_process," Random effect testing");
-    random_effect_process->close();
+    Process* random_effect_process;
+    random_effect_process = new Process;
+    if(!(random_effect_process->runRscript(param," Random effect testing")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the random effect process!");
+        return false;
+    }
     return true;
 }
 
