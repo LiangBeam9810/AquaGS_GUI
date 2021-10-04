@@ -232,8 +232,10 @@ void MainWindow::on_phenotype_next_pushButton_clicked()
      }
      return;
 }
-
-
+void MainWindow::on_AnimalID_ComboBox_currentIndexChanged(int index)
+{
+    AnimalID_phenotype_index = index;
+}
 
 /*-------------------------------------- QC -----------------------------------------*/
 
@@ -248,10 +250,10 @@ void MainWindow::on_qc_next_pushButton_clicked()
     this->runningFlag = true;
     ui->qc_next_pushButton->setDisabled(true);
     qApp->processEvents();
-
+  /*
     QFuture<void> fu = QtConcurrent::run(QThreadPool::globalInstance(), [&]()
     {
-        if (!this->callPlinkGwas(phenotype, genotype, out))
+        if (!this->callPlinkGwas(genotype, out))
         {
             emit resetWindowSig();
             QThread::msleep(10);
@@ -269,14 +271,12 @@ void MainWindow::on_qc_next_pushButton_clicked()
     this->runningFlag = false;
     ui->qc_next_pushButton->setEnabled(true);
 
-    /*-----------------*/
+  -----------------*/
     A_G_matirx_build();
     Effect_Init();
-    if(prepare_effect(fixed_effect_input))
+    if(prepare_effect(fixed_effect_input_Discrete))
     {
         qDebug()<<endl<<"prepare fixed effect complete"<<endl;
-        QStringList NULL_List;
-        prepare_phenotype(csv_path,&NULL_List,ui->AnimalID_ComboBox);
         ui->tabWidget->setCurrentIndex(3);
     }
     else {
@@ -286,7 +286,7 @@ void MainWindow::on_qc_next_pushButton_clicked()
 
 }
 
-bool MainWindow::callPlinkGwas(QString phenotype, QString genotype, QString out)
+bool MainWindow::callPlinkGwas(QString genotype, QString out)
 {
 
     QString runPath1 = QDir::currentPath();
@@ -367,18 +367,35 @@ bool MainWindow::callPlinkGwas(QString phenotype, QString genotype, QString out)
 //Fixed effect part
 void MainWindow::Effect_Init()
 {
-    fixed_effect_input.input_path = Rdata_path;
-    fixed_effect_input.output_path = output_path;
-    fixed_effect_input.A_matrix_path = A_matrix_path;
-    fixed_effect_input.G_matrix_path = G_matrix_path;
-    fixed_effect_input.original_tableview = ui->fixed_phenotype_pr_TableView;
-    fixed_effect_input.selected_tableview = ui->fixed_selected_TableView;
-    fixed_effect_input.animal_combobox = ui->AnimalID_ComboBox;
-    fixed_effect_input.randeff_testing_combobox = ui->random_effec_testing_ComboBox;
-    fixed_effect_input.target_index = target_phenotype_index;
-    fixed_effect_input.process_random_flag = 0;
-    fixed_effect_input.fixed_effect_list = &fixed_effect_list;
-    fixed_effect_input.random_effect_list = &random_effect_list;
+    fixed_effect_input_Discrete.input_path = Rdata_path;
+    fixed_effect_input_Discrete.output_path = output_path;
+    fixed_effect_input_Discrete.A_matrix_path = A_matrix_path;
+    fixed_effect_input_Discrete.G_matrix_path = G_matrix_path;
+    fixed_effect_input_Discrete.original_tableview = ui->fixed_phenotype_pr_TableView;
+    fixed_effect_input_Discrete.selected_tableview = ui->fixed_selected_TableView;
+    fixed_effect_input_Discrete.animal_combobox = ui->AnimalID_ComboBox;
+    fixed_effect_input_Discrete.randeff_testing_combobox = ui->random_effec_testing_ComboBox;
+    fixed_effect_input_Discrete.target_index = target_phenotype_index;
+    fixed_effect_input_Discrete.process_flag = 1;
+    fixed_effect_input_Discrete.fixed_effect_list = &fixed_effect_list;
+    fixed_effect_input_Discrete.Discrete_fixed_effect_list = &Discrete_fixed_effect_list;
+    //fixed_effect_input_Discrete.Continuous_fixed_effect_list = &Continuous_fixed_effect_list;
+    fixed_effect_input_Discrete.random_effect_list = &random_effect_list;
+
+    fixed_effect_input_Continuous.input_path = Rdata_path;
+    fixed_effect_input_Continuous.output_path = output_path;
+    fixed_effect_input_Continuous.A_matrix_path = A_matrix_path;
+    fixed_effect_input_Continuous.G_matrix_path = G_matrix_path;
+    fixed_effect_input_Continuous.original_tableview = ui->fixed_phenotype_pr_TableView_2;
+    fixed_effect_input_Continuous.selected_tableview = ui->fixed_selected_TableView_2;
+    fixed_effect_input_Continuous.animal_combobox = ui->AnimalID_ComboBox;
+    fixed_effect_input_Continuous.randeff_testing_combobox = ui->random_effec_testing_ComboBox;
+    fixed_effect_input_Continuous.target_index = target_phenotype_index;
+    fixed_effect_input_Continuous.process_flag = 2;
+    fixed_effect_input_Continuous.fixed_effect_list = &fixed_effect_list;
+    fixed_effect_input_Continuous.Discrete_fixed_effect_list = &Discrete_fixed_effect_list;
+    //fixed_effect_input_Continuous.Continuous_fixed_effect_list = &Continuous_fixed_effect_list;
+    fixed_effect_input_Continuous.random_effect_list = &random_effect_list;
 
     random_effect_input.input_path = Rdata_path;
     random_effect_input.output_path = output_path;
@@ -390,64 +407,131 @@ void MainWindow::Effect_Init()
     random_effect_input.randeff_testing_combobox = ui->random_effec_testing_ComboBox;
     random_effect_input.AnimalID_index = &AnimalID_phenotype_index;
     random_effect_input.target_index = target_phenotype_index;
-    random_effect_input.process_random_flag = 1;
+    random_effect_input.process_flag = 0;
     random_effect_input.fixed_effect_list = &fixed_effect_list;
     random_effect_input.random_effect_list = &random_effect_list;
 
     fixed_effect_list.clear();
+    Discrete_fixed_effect_list.clear();
     random_effect_list.clear();
-    selected_fixed_flag = false;
+
+    Discrete_selected_fixed_flag = false;
+    Continuous_selected_fixed_flag = false;
     selected_random_flag = false;
+    clean_tablevie(ui->fixed_phenotype_pr_TableView);
+    clean_tablevie(ui->fixed_phenotype_pr_TableView_2);
+    clean_tablevie(ui->fixed_selected_TableView);
+    clean_tablevie(ui->fixed_selected_TableView_2);
+    clean_tablevie(ui->random_selected_TableView);
+    clean_tablevie(ui->random_phenotype_pr_TableView);
     ui->random_accept_pushButton->setEnabled(false);
     ui->random_exclude_Button->setEnabled(false);
     ui->random_select_Button->setEnabled(false);
-    ui->fixed_accept_pushButton->setEnabled(false);
+    ui->fixed_accept_pushButton->setEnabled(true);
     ui->fixed_exclude_Button->setEnabled(false);
     ui->fixed_select_Button->setEnabled(false);
+    ui->fixed_accept_pushButton_2->setEnabled(true);
+    ui->fixed_exclude_Button_2->setEnabled(false);
+    ui->fixed_select_Button_2->setEnabled(false);
 }
-
+/**********************
+* 点击了离散型待选框（左侧）
+**********************/
 void MainWindow::on_fixed_phenotype_pr_TableView_clicked(const QModelIndex &index)
 {
-    //qDebug()<<endl<<"fixed_tableview_clicked:" <<index<<endl;
-    change_select_exclude_Button(1,selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
+    qDebug()<<endl<<"Discrete_fixed_tableview_clicked:" <<index<<endl;
+    change_select_exclude_Button(1,Discrete_selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
     return;
 }
+/**********************
+* 点击了离散型已选框（右侧）
+**********************/
 void MainWindow::on_fixed_selected_TableView_clicked(const QModelIndex &index)
 {
-    //qDebug()<<endl<<"fixed_tableview_clicked:" <<index<<endl;
-    change_select_exclude_Button(0,selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
+    qDebug()<<endl<<"Discrete_fixed_tableview_clicked:" <<index<<endl;
+    change_select_exclude_Button(0,Discrete_selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
     return;
 }
+
 void MainWindow::on_fixed_select_Button_clicked()
 {
     add_item2effect_list(ui->fixed_phenotype_pr_TableView,phenotype_list,&fixed_effect_list);
-    qDebug()<<endl<<"fixed_effect_list  is "<<fixed_effect_list<<endl;
-    prepare_effect(fixed_effect_input);
-    ui->fixed_accept_pushButton->setEnabled(true);
+    qDebug()<<endl<<"Discrete_fixed_effect_list  is "<<fixed_effect_list<<endl;
+    prepare_effect(fixed_effect_input_Discrete);
+    //ui->fixed_accept_pushButton->setEnabled(true);
 }
 void MainWindow::on_fixed_exclude_Button_clicked()
 {
     remove_item_from_effect_list(ui->fixed_selected_TableView, &fixed_effect_list);
-    prepare_effect(fixed_effect_input);
+    prepare_effect(fixed_effect_input_Discrete);
     if(isTableView_empty(ui->fixed_selected_TableView))
     {
-        ui->fixed_accept_pushButton->setEnabled(false);
+        //ui->fixed_accept_pushButton->setEnabled(false);
         qDebug()<<endl<<"selected tableview is empty"<<endl;
     }
     else
     {
-        ui->fixed_accept_pushButton->setEnabled(true);
+        //ui->fixed_accept_pushButton->setEnabled(true);
         qDebug()<<endl<<"selected tableview is  no empty"<<endl;
     }
 }
 void MainWindow::on_fixed_accept_pushButton_clicked()
 {
-    selected_fixed_flag = true;
-    prepare_effect(random_effect_input);
-    change_select_exclude_Button(0,selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
+    Discrete_selected_fixed_flag = true;
+    change_select_exclude_Button(0,Discrete_selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
     ui->fixed_accept_pushButton->setEnabled(false);
+    Discrete_fixed_effect_list = fixed_effect_list;//将离散型效应列表记录下来
+    qDebug()<<"Discrete fixed effect was accepted ,fixed_effect_list: "<<fixed_effect_list;
+    prepare_effect(fixed_effect_input_Continuous);//准备刷新连续型固定效应
 }
-//random effect part
+
+void MainWindow::on_fixed_phenotype_pr_TableView_2_clicked(const QModelIndex &index)
+{
+    qDebug()<<endl<<"Continuous_fixed_tableview_clicked:" <<index<<endl;
+    change_select_exclude_Button(1,Continuous_selected_fixed_flag,ui->fixed_select_Button_2,ui->fixed_exclude_Button_2);
+    return;
+}
+
+void MainWindow::on_fixed_selected_TableView_2_clicked(const QModelIndex &index)
+{
+    qDebug()<<endl<<"Continuous_fixed_tableview_clicked:" <<index<<endl;
+    change_select_exclude_Button(0,Continuous_selected_fixed_flag,ui->fixed_select_Button_2,ui->fixed_exclude_Button_2);
+    return;
+}
+
+void MainWindow::on_fixed_select_Button_2_clicked()
+{
+    add_item2effect_list(ui->fixed_phenotype_pr_TableView_2,phenotype_list,&fixed_effect_list);
+    qDebug()<<endl<<"Continuous_fixed_effect_list  is "<<fixed_effect_list<<endl;
+    prepare_effect(fixed_effect_input_Continuous);
+    //ui->fixed_accept_pushButton_2->setEnabled(true);
+}
+
+void MainWindow::on_fixed_exclude_Button_2_clicked()
+{
+    remove_item_from_effect_list(ui->fixed_selected_TableView_2, &fixed_effect_list);
+    prepare_effect(fixed_effect_input_Continuous);
+    if(isTableView_empty(ui->fixed_selected_TableView_2))
+    {
+        //ui->fixed_accept_pushButton_2->setEnabled(false);
+        qDebug()<<endl<<"selected tableview is empty"<<endl;
+    }
+    else
+    {
+        //ui->fixed_accept_pushButton_2->setEnabled(true);
+        qDebug()<<endl<<"selected tableview is  no empty"<<endl;
+    }
+}
+
+void MainWindow::on_fixed_accept_pushButton_2_clicked()
+{
+    Continuous_selected_fixed_flag = true;
+    change_select_exclude_Button(0,Continuous_selected_fixed_flag,ui->fixed_select_Button_2,ui->fixed_exclude_Button_2);
+    ui->fixed_accept_pushButton_2->setEnabled(false);
+    prepare_effect(random_effect_input);//准备刷新随机效应
+}
+
+//----------------------------random effect part-------------------------------------------------------------------
 void MainWindow::on_random_phenotype_pr_TableView_clicked(const QModelIndex &index)
 {
     change_select_exclude_Button(1,selected_random_flag,ui->random_select_Button,ui->random_exclude_Button);
@@ -478,12 +562,12 @@ void MainWindow::on_random_exclude_Button_clicked()
     prepare_effect(random_effect_input);
     if(isTableView_empty(ui->random_selected_TableView))
     {
-        ui->random_accept_pushButton->setEnabled(false);
+        //ui->random_accept_pushButton->setEnabled(false);
         qDebug()<<endl<<"selected tableview is empty"<<endl;
     }
     else
     {
-        ui->random_accept_pushButton->setEnabled(true);
+        //ui->random_accept_pushButton->setEnabled(true);
         qDebug()<<endl<<"selected tableview is  no empty"<<endl;
     }
 }
@@ -496,12 +580,9 @@ void MainWindow::on_random_accept_pushButton_clicked()
 void MainWindow::on_effect_reset_pushButton_clicked()
 {
     Effect_Init();
-    prepare_effect(fixed_effect_input);
+    prepare_effect(fixed_effect_input_Discrete);
 }
-void MainWindow::on_AnimalID_ComboBox_currentIndexChanged(int index)
-{
-    AnimalID_phenotype_index = index;
-}
+
 
 
 void MainWindow::on_effect_next_pushButton_clicked()
@@ -799,3 +880,5 @@ void MainWindow::on_classical_mate_Button_4_clicked()
     running_alphamate(bayes_alphamate_all,Alphamate_running_path,output_path);
 
 }
+
+

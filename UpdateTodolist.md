@@ -2,8 +2,8 @@
 ### 无需海洋提供代码部分
 ---
 ## 总体功能：
-- [ ] loading界面 
-- [ ] rscript运行时，无法显示r的命令输出
+- [x] loading界面 
+- [x] rscript运行时，无法显示r的命令输出
 ## 贝叶斯模块完善：
 - [ ] 贝叶斯模块未存在于单独的.cpp文件中
     - [ ] 生成贝叶斯专用.cpp .h
@@ -11,8 +11,8 @@
 - [ ] 贝叶斯模块的r语言代码与形状名称绑定，**兼容性较低！**
 
 ## AlphaMate模块完善
-- [ ] AlphaMate未能生成对应的AlphaMate配置文件AlphaMateSpec.txt
-- [ ] 并没有生成对应的性别文件Gender.txt
+- [x] AlphaMate未能生成对应的AlphaMate配置文件AlphaMateSpec.txt
+- [x] 并没有生成对应的性别文件Gender.txt
 - [ ] 没有将配种方案输出到Output文件夹
 
 ### 需海洋提供代码部分

@@ -22,21 +22,28 @@ j = 6
 fixed_num = as.integer(args[j]) 
 print(paste("fixed_num :",fixed_num))
 fixed_index = c(0)
-for(i in 1:fixed_num){
+if(fixed_num){
+  for(i in 1:fixed_num){
   j = j+1
   fixed_index[i]  =  as.integer(args[j])+1  # C++ start at 0, R at 1
 }
 print(paste("fixed_index :",fixed_index))
+}
+
 ##########################random################################################
 j = j+1
 random_num = as.integer(args[j]) 
 print(paste("random_num :",random_num))
 random_index = c(0)
-for(i in 1:random_num){
+if(random_num)
+{
+  for(i in 1:random_num){
   j = j+1
   random_index[i]  =  as.integer(args[j])+1 # C++ start at 0, R at 1
 }
 print(paste("random_index :",random_index))
+}
+
 ################################################################################
 #input_path= "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
 #output_path = "/home/liang/Documents/AquaGS_GUI/Output/random_effect.csv"
@@ -118,7 +125,7 @@ if(!method_flag) # using lmer to test
           }
       }
     }else{
-        # pama =paste(" fit <- try(lmer(",target_item,"~","(1|",item,"),data=data))",sep="")
+        pama =paste(" fit <- try(lmer(",target_item,"~","(1|",item,"),data=data))",sep="")
         print(pama)
         eval(parse(text = pama))
         if("try-error" %in% class(fit))

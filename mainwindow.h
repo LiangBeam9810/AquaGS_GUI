@@ -67,7 +67,8 @@ public:
     phenotype_display original_display;
     phenotype_display converted_display;
 
-    prepare_effect_input fixed_effect_input;
+    prepare_effect_input fixed_effect_input_Discrete; //离散部分使用
+    prepare_effect_input fixed_effect_input_Continuous;//连续部分使用
     prepare_effect_input random_effect_input;
 
     blup blup_mode ;
@@ -90,7 +91,7 @@ public:
     QString classical_GEBV_path = "";
     QString bayes_GEBV_path = "";
     QString Gender_path = "";
-    QString Alphamate_running_path="";
+    QString Alphamate_running_path= "";
 
     QStringList phenotype_list ;
     unsigned int target_phenotype_index= 0 ;
@@ -100,11 +101,14 @@ public:
 
     unsigned int fist_convert_flag = 1;
     QStringList fixed_effect_list ;
+    QStringList Discrete_fixed_effect_list ;
+    //QStringList Continuous_fixed_effect_list ;
     QStringList random_effect_list ;
 
     bool phenotype_converted_flag = false;
 
-    bool selected_fixed_flag = false;
+    bool Discrete_selected_fixed_flag = false;
+    bool Continuous_selected_fixed_flag = false;
     bool selected_random_flag = false;
 
     bool start_complete_flag = false;
@@ -118,7 +122,7 @@ public:
     bool A_G_matirx_build();
 
     //for QC
-    bool callPlinkGwas(QString phenotype, QString genotype, QString out);
+    bool callPlinkGwas(QString genotype, QString out);
 
 signals:
     void resetWindowSig();
@@ -155,7 +159,6 @@ private slots:
     void on_phenotype_next_pushButton_clicked();
 
     void on_qc_next_pushButton_clicked();
-
 
     void on_fixed_phenotype_pr_TableView_clicked(const QModelIndex &index);
 
@@ -210,6 +213,16 @@ private slots:
     void on_GenderFile_checkBox_4_stateChanged(int arg1);
 
     void on_classical_mate_Button_4_clicked();
+
+    void on_fixed_phenotype_pr_TableView_2_clicked(const QModelIndex &index);
+
+    void on_fixed_select_Button_2_clicked();
+
+    void on_fixed_selected_TableView_2_clicked(const QModelIndex &index);
+
+    void on_fixed_exclude_Button_2_clicked();
+
+    void on_fixed_accept_pushButton_2_clicked();
 
 private:
     Ui::MainWindow *ui;

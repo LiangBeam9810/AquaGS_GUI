@@ -1,5 +1,11 @@
 #include "effect.h"
-
+void clean_tablevie(QTableView* tableview)
+{
+     QStandardItemModel* model = new QStandardItemModel();
+     model->clear();
+     tableview->setModel(model);
+     tableview->show();
+}
 void display_effect(QString pr_csv_path,QTableView* original_tableview,QTableView* selected_tableview,QStringList effect_list)
 {
     QStandardItemModel* original_model = new QStandardItemModel();
@@ -27,8 +33,8 @@ void display_effect(QString pr_csv_path,QTableView* original_tableview,QTableVie
     qDebug()<<endl<<"csv_list:"<<csv_list<<endl;
 
     unsigned count = 0;
-    unsigned int i =0;
-    unsigned int j =0;
+    unsigned int i =0;//右侧已经选择的计数
+    unsigned int j =0;//左侧为选择的计数
     Q_FOREACH(QString str, csv_list)
     {
        QStringList valsplit = str.split(",");
@@ -80,10 +86,45 @@ void clean_effect_table(QTableView* tableview)
     tableview->show();
 }
 
-bool fixed_effect_testing(QString Rdata_path,QString output_path,unsigned int target_phenotype_index,QStringList fixed_effect_list)
+bool Discrete_fixed_effect_testing(QString Rdata_path,QString output_path,unsigned int target_phenotype_index,QStringList fixed_effect_list)
 {
     QString runPath = QDir::currentPath();
-    runPath.append("/rscript/fixed_effect_testing(Rdata).R");
+    runPath.append("/rscript/Discrete_fixed_effect_testing(Rdata).R");
+    qDebug() << endl <<"runPath:" << runPath << endl;
+    QString param;
+    // The sequence of param is not changeable
+    param.clear();
+    param.append("Rscript");
+    param.append(" ");
+    param.append(runPath);
+    param.append(" ");
+    param.append(Rdata_path);
+    param.append(" ");
+    param.append(output_path);
+    param.append(" ");
+    param.append(QString::number(target_phenotype_index));
+    param.append(" ");
+    param.append(QString::number(fixed_effect_list.length()));
+    param.append(" ");
+    for(int i = 0;i < fixed_effect_list.length();i++){
+        param.append(fixed_effect_list[i]);
+        param.append(" ");
+    }
+    qDebug()<< endl<<"display param :"<<param<< endl;
+    Process* fixed_effect_process;
+    fixed_effect_process = new Process;
+    if(!(fixed_effect_process->runRscript(param,"Fixed effect testing")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the fixed effect process!");
+        return false;
+    }
+    return true;
+}
+
+bool Continuous_fixed_effect_testing(QString Rdata_path,QString output_path,unsigned int target_phenotype_index,QStringList fixed_effect_list)
+{
+    QString runPath = QDir::currentPath();
+    runPath.append("/rscript/Continuous_fixed_effect_testing(Rdata).R");
     qDebug() << endl <<"runPath:" << runPath << endl;
     QString param;
     // The sequence of param is not changeable
@@ -144,6 +185,7 @@ bool random_effect_testing(QString input_path,QString output_path,QString A_matr
     param.append(" ");
 
     param.append(QString::number(fixed_effect_list.length()));
+    qDebug()<< endl<<"display QString::number(fixed_effect_list.length()) :"<<QString::number(fixed_effect_list.length())<< endl;
     qDebug()<< endl<<"display fixed_effect_list :"<<fixed_effect_list<< endl;
     param.append(" ");
     for(int i = 0;i < fixed_effect_list.length();i++){
@@ -174,7 +216,7 @@ bool prepare_effect(prepare_effect_input effect_input)
 {
     QString effect_path = effect_input.output_path;
     bool callbake = false;
-    if(effect_input.process_random_flag)
+    if(!effect_input.process_flag)//flag = 0 进入随机效应检测
     {
         effect_path.append("/random_effect.csv");
         qDebug() << endl << "random_effect_path:" << effect_path <<endl;
@@ -189,11 +231,22 @@ bool prepare_effect(prepare_effect_input effect_input)
             display_effect(effect_path,effect_input.original_tableview,effect_input.selected_tableview,*(effect_input.random_effect_list));
         }
     }
-    else
+    else if(effect_input.process_flag == 1)//flag = 1 进入离散固定效应检验
     {
-        effect_path.append("/fixed_effect.csv");
-        qDebug() << endl << "fixed_effect_path:" << effect_path <<endl;
-        callbake =  fixed_effect_testing(effect_input.input_path,effect_path,effect_input.target_index,*(effect_input.fixed_effect_list));
+        effect_path.append("/Discrete_fixed_effect_dis.csv");
+        qDebug() << endl << "Discrete_fixed_effect_path:" << effect_path <<endl;
+        callbake =  Discrete_fixed_effect_testing(effect_input.input_path,effect_path,effect_input.target_index,*(effect_input.fixed_effect_list));
+        if(callbake)
+        {
+            display_effect(effect_path,effect_input.original_tableview,
+                           effect_input.selected_tableview,*(effect_input.fixed_effect_list));
+        }
+    }
+    else if(effect_input.process_flag == 2)//flag = 2 进入连续固定效应检验
+    {
+        effect_path.append("/Continuous_fixed_effect_dis.csv");
+        qDebug() << endl << "Continuous_fixed_effect_path:" << effect_path <<endl;
+        callbake =  Continuous_fixed_effect_testing(effect_input.input_path,effect_path,effect_input.target_index,*(effect_input.fixed_effect_list));
         if(callbake)
         {
             display_effect(effect_path,effect_input.original_tableview,effect_input.selected_tableview,*(effect_input.fixed_effect_list));
@@ -236,9 +289,10 @@ void add_item2effect_list(QTableView* original_tableview,QStringList phenotypeli
     {
         for(int i = 0;i < ((*effect_list).length());i++)
         {
-            if(QString::number(select_phenotype_index) == (*effect_list)[i])
+            if(QString::number(select_phenotype_index) == (*effect_list)[i])//如果新添加效应已存在
             {
                 Norepetition_flag = false;
+                break;
             }
         }
     }

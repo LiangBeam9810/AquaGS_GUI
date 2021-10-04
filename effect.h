@@ -15,11 +15,13 @@ struct prepare_effect_input
     QComboBox* randeff_testing_combobox;
     unsigned int* AnimalID_index;
     unsigned int target_index;
-    unsigned  int process_random_flag;
+    unsigned  int process_flag;//0:随机 1：离散固定效应 2：连续固定效应
     QStringList* fixed_effect_list ;
     QStringList* random_effect_list;
+    QStringList* Discrete_fixed_effect_list = NULL;
+    //QStringList* Continuous_fixed_effect_list  = NULL;
 };
-
+void clean_tablevie(QTableView* tableview);
 bool prepare_effect(prepare_effect_input effect_input);
 void clean_effect_table(QTableView* tableview);
 void add_item2effect_list(QTableView* original_tableview,QStringList phenotypelist,QStringList* fixed_effect_list);
