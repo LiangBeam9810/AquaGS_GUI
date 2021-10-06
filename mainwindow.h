@@ -87,6 +87,8 @@ public:
     QString G_matrix_path = "";
     QString output_path = "";
     QString Rdata_path = "";
+    QString blup_varcomp_path = "";
+    QString blup_formula_ans_path = "";
 
     QString classical_GEBV_path = "";
     QString bayes_GEBV_path = "";
@@ -223,6 +225,10 @@ private slots:
     void on_fixed_exclude_Button_2_clicked();
 
     void on_fixed_accept_pushButton_2_clicked();
+
+    void on_random_effec_testing_ComboBox_currentIndexChanged(int index);
+
+    void on_trans_formula_1_lineEdit_returnPressed();
 
 private:
     Ui::MainWindow *ui;

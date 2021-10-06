@@ -16,21 +16,39 @@ j = 6
 fixed_num = as.integer(args[j]) 
 print(paste("fixed_num :",fixed_num))
 fixed_index = c(0)
-for(i in 1:fixed_num){
+if(fixed_num)
+{
+  for(i in 1:fixed_num){
   j = j+1
   fixed_index[i]  =  as.integer(args[j])+1  # C++ start at 0, R at 1
 }
+}
+
 print(paste("fixed_index :",fixed_index))
 ##########################random################################################
 j = j+1
 random_num = as.integer(args[j]) 
 print(paste("random_num :",random_num))
 random_index = c(0)
-for(i in 1:random_num){
+if(random_num){
+  for(i in 1:random_num){
   j = j+1
   random_index[i]  =  as.integer(args[j])+1 # C++ start at 0, R at 1
+  }
+  print(paste("random_index :",random_index))
 }
-print(paste("random_index :",random_index))
+j=j+1
+formula = args[j]
+print(paste("formula :",formula))
+
+j = j+1
+varcomp_path = (args[j]) 
+print(paste("varcomp_path :",varcomp_path))
+
+j = j+1
+formula_ans_path = (args[j]) 
+print(paste("formula_ans_path :",formula_ans_path))
+
 ###############################################################################
 #input_path= "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
 #output_path = "/home/liang/Documents/AquaGS_GUI/Output/GEBV.txt"
@@ -46,7 +64,7 @@ print(paste("random_index :",random_index))
 #random_num = 0
 #random_index = c(0)
 
-#trans_formula = "h2 ~ V1/(V1+V2)"
+#trans_formula = "h2 ~ V1/(V1+V2)"formula
 
 require(data.table)
 load(input_path)
@@ -90,6 +108,8 @@ paste("random_part_pama:",random_part_pama)
 
 ###############################################################################
 library(sommer)
+
+
 if(mode_flag)
 {
   if(random_num==0)
@@ -124,6 +144,9 @@ if(mode_flag)
     setnames(GEBV,"rn","AnimalID")
     setnames(GEBV,"ans_G$U$`u:AnimalID`$ABT_t","GEBV")
     fwrite(GEBV,file = output_path,sep = " ",col.names = F)
+    
+    
+    
   }
 }else{
   if(random_num==0)
@@ -135,6 +158,7 @@ if(mode_flag)
     pama =paste(" ans_G <- try(mmer(",target_item,"~",fixed_part_pama,","
                 ,"random = ~ vs(",AnimalID_item,", Gu = A)+",random_part_pama,","
                 ,"rcov = ~ units,data = data))",sep="")
+    
   }
   print(paste("pama:",pama))
   eval(parse(text = pama))
@@ -155,17 +179,36 @@ if(mode_flag)
     pama = paste("GEBV <- as.data.table(ans_G$U$`u:",AnimalID_item,"`$",target_item,",keep.rownames = T)",sep = "")
     eval(parse(text = pama))
     
-    setnames(GEBV,"rn","AnimalID")
-    setnames(GEBV,"ans_G$U$`u:AnimalID`$ABT_t","GEBV")
-    fwrite(GEBV,file = output_path,sep = " ",col.names = F)
+    setnames(GEBV,"rn",AnimalID_item)
     
+    #setnames(GEBV,"ans_G$U$`u:AnimalID`$ABT_t","GEBV")
+    pama = ""
+    pama = paste("setnames(GEBV,\"ans_G$U$`u:",AnimalID_item,"`$",target_item,"\",\"GEBV\")",sep = "")
+    print(pama)
+    eval(parse(text = pama))
+    fwrite(GEBV,file = output_path,sep = " ",col.names = F)
   }
 }
+
+ans_varcomp = summary(ans_G)$varcomp
+write.table (ans_varcomp, varcomp_path, sep =",", row.names =TRUE, col.names =FALSE, quote =FALSE)
+print(ans_varcomp)
+
+ans_vpredict =  c(0,0)
+pama = ""
+pama = paste("ans_vpredict[1] = vpredict(ans_G,",formula,")$Estimate[1]",sep = "")
+eval(parse(text = pama))
+
+pama = ""
+pama = paste("ans_vpredict[2] = vpredict(ans_G,",formula,")$SE[1]",sep = "")
+eval(parse(text = pama))
+print(ans_vpredict)
+write.table (ans_vpredict,formula_ans_path, sep =",", row.names =FALSE, col.names =FALSE, quote =FALSE)
 
 if(file.exists(output_path)){
   print("GEBV building is completed.")
 }
 #######################    ##################################################
-save(file = "/home/liang/Documents/GEBVRbuffer.Rdata")
+##save(file = "/home/liang/Documents/GEBVRbuffer.Rdata")
 
 print("-----------blup_gblup_build.R output end--------------")

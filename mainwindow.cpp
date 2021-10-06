@@ -250,7 +250,7 @@ void MainWindow::on_qc_next_pushButton_clicked()
     this->runningFlag = true;
     ui->qc_next_pushButton->setDisabled(true);
     qApp->processEvents();
-  /*
+
     QFuture<void> fu = QtConcurrent::run(QThreadPool::globalInstance(), [&]()
     {
         if (!this->callPlinkGwas(genotype, out))
@@ -271,7 +271,6 @@ void MainWindow::on_qc_next_pushButton_clicked()
     this->runningFlag = false;
     ui->qc_next_pushButton->setEnabled(true);
 
-  -----------------*/
     A_G_matirx_build();
     Effect_Init();
     if(prepare_effect(fixed_effect_input_Discrete))
@@ -583,7 +582,10 @@ void MainWindow::on_effect_reset_pushButton_clicked()
     prepare_effect(fixed_effect_input_Discrete);
 }
 
-
+void MainWindow::on_random_effec_testing_ComboBox_currentIndexChanged(int index)
+{
+    prepare_effect(random_effect_input);
+}
 
 void MainWindow::on_effect_next_pushButton_clicked()
 {
@@ -608,14 +610,26 @@ void MainWindow::classical_method_Init()
 
     blup_mode.BLUP_accept_pushButtom = ui->BLUP_accept_pushButtom;
     blup_mode.BLUP_mode_ComboBox = ui->BLUP_mode_ComboBox;
-    blup_mode.trans_formula_1_ComboBox = ui->trans_formula_1_ComboBox;
-    blup_mode.trans_formula_2_ComboBox = ui->trans_formula_2_ComboBox;
+    blup_mode.trans_formula_1_lineEdit = ui->trans_formula_1_lineEdit;
+    blup_mode.trans_formula_2_lineEdit = ui->trans_formula_2_lineEdit;
+    blup_mode.classical_SE_textBrowser = ui->classical_SE_textBrowser;
+    blup_mode.classical_varComp_tableView = ui->classical_varComp_tableView;
+    blup_mode.classical_Estimate_textBrowser = ui->classical_Estimate_textBrowser;
     blup_mode.A_matrix_path = A_matrix_path;
     blup_mode.G_matrix_path = G_matrix_path;
     blup_mode.Rdata_path = Rdata_path;
     blup_mode.output_path = output_path;
     blup_mode.output_path.append("/GEBV.txt");
     classical_GEBV_path = blup_mode.output_path;
+
+    blup_mode.blup_varcomp_path = output_path;
+    blup_mode.blup_varcomp_path.append("/blup_varcomp.csv");
+    blup_varcomp_path = blup_mode.blup_varcomp_path;
+
+    blup_mode.blup_formula_ans_path = output_path;
+    blup_mode.blup_formula_ans_path.append("/blup_formula_ans.csv");
+    blup_formula_ans_path = blup_mode.blup_formula_ans_path;
+
     bayes_GEBV_path = output_path+"/bayes_GEBV.txt";
     blup_mode.AnimalID_index = AnimalID_phenotype_index;
     blup_mode.target_index = target_phenotype_index;
@@ -633,6 +647,8 @@ void MainWindow::classical_method_Init()
          blup_mode.random_effect_list[i] = phenotype_list[(random_effect_list[i].toInt())];
          qDebug()<<blup_mode.random_effect_list[i];
     }
+
+
     blup_fold_validate.Rdata_path = Rdata_path;
     blup_fold_validate.output_path = output_path;
     blup_fold_validate.output_path.append("/classical_accuracy.csv");
@@ -643,6 +659,8 @@ void MainWindow::classical_method_Init()
     blup_fold_validate.fixed_effect_list = fixed_effect_list;
     blup_fold_validate.random_effect_list = random_effect_list;
     blup_fold_validate.cross_validation_pushbutton = ui->classical_validate_pushButtom;
+
+
 
     blup_alphamate_all.alphmate_checkBox = ui->alphmate_checkBox;
     blup_alphamate_all.classical_more_Button = ui->classical_more_Button_3;
@@ -710,6 +728,11 @@ void MainWindow::classical_method_Init()
     blup_alphamate_Init(blup_alphamate_all);
     blup_alphamate_Init(bayes_alphamate_all);
 }
+
+void MainWindow::on_trans_formula_1_lineEdit_returnPressed()
+{
+}
+
 
 void MainWindow::on_BLUP_mode_ComboBox_currentIndexChanged(int index)
 {
@@ -880,5 +903,8 @@ void MainWindow::on_classical_mate_Button_4_clicked()
     running_alphamate(bayes_alphamate_all,Alphamate_running_path,output_path);
 
 }
+
+
+
 
 

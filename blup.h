@@ -8,13 +8,21 @@ struct blup
     QComboBox* BLUP_mode_ComboBox = NULL;
     QLineEdit* fiexd_effect_lineedit = NULL;
     QLineEdit* random_effect_lineedit = NULL;
-    QComboBox* trans_formula_1_ComboBox = NULL;
-    QComboBox* trans_formula_2_ComboBox = NULL;
+    QLineEdit* trans_formula_1_lineEdit = NULL;
+    QLineEdit* trans_formula_2_lineEdit = NULL;
     QPushButton* BLUP_accept_pushButtom = NULL;
+    QTextBrowser* classical_Estimate_textBrowser = NULL;
+    QTextBrowser* classical_SE_textBrowser = NULL;
+    QTableView* classical_varComp_tableView = NULL;
+
 
     QString Rdata_path = "";
     QString A_matrix_path = "";
     QString G_matrix_path = "";
+    QString blup_varcomp_path = "";
+    QString blup_formula_ans_path = "";
+    QString trans_formula_1 = "";
+    QString trans_formula_2 = "";
     unsigned int AnimalID_index;
     unsigned int target_index;
     QString output_path = "";

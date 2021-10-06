@@ -71,3 +71,27 @@ Thumbs.db
 *.dll
 *.exe
 
+Input/fixed_effect.csv
+Output/classical_accuracy.csv
+Output/Continuous__fixed_effect_dis.csv
+Output/Continuous_fixed_effect_dis.csv
+Output/Discrete_fixed_effect_dis.csv
+Output/fixed_effect.csv
+Output/ske_kur_of_original.csv
+Output/ske_kur_of_converted.csv
+Output/Rbuffer.Rdata
+Output/raw_output.raw
+Output/raw_output.nosex
+Output/raw_output.log
+Output/random_effect.csv
+Output/histogram_of_original.png
+Output/histogram_of_converted.png
+Output/gender.txt
+Output/GEBV.txt
+Output/G_matrix.txt
+Output/A_matrix.txt
+rscript/.RData
+.Rhistory
+snp_abt_630_imput_out_select48K.vcf
+Output/blup_formula_ans.txt
+Output/blup_varcomp.csv
