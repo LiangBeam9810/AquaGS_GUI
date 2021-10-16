@@ -36,6 +36,7 @@ void blup_alphamate_Init(alphamate_edge blup_alphamate_all)
     blup_alphamate_all.EqualizeMaleContributions_checkBox->setEnabled(false);
     blup_alphamate_all.EqualizeFemaleContributions_checkBox->setCheckState(Qt::Checked);
     blup_alphamate_all.EqualizeFemaleContributions_checkBox->setEnabled(false);
+    blup_alphamate_all.GenderFile_CheckBox->setCheckState(Qt::Unchecked);
 }
 
 void alphmate_enable_all(alphamate_edge blup_alphamate_all)

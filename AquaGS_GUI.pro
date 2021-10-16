@@ -12,6 +12,7 @@ SOURCES += \
     alphamate.cpp \
     blup.cpp \
     effect.cpp \
+    h_matrix.cpp \
     loadingwight.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     alphamate.h \
     blup.h \
     effect.h \
+    h_matrix.h \
     loadingwight.h \
     mainwindow.h \
     phenotype.h \

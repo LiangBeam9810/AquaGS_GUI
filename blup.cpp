@@ -1,5 +1,9 @@
 #include "blup.h"
 
+#define BLUP 0
+#define GBLUP 1
+#define HBLUP 2S
+
 bool MainWindow::A_G_matirx_build()
 {
 
@@ -8,6 +12,7 @@ bool MainWindow::A_G_matirx_build()
     Rdata_path.append("/Rbuffer.Rdata");
     A_matrix_path = output_path+"/A_matrix.txt";
     G_matrix_path = output_path+"/G_matrix.txt";
+    Gender_path =  output_path+"/gender.txt";
     qDebug()<<endl<<"Rdata_path"<<Rdata_path;
     qDebug()<<endl<<"A_matrix_path"<<A_matrix_path;
     qDebug()<<"G_matrix_path"<<G_matrix_path<<endl;
@@ -20,7 +25,8 @@ bool MainWindow::A_G_matirx_build()
     // The sequence of param is not changeable
     param.clear();
     param.append("Rscript");
-    param.append(" ");  param.append(runPath);
+    param.append(" ");
+    param.append(runPath);
     param.append(" ");
     param.append(csv_path);
     param.append(" ");
@@ -39,6 +45,10 @@ bool MainWindow::A_G_matirx_build()
     param.append(QString::number(Dam_phenotype_index));
     param.append(" ");
     param.append(QString::number(Sire_phenotype_index));
+    param.append(" ");
+    param.append(QString::number(Gender_phenotype_index));
+    param.append(" ");
+    param.append(Gender_path);
     param.append(" ");
     qDebug()<< endl<<"display param :"<<param<< endl;
     Process *A_G_matirx_build_process;
@@ -135,7 +145,14 @@ bool blup_build(blup blup_input)
     QString formula = "";
     formula = blup_input.trans_formula_1_lineEdit->text()+"~("+blup_input.trans_formula_2_lineEdit->text()+")";
     qDebug()<<"formula : "<<formula;
-    runPath.append("/rscript/blup_gblup_build(Rdata).R");
+    if(mode_flag == GBLUP||mode_flag == BLUP)
+    {
+        runPath.append("/rscript/blup_gblup_build(Rdata).R");
+    }
+    else {
+        runPath.append("/rscript/hblup_build(Rdata).R");
+    }
+
     qDebug() << endl <<"runPath:" << runPath << endl;
     QString param;
     // The sequence of param is not changeable

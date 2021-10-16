@@ -10,6 +10,8 @@ struct phenotype_select{
     QComboBox* Dam_ComboBox = NULL;
     QComboBox* Sire_ComboBox = NULL;
     QCheckBox* outlier_CheckBox = NULL;
+    QCheckBox* Gender_CheckBox = NULL;
+    QComboBox* Gender_ComboBox = NULL;
 };
 
 
@@ -22,7 +24,8 @@ void phenotype_select_line_init(phenotype_select phenotype_select_line,QString c
 void phenotype_select_line_get_index(phenotype_select phenotype_select_line,unsigned int * target_index,
                                      unsigned int * ID_index,
                                      unsigned int * Dam_index,
-                                     unsigned int * Sire_index);
+                                     unsigned int * Sire_index,
+                                     int * Gender_index);
 
 void prepare_phenotype(QString csv_path,
                        QStringList* phenotype_list ,

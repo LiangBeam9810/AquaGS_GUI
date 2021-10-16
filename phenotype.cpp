@@ -8,18 +8,30 @@ void phenotype_select_line_init(phenotype_select phenotype_select_line,QString c
     prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.Dam_ComboBox);
     prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.Sire_ComboBox);
     prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.target_phenotype_ComboBox);
+    prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.Gender_ComboBox);
     phenotype_select_line.outlier_CheckBox->setCheckState(Qt::Unchecked);
 }
+
 
 void phenotype_select_line_get_index(phenotype_select phenotype_select_line,unsigned int * target_index,
                                      unsigned int * ID_index,
                                      unsigned int * Dam_index,
-                                     unsigned int * Sire_index)
+                                     unsigned int * Sire_index,
+                                     int * Gender_index)
 {
     *target_index = phenotype_select_line.target_phenotype_ComboBox->currentIndex();
     *ID_index = phenotype_select_line.AnimalID_ComboBox->currentIndex();
     *Dam_index = phenotype_select_line.Dam_ComboBox->currentIndex();
     *Sire_index = phenotype_select_line.Sire_ComboBox->currentIndex();
+    if(phenotype_select_line.Gender_CheckBox->isChecked())
+    {
+        *Gender_index = phenotype_select_line.Gender_ComboBox->currentIndex();
+    }
+    else
+    {
+        *Gender_index = -1;
+    }
+
 }
 
 void prepare_phenotype(QString csv_path,
@@ -61,6 +73,8 @@ void init_ready_for_run(QTextBrowser* skewnessddisplay_1,
     *fist_convert_flag = 1;
     *target_phenotype_index = phenotypeComboBox->currentIndex();
 }
+
+
 void change_convert_wight_state(int state, QPushButton* convert_Button,QPushButton* reset_Button,QPushButton* accept_Button,QToolButton* detial_Button)
 {
     if(state){

@@ -11,7 +11,7 @@ void Process:: process_notrunning()
 {
     if(this->state() == QProcess::NotRunning)
     {
-        emit process_end_to_close_gif("1");
+        emit process_end_to_close_gif("1");//运行完成发送信号
     }
 }
 void Process::on_readProcessOutput()
@@ -36,7 +36,7 @@ void Process::Process_runing_gif(QString title)
     loading_page = new  LoadingDialog;
     QString title_string = title;
     loading_page->setTipsText(title_string);
-    connect(this, SIGNAL(process_end_to_close_gif(QString)), loading_page, SLOT(cancelBtnClicked()));
+    connect(this, SIGNAL(process_end_to_close_gif(QString)), loading_page, SLOT(cancelBtnClicked()));//运行完成信号 绑定关闭loading界面的取消函数
 
     while ((this->state() == QProcess::Starting)||(this->state() == QProcess::Running))
     {

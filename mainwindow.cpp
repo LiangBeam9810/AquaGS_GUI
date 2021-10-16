@@ -103,7 +103,6 @@ void MainWindow::Phenotype_Init()
 {
     if(!start_complete_flag)
     {
-
     }
     else
     {
@@ -112,7 +111,10 @@ void MainWindow::Phenotype_Init()
         phenotype_select_line.Sire_ComboBox = ui->Sire_ComboBox;
         phenotype_select_line.target_phenotype_ComboBox = ui->phenotype_ComboBox;
         phenotype_select_line.outlier_CheckBox = ui->outlier_swith;
+        phenotype_select_line.Gender_CheckBox = ui->Gender_CheckBox;
+        phenotype_select_line.Gender_ComboBox = ui->Gender_ComboBox;
         phenotype_select_line_init(phenotype_select_line,csv_path,&phenotype_list);
+        ui->Gender_ComboBox->setEnabled(false);
     }
     return;
 }
@@ -133,15 +135,27 @@ void MainWindow::on_convert_swith_stateChanged(int arg1)
 void MainWindow::on_phenotype_run_Button_clicked()
 {
     unsigned int outlier_state = 0;
-    check_all_path(ui->output_lineEdit,ui->csv_lineEdit,ui->vcf_lineEdit,&output_path,&csv_path,&vcf_path);//ever time click run,the path need to be reload.
+    check_all_path(ui->output_lineEdit,
+                   ui->csv_lineEdit,
+                   ui->vcf_lineEdit,
+                   &output_path,
+                   &csv_path,
+                   &vcf_path);//if clicked run buttun,the path need to be reload.
     init_ready_for_run(ui->skewnessdisplay_1,ui->kurtosisdisplay_1,ui->horizontallabel_1,
                        ui->skewnessdisplay_2,ui->kurtosisdisplay_2,ui->horizontallabel_2,
                        ui->outlier_swith,
                        ui->phenotype_ComboBox,
                        ui->phenotype_accept_Button,
                        ui->convert_swith,
-                       &outlier_state,&fist_convert_flag,&target_phenotype_index);
-    phenotype_select_line_get_index(phenotype_select_line,&target_phenotype_index,&AnimalID_phenotype_index,&Dam_phenotype_index,&Sire_phenotype_index);
+                       &outlier_state,
+                       &fist_convert_flag,
+                       &target_phenotype_index);
+    phenotype_select_line_get_index(phenotype_select_line,
+                                    &target_phenotype_index,
+                                    &AnimalID_phenotype_index,
+                                    &Dam_phenotype_index,
+                                    &Sire_phenotype_index,
+                                    &Gender_phenotype_index);
     if(outlier_elimination(&csv_path,outlier_state,target_phenotype_index))
     {
         qDebug()<<endl<<"outlier completed!"<<endl;
@@ -150,6 +164,7 @@ void MainWindow::on_phenotype_run_Button_clicked()
         qDebug()<<"ID_index:"<<AnimalID_phenotype_index;
         qDebug()<<"Dam_index:"<<Dam_phenotype_index;
         qDebug()<<"Sire_index:"<<Sire_phenotype_index;
+        qDebug()<<"Gender_index:"<<Gender_phenotype_index;
     }
     else {
         qDebug()<<endl<<"outlier error!"<<endl;
@@ -232,9 +247,22 @@ void MainWindow::on_phenotype_next_pushButton_clicked()
      }
      return;
 }
+
 void MainWindow::on_AnimalID_ComboBox_currentIndexChanged(int index)
 {
     AnimalID_phenotype_index = index;
+}
+
+void MainWindow::on_Gender_CheckBox_stateChanged(int arg1)
+{
+    qDebug()<<arg1;
+    if(arg1 == 2)
+    {
+        ui->Gender_ComboBox->setEnabled(true);
+    }
+    else {
+        ui->Gender_ComboBox->setEnabled(false);
+    }
 }
 
 /*-------------------------------------- QC -----------------------------------------*/
@@ -272,6 +300,7 @@ void MainWindow::on_qc_next_pushButton_clicked()
     ui->qc_next_pushButton->setEnabled(true);
 
     A_G_matirx_build();
+    bilud_H_matrix(Rdata_path,output_path,&H_matrix_path);
     Effect_Init();
     if(prepare_effect(fixed_effect_input_Discrete))
     {
@@ -454,10 +483,10 @@ void MainWindow::on_fixed_selected_TableView_clicked(const QModelIndex &index)
 
 void MainWindow::on_fixed_select_Button_clicked()
 {
-    add_item2effect_list(ui->fixed_phenotype_pr_TableView,phenotype_list,&fixed_effect_list);
-    qDebug()<<endl<<"Discrete_fixed_effect_list  is "<<fixed_effect_list<<endl;
+    add_item2effect_list(ui->fixed_phenotype_pr_TableView,
+                         phenotype_list,&fixed_effect_list);
     prepare_effect(fixed_effect_input_Discrete);
-    //ui->fixed_accept_pushButton->setEnabled(true);
+    //ui->fixed_accept_pushButton->setEnabled(true);qDebug()<<endl<<"Discrete_fixed_effect_list  is "<<fixed_effect_list<<endl;
 }
 void MainWindow::on_fixed_exclude_Button_clicked()
 {
@@ -719,13 +748,12 @@ void MainWindow::classical_method_Init()
     blup_alphamate_all.SelCriterionFile_lineEdit->setText(classical_GEBV_path);
     bayes_alphamate_all.SelCriterionFile_lineEdit->setText(classical_GEBV_path);
     qDebug()<<"SelCriterionFile PATH : "<<classical_GEBV_path;
-    Gender_path =  "/home/liang/Documents/AquaGS_GUI/Output/gender.txt";//
+    //Gender_path =  "/home/liang/Documents/AquaGS_GUI/Output/gender.txt";//
     blup_alphamate_all.GenderFile_lineEdit->setText(Gender_path);
     bayes_alphamate_all.GenderFile_lineEdit->setText(Gender_path);
 
     blup_Init(blup_mode);
     blup_fold_validate_Init(blup_fold_validate);
-    blup_alphamate_Init(blup_alphamate_all);
     blup_alphamate_Init(bayes_alphamate_all);
 }
 
@@ -777,7 +805,7 @@ void MainWindow::on_classical_more_Button_3_clicked()
 
 void MainWindow::on_GenderFile_checkBox_3_stateChanged(int arg1)
 {
-    if((ui->alphmate_checkBox->checkState() == Qt::Checked)&& arg1 == 2)
+    if(arg1 == 2)
     {
         alphmate_able_gender(blup_alphamate_all,true);
     }else
@@ -825,7 +853,7 @@ void MainWindow::on_bayesrunpushButton_clicked()
     param.append(" ");
     param.append(ui->dropoutspinBox->text());
     param.append(" ");
-
+    
     qDebug()<< endl<<"display param :"<<param<< endl;
 
     //QMessageBox::information(NULL, "Massage", "This will take a few minutes");
@@ -903,6 +931,9 @@ void MainWindow::on_classical_mate_Button_4_clicked()
     running_alphamate(bayes_alphamate_all,Alphamate_running_path,output_path);
 
 }
+
+
+
 
 
 

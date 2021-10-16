@@ -11,16 +11,19 @@ target_index = as.integer(args[6]) + 1  # C++ start at 0, R at 1
 AnimalID_index = as.integer(args[7]) +1  
 Dam_index =  as.integer(args[8]) + 1
 Sire_index = as.integer(args[9]) + 1
+Gender_index = as.integer(args[10]) + 1
+Gender_path = args[11]
 
 #csv_path= "/home/liang/Documents/AquaGS_GUI/Input/ABT20210617_outlier.csv"
-#raw_path = "/home/liang/Documents/AquaGS_GUI/Output/snp_abt_630_imput_out_select48K.raw"
+#raw_path = "/home/liang/Documents/AquaGS_GUI/Output/raw_output.raw"
 #rdata_path = "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
-#A_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/A_matrix.txt"
+#A_matrix_path = "/home/l iang/Documents/AquaGS_GUI/Output/A_matrix.txt"
 #G_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/G_matrix.txt"
 #target_index = 8 + 1  # C++ start at 0, R at 1
 #AnimalID_index = 0 +1 # C++ start at 0, R at 1
 #Dam_index =  2 + 1
 #Sire_index = 1 + 1
+#Gender_index = 11
 
 
 require(data.table)
@@ -47,6 +50,11 @@ target_item = col_list[target_index]
 AnimalID_item = col_list[AnimalID_index]
 Dam_item =  col_list[Dam_index]
 Sire_item = col_list[Sire_index]
+Gender_item = col_list[Gender_index]
+
+Gender_data <-data.frame(ID = data[,..AnimalID_index],gender = data[,..Gender_index])
+colnames(Gender_data) <- c("ID", "gender")
+fwrite(Gender_data,file = Gender_path,sep = " ",col.names = F)
 
 data_A <-data.frame(ID = data[,..AnimalID_index],Dam = data[,..Dam_index],sire = data[,..Sire_index])
 colnames(data_A) <- c("ID", "Dam","Sire")
@@ -78,7 +86,8 @@ G_dt <- as.data.table(G,keep.rownames = T)
 setnames(G_dt,"rn",AnimalID_item)
 fwrite(G_dt,file = G_matrix_path,sep = " ",col.names = F)
 #######################    ##################################################
-save(data,A,G,id,col_list,file = rdata_path)
+save(data,A,G,AnimalID_item,id,geno_012_DT,geno_012_matrix,file = rdata_path)
 rdata_path
 #######################  G  ##################################################
 print("-----------A_G_matirx_build.R output end--------------")
+

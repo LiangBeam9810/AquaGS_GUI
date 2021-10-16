@@ -49,6 +49,8 @@
 #include "process.h"
 #include "tool.h"
 #include "loadingwight.h"
+#include "h_matrix.h"
+
 #include <QtConcurrent>
 #include <QFuture>
 
@@ -85,6 +87,7 @@ public:
     QString raw_path = "";
     QString A_matrix_path = "";
     QString G_matrix_path = "";
+    QString H_matrix_path = "";
     QString output_path = "";
     QString Rdata_path = "";
     QString blup_varcomp_path = "";
@@ -100,6 +103,7 @@ public:
     unsigned int AnimalID_phenotype_index= 0 ;
     unsigned int Dam_phenotype_index= 0 ;
     unsigned int Sire_phenotype_index= 0 ;
+    int Gender_phenotype_index = -1;
 
     unsigned int fist_convert_flag = 1;
     QStringList fixed_effect_list ;
@@ -229,6 +233,8 @@ private slots:
     void on_random_effec_testing_ComboBox_currentIndexChanged(int index);
 
     void on_trans_formula_1_lineEdit_returnPressed();
+
+    void on_Gender_CheckBox_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

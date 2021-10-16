@@ -40,7 +40,7 @@ void LoadingDialog::initUi()
     //取消按钮
     m_pCancelBtn = new QPushButton(m_pCenterFrame);
     m_pCancelBtn->setObjectName("cancelBtn");
-    m_pCancelBtn->setText("取消等待");
+    m_pCancelBtn->setText("Terminal output");
     m_pCancelBtn->setStyleSheet("QPushButton#cancelBtn{"
                                     "background-color: #edeef6;"
                                     "border-radius: 4px;"
@@ -61,12 +61,13 @@ void LoadingDialog::initUi()
     shadow->setColor(QColor(32, 101, 165));
     shadow->setBlurRadius(10);
     this->setGraphicsEffect(shadow);
+
 }
 
-/**
+/***
  * @brief LoadingDialog::setTipsText 设置提示文本
  * @param strTipsText 提示文本
- */
+ ***/
 void LoadingDialog::setTipsText(QString strTipsText)
 {
     m_pTipsLabel->setText(strTipsText);
