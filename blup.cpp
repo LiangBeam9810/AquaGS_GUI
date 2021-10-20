@@ -2,7 +2,126 @@
 
 #define BLUP 0
 #define GBLUP 1
-#define HBLUP 2S
+#define HBLUP 2
+
+bool rdata_init(QString Rdata_path,QString csv_path,QString raw_path,unsigned int  target_index,unsigned int AnimalID_index)
+{
+    QString runPath = QDir::currentPath();
+    runPath.append("/rscript/data_init.R");
+    qDebug() << endl <<"runPath:" << runPath ;
+
+    QString param;
+    // The sequence of param is not changeable
+    param.clear();
+    param.append("Rscript");
+    param.append(" ");
+    param.append(runPath);
+    param.append(" ");
+    param.append(csv_path);
+    param.append(" ");
+    param.append(raw_path);
+    param.append(" ");
+    param.append(Rdata_path);
+    param.append(" ");
+    param.append(QString::number(target_index));
+    param.append(" ");
+    param.append(QString::number(AnimalID_index));
+    qDebug() <<"param:" << param << endl;
+    Process* rdata_init_process;
+    rdata_init_process = new Process;
+    if(!(rdata_init_process->runRscript(param,"Building rdata")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the rdata init process!");
+        return false;
+    }
+    return true;
+}
+
+bool G_matirx_build(QString Rdata_path,QString G_matrix_path)
+{
+    QString runPath = QDir::currentPath();
+    runPath.append("/rscript/G_matirx_build.R");
+    qDebug() << endl <<"runPath:" << runPath ;
+
+    QString param;
+    // The sequence of param is not changeable
+    param.clear();
+    param.append("Rscript");
+    param.append(" ");
+    param.append(runPath);
+    param.append(" ");
+    param.append(Rdata_path);
+    param.append(" ");
+    param.append(G_matrix_path);
+    qDebug() <<"param:" << param << endl;
+    Process* G_matirx_build_process;
+    G_matirx_build_process = new Process;
+    if(!(G_matirx_build_process->runRscript(param,"Building G matirx")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the G matirx build process!");
+        return false;
+    }
+    return true;
+}
+
+bool A_matirx_build(QString Rdata_path,QString A_matrix_path,int Dam_index,int Sire_index)
+{
+    QString runPath = QDir::currentPath();
+    runPath.append("/rscript/A_matirx_build.R");
+    qDebug() << endl <<"runPath:" << runPath ;
+    QString param;
+    // The sequence of param is not changeable
+    param.clear();
+    param.append("Rscript");
+    param.append(" ");
+    param.append(runPath);
+    param.append(" ");
+    param.append(Rdata_path);
+    param.append(" ");
+    param.append(A_matrix_path);
+    param.append(" ");
+    param.append(QString::number(Dam_index));
+    param.append(" ");
+    param.append(QString::number(Sire_index));
+    qDebug() <<"param:" << param << endl;
+    Process* A_matirx_build_process;
+    A_matirx_build_process = new Process;
+    if(!(A_matirx_build_process->runRscript(param,"Building A matirx")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the A matirx build process!");
+        return false;
+    }
+    return true;
+}
+
+bool Gender_build(QString Rdata_path,QString Gender_path,unsigned Gender_index)
+{
+    QString runPath = QDir::currentPath();
+    runPath.append("/rscript/Gender_build.R");
+    qDebug() << endl <<"runPath:" << runPath ;
+
+    QString param;
+    // The sequence of param is not changeable
+    param.clear();
+    param.append("Rscript");
+    param.append(" ");
+    param.append(runPath);
+    param.append(" ");
+    param.append(Rdata_path);
+    param.append(" ");
+    param.append(Gender_path);
+    param.append(" ");
+    param.append(QString::number(Gender_index));
+    qDebug() <<"param:" << param << endl;
+    Process* Gender_build_process;
+    Gender_build_process = new Process;
+    if(!(Gender_build_process->runRscript(param,"Building gender.txt")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the gender build process!");
+        return false;
+    }
+    return true;
+}
 
 bool MainWindow::A_G_matirx_build()
 {
@@ -17,47 +136,17 @@ bool MainWindow::A_G_matirx_build()
     qDebug()<<endl<<"A_matrix_path"<<A_matrix_path;
     qDebug()<<"G_matrix_path"<<G_matrix_path<<endl;
     /*-------------------------------------------*/
-
-    QString runPath = QDir::currentPath();
-    runPath.append("/rscript/A_G_matirx_build.R");
-    qDebug() << endl <<"runPath:" << runPath << endl;
-    QString param;
-    // The sequence of param is not changeable
-    param.clear();
-    param.append("Rscript");
-    param.append(" ");
-    param.append(runPath);
-    param.append(" ");
-    param.append(csv_path);
-    param.append(" ");
-    param.append(raw_path);
-    param.append(" ");
-    param.append(Rdata_path);
-    param.append(" ");
-    param.append(A_matrix_path);
-    param.append(" ");
-    param.append(G_matrix_path);
-    param.append(" ");
-    param.append(QString::number(target_phenotype_index));
-    param.append(" ");
-    param.append(QString::number(AnimalID_phenotype_index));
-    param.append(" ");
-    param.append(QString::number(Dam_phenotype_index));
-    param.append(" ");
-    param.append(QString::number(Sire_phenotype_index));
-    param.append(" ");
-    param.append(QString::number(Gender_phenotype_index));
-    param.append(" ");
-    param.append(Gender_path);
-    param.append(" ");
-    qDebug()<< endl<<"display param :"<<param<< endl;
-    Process *A_G_matirx_build_process;
-    A_G_matirx_build_process = new Process;
-    if(!A_G_matirx_build_process->runRscript(param," Building A and G matirx "))
+    rdata_init(Rdata_path,csv_path,raw_path,target_phenotype_index,AnimalID_phenotype_index);
+    G_matirx_build(Rdata_path,G_matrix_path);
+    if(blup_Hblup_flag)
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the A&G matirx build process!");
-        return false;
+        A_matirx_build(Rdata_path,A_matrix_path,Dam_phenotype_index,Sire_phenotype_index);
     }
+    if(gender_flag)
+    {
+        Gender_build(Rdata_path,Gender_path,Gender_phenotype_index);
+    }
+
     return true;
 }
 
@@ -136,6 +225,11 @@ void blup_fold_validate_Init(fold_validate fold_validate_input)
 bool blup_build(blup blup_input)
 {
     unsigned int mode_flag = blup_input.BLUP_mode_ComboBox->currentIndex();
+    if((!(mode_flag == GBLUP))&&(!(blup_input.blup_hblup_flag)))
+    {
+        QMessageBox::warning( NULL,"Condition error:","\"Dam\" and \"Sire\" is missing.\n Please select \"GBlup\" in the \"Classical method \"");
+        return false;
+    }
     QString runPath = QDir::currentPath();
     if(blup_input.trans_formula_1_lineEdit->text().isEmpty() || blup_input.trans_formula_2_lineEdit->text().isEmpty())
     {

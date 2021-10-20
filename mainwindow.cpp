@@ -30,7 +30,7 @@ void MainWindow::init()
     //ui->out_lineEdit->setText("Enter/Select the output folder.");
     csv_line->setText("/home/liang/Documents/AquaGS_GUI/Input/ABT20210617.csv");
     vcf_line->setText("/home/liang/Documents/AquaGS_GUI/snp_abt_630_imput_out_select48K.vcf");
-    out_line->setText("/home/liang/Documents/AquaGS_GUI/Output");
+    out_line->setText("/home/liang/Desktop");
     ui->tabWidget->setCurrentIndex(0);//Start index
     /*--------------------------------------------------------------*/
 
@@ -115,6 +115,8 @@ void MainWindow::Phenotype_Init()
         phenotype_select_line.Gender_ComboBox = ui->Gender_ComboBox;
         phenotype_select_line_init(phenotype_select_line,csv_path,&phenotype_list);
         ui->Gender_ComboBox->setEnabled(false);
+        ui->Dam_ComboBox->setEnabled(false);
+        ui->Sire_ComboBox->setEnabled(false);
     }
     return;
 }
@@ -239,9 +241,14 @@ void MainWindow::on_phenotype_next_pushButton_clicked()
 
      if(check_convert_path_of_phenotype(phenotype_converted_flag,ui->convert_swith))
      {
-         ui->tabWidget->setCurrentIndex(2);
-     }
-     else
+
+         if(blup_Hblup_flag == false)
+         {
+             QMessageBox::warning(NULL, "OK", "\"Dam\" and \"Sire\" is missing.\n Please select \"GBlup\" in the \"Classical method \"");
+         }
+         ui->tabWidget->setCurrentIndex(2);//显示下一页
+    }
+     else //没有点击accept按钮 确认正态转换后的数据
      {
           QMessageBox::warning(NULL, "OK", "The converted switch was checked, but no converted phenotype was accepted!");
      }
@@ -259,11 +266,31 @@ void MainWindow::on_Gender_CheckBox_stateChanged(int arg1)
     if(arg1 == 2)
     {
         ui->Gender_ComboBox->setEnabled(true);
+        gender_flag = true;
     }
     else {
         ui->Gender_ComboBox->setEnabled(false);
+        gender_flag = false;
     }
 }
+
+
+void MainWindow::on_Blup_CheckBox_stateChanged(int arg1)
+{
+    qDebug()<<arg1;
+    if(arg1 == 2)
+    {
+        ui->Dam_ComboBox->setEnabled(true);
+        ui->Sire_ComboBox->setEnabled(true);
+        blup_Hblup_flag = true;
+    }
+    else {
+        ui->Dam_ComboBox->setEnabled(false);
+        ui->Sire_ComboBox->setEnabled(false);
+        blup_Hblup_flag = false;
+    }
+}
+
 
 /*-------------------------------------- QC -----------------------------------------*/
 
@@ -271,8 +298,55 @@ void MainWindow::on_Gender_CheckBox_stateChanged(int arg1)
 void MainWindow::on_qc_next_pushButton_clicked()
 {
 
+    if(ui->genofillcheckBox->isChecked())
+    {
+
+        QString newvcf = ui->genofill_output_lineEdit->text();
+
+        QString param0 = "source /etc/profile";
+        QProcess display_process0;
+        display_process0.execute(param0);
+
+        QString runPath = QDir::currentPath();
+        runPath.append("/beagle.28Jun21.220.jar");
+        qDebug() << endl <<"runPath:" << runPath << endl;
+        QString param;
+        // The sequence of param is not changeable
+        param.clear();
+        param.append("java");
+        param.append(" ");
+        param.append("-jar");
+        param.append(" ");
+        param.append(runPath);
+        param.append(" ");
+        param.append("gt="+vcf_path);
+        param.append(" ");
+        param.append("out="+output_path+"/"+newvcf);
+        param.append(" ");
+        qDebug()<< endl<<"display param :"<<param<< endl;
+        Process* validate_process;
+        validate_process = new Process;
+        if(!(validate_process->runRscript(param,"Genotype Filling")))
+        {
+            QMessageBox::warning(NULL, "Process error:", "Can't open the Genotype Filling process!");
+            return;
+        }
+
+        QString param1 = "gunzip "+output_path+"/"+newvcf+".vcf.gz";
+        QProcess display_process1;
+        display_process1.execute(param1);
+    }
+
     QString phenotype = csv_path;
-    QString genotype = vcf_path;
+    QString genotype;
+    if(ui->genofillcheckBox->isChecked())
+    {
+        genotype = output_path+ui->genofill_output_lineEdit->text()+".vcf";
+    }
+    else
+    {
+        genotype = vcf_path;
+    }
     QString out = output_path;
 
     this->runningFlag = true;
@@ -300,7 +374,7 @@ void MainWindow::on_qc_next_pushButton_clicked()
     ui->qc_next_pushButton->setEnabled(true);
 
     A_G_matirx_build();
-    bilud_H_matrix(Rdata_path,output_path,&H_matrix_path);
+    if(blup_Hblup_flag) bilud_H_matrix(Rdata_path,output_path, &H_matrix_path);
     Effect_Init();
     if(prepare_effect(fixed_effect_input_Discrete))
     {
@@ -314,80 +388,7 @@ void MainWindow::on_qc_next_pushButton_clicked()
 
 }
 
-bool MainWindow::callPlinkGwas(QString genotype, QString out)
-{
 
-    QString runPath1 = QDir::currentPath();
-//    runPath.append("/rscript/fixed_effect_testing.R");
-    qDebug() << endl <<"runPath1:" << runPath1 << endl;
-
-    QString maf = ui->mafcheckBox->isChecked()? ui->mafdoubleSpinBox->text():nullptr;
-    QString mind = ui->mindcheckBox->isChecked()? ui->minddoubleSpinBox->text():nullptr;
-    QString geno = ui->genocheckBox->isChecked()? ui->genodoubleSpinBox->text():nullptr;
-    QString hwe = ui->hwcheckBox->isChecked()? ui->hwdoubleSpinBox->text():nullptr;
-
-    QString plinkpath = runPath1.append("/plink/");
-//    QString plinkpath = "/home/zhi/Desktop/AquaGS_GUI-main/plink/";
-    //这里修改生成的中间文件和输出raw的路径
-    QString file2=plinkpath+"files/"+"file2";
-    QString file3=plinkpath+"files/"+"file3";
-    QString file4=plinkpath+"files/"+"file4";
-    QString file5=plinkpath+"files/"+"file5";
-    QString outfile=out+"/raw_output";
-    raw_path = outfile+".raw";
-    Plink plink;
-    Process* plink_process;
-    plink_process = new Process;
-    plink.part1(genotype, file2);
-    if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
-    {
-        return false;
-    }
-
-    plink.part2(file2, geno, maf, mind, file3);
-    if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
-    {
-        return false;
-    }
-
-    plink.part3(file3, hwe, file4);
-    if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
-    {
-        return false;
-    }
-
-    if (ui->swcheckBox->isChecked())
-    {
-        QString winSize, stepLen, r2Threshold;
-
-        winSize = ui->winsizedoubleSpinBox->text();
-        stepLen = ui->steplengthdoubleSpinBox->text();
-        r2Threshold = ui->r2doubleSpinBox->text();
-        plink.part4(file4, winSize, stepLen, r2Threshold, file5);
-        if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
-        {
-            return false;
-        }
-        plink.part5(file5, outfile);
-        if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
-        {
-            return false;
-        }
-
-    }
-    else
-    {
-        plink.part6(file4, outfile);
-        if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
-        {
-            return false;
-        }
-
-    }
-
-    return true;
-
-}
 
 /*---------------------------------------------------------------------------------------*/
 
@@ -557,6 +558,7 @@ void MainWindow::on_fixed_accept_pushButton_2_clicked()
     change_select_exclude_Button(0,Continuous_selected_fixed_flag,ui->fixed_select_Button_2,ui->fixed_exclude_Button_2);
     ui->fixed_accept_pushButton_2->setEnabled(false);
     prepare_effect(random_effect_input);//准备刷新随机效应
+
 }
 
 //----------------------------random effect part-------------------------------------------------------------------
@@ -634,6 +636,9 @@ void MainWindow::on_effect_next_pushButton_clicked()
 /*---------------------------------class_method-------------------------------------------*/
 void MainWindow::classical_method_Init()
 {
+
+    //bilud_H_matrix(Rdata_path,output_path, &H_matrix_path);
+    blup_mode.blup_hblup_flag = blup_Hblup_flag;
     blup_mode.fiexd_effect_lineedit = ui->blup_fixed_lineEdit;
     blup_mode.random_effect_lineedit = ui->blup_random_lineEdit;
 
@@ -839,24 +844,31 @@ void MainWindow::on_bayesrunpushButton_clicked()
     param.append(" ");
     param.append(runPath);
     param.append(" ");
-    param.append(csv_path);
+    param.append(csv_path);//1
     param.append(" ");
-    param.append(output_path);
+    param.append(output_path);//2
     param.append(" ");
-    param.append(output_path+"/raw_output.raw");
+    param.append(output_path+"/raw_output.raw");//3
     param.append(" ");
-    param.append(ui->modelcomboBox->currentText());
+    param.append(ui->modelcomboBox->currentText());//4
     param.append(" ");
-    param.append(ui->k_flod_ComboBox->currentText());
+    param.append(ui->k_flod_ComboBox->currentText());//5
     param.append(" ");
-    param.append(ui->iterationspinBox->text());
+    param.append(ui->iterationspinBox->text());//6
     param.append(" ");
-    param.append(ui->dropoutspinBox->text());
+    param.append(ui->dropoutspinBox->text());//7
     param.append(" ");
-    
-    qDebug()<< endl<<"display param :"<<param<< endl;
+    param.append(QString::number(target_phenotype_index));
+    param.append(" ");
+    param.append(QString::number(fixed_effect_list.length()));
+    param.append(" ");
 
-    //QMessageBox::information(NULL, "Massage", "This will take a few minutes");
+    for(int i = 0;i < fixed_effect_list.length();i++){
+        param.append(fixed_effect_list[i]);
+        param.append(" ");
+    }
+
+    qDebug()<< endl<<"display param :"<<param<< endl;
 
     QProcess display_process;
 
@@ -896,7 +908,6 @@ void MainWindow::on_bayesrunpushButton_clicked()
     ui->herittextBrowser->insertPlainText(bayesoutput[1]);
     ui->varcomp1textBrowser->insertPlainText(bayesoutput[2]);
     ui->varcomp2textBrowser->insertPlainText(bayesoutput[3]);
-
 }
 
 
@@ -931,6 +942,8 @@ void MainWindow::on_classical_mate_Button_4_clicked()
     running_alphamate(bayes_alphamate_all,Alphamate_running_path,output_path);
 
 }
+
+
 
 
 

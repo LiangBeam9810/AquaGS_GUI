@@ -5,6 +5,81 @@ Plink::Plink()
     this->paramlist.clear();
 }
 
+bool MainWindow::callPlinkGwas(QString genotype, QString out)
+{
+
+    QString runPath1 = QDir::currentPath();
+//    runPath.append("/rscript/fixed_effect_testing.R");
+    qDebug() << endl <<"runPath1:" << runPath1 << endl;
+
+    QString maf = ui->mafcheckBox->isChecked()? ui->mafdoubleSpinBox->text():nullptr;
+    QString mind = ui->mindcheckBox->isChecked()? ui->minddoubleSpinBox->text():nullptr;
+    QString geno = ui->genocheckBox->isChecked()? ui->genodoubleSpinBox->text():nullptr;
+    QString hwe = ui->hwcheckBox->isChecked()? ui->hwdoubleSpinBox->text():nullptr;
+
+    QString plinkpath = runPath1.append("/plink/");
+//    QString plinkpath = "/home/zhi/Desktop/AquaGS_GUI-main/plink/";
+    //这里修改生成的中间文件和输出raw的路径
+    QString file2=plinkpath+"files/"+"file2";
+    QString file3=plinkpath+"files/"+"file3";
+    QString file4=plinkpath+"A_G_matirx_build();files/"+"file4";
+    QString file5=plinkpath+"files/"+"file5";
+    QString outfile=out+"/raw_output";
+    raw_path = outfile+".raw";
+    Plink plink;
+    Process* plink_process;
+    plink_process = new Process;
+    plink.part1(genotype, file2);
+    if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
+    {
+        return false;
+    }
+
+    plink.part2(file2, geno, maf, mind, file3);
+    if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
+    {
+        return false;
+    }
+
+    plink.part3(file3, hwe, file4);
+    if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
+    {
+        return false;
+    }
+
+    if (ui->swcheckBox->isChecked())
+    {
+        QString winSize, stepLen, r2Threshold;
+
+        winSize = ui->winsizedoubleSpinBox->text();
+        stepLen = ui->steplengthdoubleSpinBox->text();
+        r2Threshold = ui->r2doubleSpinBox->text();
+        plink.part4(file4, winSize, stepLen, r2Threshold, file5);
+        if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
+        {
+            return false;
+        }
+        plink.part5(file5, outfile);
+        if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
+        {
+            return false;
+        }
+
+    }
+    else
+    {
+        plink.part6(file4, outfile);
+        if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
+        {
+            return false;
+        }
+
+    }
+
+    return true;
+
+}
+
 bool Plink::part1(QString vcfFile, QString file2)
 {
     //./plink --vcf snp_abt_630_imput_out_select48K.vcf --allow-extra-chr --threads 20 --const-fid --recode --out file2

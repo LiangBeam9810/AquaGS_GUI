@@ -30,6 +30,7 @@ struct blup
     QStringList random_effect_list ;
     QStringList fixed_effect_list2R ;
     QStringList random_effect_list2R ;
+    bool blup_hblup_flag = false;
 };
 
 struct fold_validate{

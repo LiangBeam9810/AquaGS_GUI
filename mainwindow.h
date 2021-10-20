@@ -116,6 +116,8 @@ public:
     bool Discrete_selected_fixed_flag = false;
     bool Continuous_selected_fixed_flag = false;
     bool selected_random_flag = false;
+    bool gender_flag = false;
+    bool blup_Hblup_flag = false;
 
     bool start_complete_flag = false;
     bool phenotype_complete_flag = false;
@@ -235,6 +237,8 @@ private slots:
     void on_trans_formula_1_lineEdit_returnPressed();
 
     void on_Gender_CheckBox_stateChanged(int arg1);
+
+    void on_Blup_CheckBox_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

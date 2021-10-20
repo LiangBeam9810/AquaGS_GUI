@@ -23,7 +23,7 @@ H_dt <- as.data.table(A,keep.rownames = T)
 setnames(H_dt,"rn",AnimalID_item)
 fwrite(H_dt,file = H_matrix_path,sep = " ",col.names = F)
 #######################    ##################################################
-save(data,A,G,H,AnimalID_item,id,geno_012_DT,geno_012_matrix,file = rdata_path)
+save.image(file = rdata_path)
 rdata_path
 #######################  G  ##################################################
 print("-----------H_matirx_build.R output end--------------")

@@ -14,16 +14,17 @@ Sire_index = as.integer(args[9]) + 1
 Gender_index = as.integer(args[10]) + 1
 Gender_path = args[11]
 
-#csv_path= "/home/liang/Documents/AquaGS_GUI/Input/ABT20210617_outlier.csv"
-#raw_path = "/home/liang/Documents/AquaGS_GUI/Output/raw_output.raw"
-#rdata_path = "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
-#A_matrix_path = "/home/l iang/Documents/AquaGS_GUI/Output/A_matrix.txt"
-#G_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/G_matrix.txt"
-#target_index = 8 + 1  # C++ start at 0, R at 1
-#AnimalID_index = 0 +1 # C++ start at 0, R at 1
-#Dam_index =  2 + 1
-#Sire_index = 1 + 1
-#Gender_index = 11
+csv_path= "/home/liang/Documents/AquaGS_GUI/Input/ABT20210617_outlier.csv"
+raw_path = "/home/liang/Documents/AquaGS_GUI/Output/raw_output.raw"
+rdata_path = "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
+A_matrix_path = "/home/l iang/Documents/AquaGS_GUI/Output/A_matrix.txt"
+G_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/G_matrix.txt"
+Gender_path = "/home/liang/Documents/AquaGS_GUI/Output/gender.txt"
+target_index = 8 + 1  # C++ start at 0, R at 1
+AnimalID_index = 0 +1 # C++ start at 0, R at 1
+Dam_index =  2 + 1
+Sire_index = 1 + 1
+Gender_index = 10
 
 
 require(data.table)
