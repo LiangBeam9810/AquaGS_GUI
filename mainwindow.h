@@ -50,6 +50,7 @@
 #include "tool.h"
 #include "loadingwight.h"
 #include "h_matrix.h"
+#include "terminal_dialog.h"
 
 #include <QtConcurrent>
 #include <QFuture>
@@ -65,7 +66,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    phenotype_select phenotype_select_line;
+    Terminal_Dialog* Terminal_log = nullptr;
+    phenotype_select phenotype_select_line ;
     phenotype_display original_display;
     phenotype_display converted_display;
 
@@ -131,7 +133,8 @@ public:
 
     //for QC
     bool callPlinkGwas(QString genotype, QString out);
-
+public slots:
+    void sent_massage_to_terminal(QString message);
 signals:
     void resetWindowSig();
     void setMsgBoxSig(const QString &title, const QString &text);
@@ -239,6 +242,9 @@ private slots:
     void on_Gender_CheckBox_stateChanged(int arg1);
 
     void on_Blup_CheckBox_stateChanged(int arg1);
+
+
+    void on_toolButton_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -37,32 +37,43 @@ void LoadingDialog::initUi()
     m_pTipsLabel->setText("加载中,请稍候...");
     m_pTipsLabel->setStyleSheet("QLabel#tips{font-family:\"Microsoft YaHei\";font-size: 15px;color: #333333;}");
 
-    //取消按钮
+    //显示命令行哦按钮
     m_pCancelBtn = new QPushButton(m_pCenterFrame);
-    m_pCancelBtn->setObjectName("cancelBtn");
+    m_pCancelBtn->setObjectName("TerminalBtn");
     m_pCancelBtn->setText("Terminal output");
-    m_pCancelBtn->setStyleSheet("QPushButton#cancelBtn{"
+    m_pCancelBtn->setStyleSheet("QPushButton#TerminalBtn{"
                                     "background-color: #edeef6;"
                                     "border-radius: 4px;"
                                     "font-family: \"Microsoft YaHei\";"
                                     "font-size: 14px;"
                                     "color: #333333;"
                                 "}"
-                                "QPushButton#cancelBtn::hover{"
+                                "QPushButton#TerminalBtn::hover{"
                                     "background:#dcdeea"
                                 "}");
     m_pCancelBtn->setGeometry(25, 180, 180, 35);
     m_pCancelBtn->setEnabled(true);
-    connect(m_pCancelBtn, &QPushButton::clicked, this, &LoadingDialog::cancelBtnClicked);
+
 }
     /*//实例阴影shadow
     QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
     shadow->setOffset(0, 0);
     shadow->setColor(QColor(32, 101, 165));
     shadow->setBlurRadius(10);
-    this->setGraphicsEffect(shadow);
+    this-m_pCancelBtn>setGraphicsEffect(shadow);
 
 }
+
+/*
+ *
+ * @brief LoadingDialog:: 打开终端文本输出界面
+ */
+void LoadingDialog::opend_terminal_page(Terminal_Dialog* Terminal_log = nullptr)
+{
+    if(Terminal_log)   return;
+    Terminal_log->show();
+}
+
 
 /***
  * @brief LoadingDialog::setTipsText 设置提示文本
@@ -107,7 +118,7 @@ void LoadingDialog::moveToCenter(QWidget *pParent)
 }
 
 /**
- * @brief LoadingDialog::cancelBtnClicked 取消按钮槽函数
+ * @brief LoadingDialog::cancelBtnClicked 关闭界面
  */
 void LoadingDialog::cancelBtnClicked()
 {

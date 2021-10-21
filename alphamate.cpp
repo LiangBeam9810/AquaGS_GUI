@@ -37,6 +37,7 @@ void blup_alphamate_Init(alphamate_edge blup_alphamate_all)
     blup_alphamate_all.EqualizeFemaleContributions_checkBox->setCheckState(Qt::Checked);
     blup_alphamate_all.EqualizeFemaleContributions_checkBox->setEnabled(false);
     blup_alphamate_all.GenderFile_CheckBox->setCheckState(Qt::Unchecked);
+
 }
 
 void alphmate_enable_all(alphamate_edge blup_alphamate_all)
@@ -130,6 +131,23 @@ bool copy_file(QString sourceDir ,QString toDir)
         return false;
     }
     return true;
+}
+
+void copyPath(QString src, QString dst)
+{
+    QDir dir(src);
+    if (! dir.exists())
+        return;
+
+    foreach (QString d, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        QString dst_path = dst + QDir::separator() + d;
+        dir.mkpath(dst_path);
+        copyPath(src+ QDir::separator() + d, dst_path);//use recursion
+    }
+
+    foreach (QString f, dir.entryList(QDir::Files)) {
+        QFile::copy(src + QDir::separator() + f, dst + QDir::separator() + f);
+    }
 }
 
 
@@ -244,6 +262,25 @@ bool prepare_alphamate_file(alphamate_edge blup_alphamate_all,QString Alphamate_
 }
 
 bool running_alphamate(alphamate_edge blup_alphamate_all,QString Alphamate_running_path,QString output_path){
+    QString Alphamate_new_running_path = output_path+"/AlphaMateLinux";//在输出文件夹创建Alphamate的文件夹
+
+ /*------------------判断该文件夹是否存在 如果不存在就创建---------------------*/
+    QDir dir(Alphamate_new_running_path);
+    if(!dir.exists()){
+        bool ismkdir = dir.mkdir(Alphamate_new_running_path);
+        if(!ismkdir)
+            qDebug() << "Create path fail" << endl;
+        else
+            qDebug() << "Create fullpath success" << endl;
+    }
+    else{
+        qDebug() << "fullpath exist" << endl;
+    }
+/*-------------------------------------------------------------------------*/
+
+    copyPath(Alphamate_running_path,Alphamate_new_running_path);
+    Alphamate_running_path = Alphamate_new_running_path;
+    qDebug()<<"Alphamate_running_path:"<<Alphamate_running_path<<endl;
     if(!(prepare_alphamate_file(blup_alphamate_all,Alphamate_running_path)))
     {
         return false;

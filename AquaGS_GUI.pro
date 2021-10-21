@@ -20,6 +20,7 @@ SOURCES += \
     plink.cpp \
     process.cpp \
     start.cpp \
+    terminal_dialog.cpp \
     tool.cpp
 
 HEADERS += \
@@ -33,10 +34,12 @@ HEADERS += \
     plink.h \
     process.h \
     start.h \
+    terminal_dialog.h \
     tool.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    terminal_dialog.ui
 
 QMAKE_LFLAGS += -no-pie
 

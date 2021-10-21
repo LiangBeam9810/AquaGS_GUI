@@ -7,8 +7,7 @@
 #include <QTimer>
 #include <QtGui/qguiapplication.h>
 #include "loadingwight.h"
-
-
+#include "mainwindow.h"
 
 class Process : public QProcess
 {
@@ -26,7 +25,9 @@ public slots:
     bool runExTool(QString tool, QStringList param);
     bool runAlphamate(QString dir,QString param,QString title);
     void process_notrunning();
+
 signals:
+    void messageStandardOutput(QString message);
     void process_end_to_close_gif(const QString);
 };
 void Process_runing_gif(QProcess* Process,QString title);

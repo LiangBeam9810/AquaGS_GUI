@@ -115,7 +115,7 @@ bool outlier_elimination(QString* csv_path,
     qDebug()<<endl<<"outlier param :"<<param<<endl;
 
     Process* outlier_process;
-    outlier_process = new Process;
+    outlier_process = new Process();
     if(!(outlier_process->runRscript(param,"Reading and handle phenotype")))
     {
         QMessageBox::warning(NULL, "Process error:", "Can't open outlier process!");

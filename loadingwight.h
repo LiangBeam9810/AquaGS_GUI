@@ -7,6 +7,8 @@
 #include <QPushButton>
 #include <QGraphicsDropShadowEffect>
 #include <QDir>
+#include <QDebug>
+#include <terminal_dialog.h>
 #define USER_CANCEL -1
 class LoadingDialog : public QDialog
 {
@@ -20,6 +22,9 @@ public:
     void setCanCancel(bool bCanCancel);
     //移动到指定窗口中间显示
     void moveToCenter(QWidget* pParent);
+    //
+    void opend_terminal_page(Terminal_Dialog* Terminal_log);
+     QPushButton *m_pCancelBtn;
 protected:
     void paintEvent(QPaintEvent *event) override;
 private:
@@ -33,6 +38,6 @@ private:
     QLabel *m_pMovieLabel;
     QMovie *m_pLoadingMovie;
     QLabel *m_pTipsLabel;
-    QPushButton *m_pCancelBtn;
+
 };
 #endif // LOADINGDIALOG_H

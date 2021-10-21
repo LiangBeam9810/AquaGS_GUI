@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 
+MainWindow* m;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -7,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("AquaGS");
     init();
+
 }
 
 MainWindow::~MainWindow()
@@ -16,14 +19,13 @@ MainWindow::~MainWindow()
 /*-------------------------------------- Global auxiliary function -----------------------------------------*/
 
 
-
-
 /*------------------------------------------------------------------------ */
 void MainWindow::init()
 {
     out_line = ui->output_lineEdit;
     csv_line = ui->csv_lineEdit;
     vcf_line = ui->vcf_lineEdit;
+    Terminal_log = new Terminal_Dialog(this);
     /*----------StratTAB init---------------------------------------*/
     //ui->csv_input_lineEdit->setText("Enter/Select the csv file.");
     //ui->vcf_input_lineEdit->setText("Enter/Select the vcf file.");
@@ -43,6 +45,9 @@ void MainWindow::init()
     ui->convert_swith->setCheckState(Qt::Unchecked);
     ui->outlier_swith->setCheckState(Qt::Unchecked);
     ui->convert_swith->setEnabled(false);
+
+
+
     /*--------------------------------------------------------------*/
 
     /*----------Effect init-----------------------------------------*/
@@ -101,23 +106,17 @@ void MainWindow::on_start_next_pushButton_clicked()
 /*---------------------------------phenotype--------------------------------------*/
 void MainWindow::Phenotype_Init()
 {
-    if(!start_complete_flag)
-    {
-    }
-    else
-    {
-        phenotype_select_line.AnimalID_ComboBox = ui->AnimalID_ComboBox;
-        phenotype_select_line.Dam_ComboBox = ui->Dam_ComboBox;
-        phenotype_select_line.Sire_ComboBox = ui->Sire_ComboBox;
-        phenotype_select_line.target_phenotype_ComboBox = ui->phenotype_ComboBox;
-        phenotype_select_line.outlier_CheckBox = ui->outlier_swith;
-        phenotype_select_line.Gender_CheckBox = ui->Gender_CheckBox;
-        phenotype_select_line.Gender_ComboBox = ui->Gender_ComboBox;
-        phenotype_select_line_init(phenotype_select_line,csv_path,&phenotype_list);
-        ui->Gender_ComboBox->setEnabled(false);
-        ui->Dam_ComboBox->setEnabled(false);
-        ui->Sire_ComboBox->setEnabled(false);
-    }
+    phenotype_select_line.AnimalID_ComboBox = ui->AnimalID_ComboBox;
+    phenotype_select_line.Dam_ComboBox = ui->Dam_ComboBox;
+    phenotype_select_line.Sire_ComboBox = ui->Sire_ComboBox;
+    phenotype_select_line.target_phenotype_ComboBox = ui->phenotype_ComboBox;
+    phenotype_select_line.outlier_CheckBox = ui->outlier_swith;
+    phenotype_select_line.Gender_CheckBox = ui->Gender_CheckBox;
+    phenotype_select_line.Gender_ComboBox = ui->Gender_ComboBox;
+    phenotype_select_line_init(phenotype_select_line,csv_path,&phenotype_list);
+    ui->Gender_ComboBox->setEnabled(false);
+    ui->Dam_ComboBox->setEnabled(false);
+    ui->Sire_ComboBox->setEnabled(false);
     return;
 }
 
@@ -137,26 +136,11 @@ void MainWindow::on_convert_swith_stateChanged(int arg1)
 void MainWindow::on_phenotype_run_Button_clicked()
 {
     unsigned int outlier_state = 0;
-    check_all_path(ui->output_lineEdit,
-                   ui->csv_lineEdit,
-                   ui->vcf_lineEdit,
-                   &output_path,
-                   &csv_path,
-                   &vcf_path);//if clicked run buttun,the path need to be reload.
-    init_ready_for_run(ui->skewnessdisplay_1,ui->kurtosisdisplay_1,ui->horizontallabel_1,
-                       ui->skewnessdisplay_2,ui->kurtosisdisplay_2,ui->horizontallabel_2,
-                       ui->outlier_swith,
-                       ui->phenotype_ComboBox,
-                       ui->phenotype_accept_Button,
-                       ui->convert_swith,
-                       &outlier_state,
-                       &fist_convert_flag,
-                       &target_phenotype_index);
-    phenotype_select_line_get_index(phenotype_select_line,
-                                    &target_phenotype_index,
-                                    &AnimalID_phenotype_index,
-                                    &Dam_phenotype_index,
-                                    &Sire_phenotype_index,
+    check_all_path(ui->output_lineEdit,ui->csv_lineEdit,ui->vcf_lineEdit,&output_path,&csv_path,&vcf_path);//if clicked run buttun,the path need to be reload.
+    init_ready_for_run(ui->skewnessdisplay_1,ui->kurtosisdisplay_1,ui->horizontallabel_1,ui->skewnessdisplay_2,ui->kurtosisdisplay_2,ui->horizontallabel_2,
+                       ui->outlier_swith,ui->phenotype_ComboBox,ui->phenotype_accept_Button,ui->convert_swith,
+                       &outlier_state,&fist_convert_flag,&target_phenotype_index);
+    phenotype_select_line_get_index(phenotype_select_line,&target_phenotype_index,&AnimalID_phenotype_index,&Dam_phenotype_index,&Sire_phenotype_index,
                                     &Gender_phenotype_index);
     if(outlier_elimination(&csv_path,outlier_state,target_phenotype_index))
     {
@@ -565,6 +549,7 @@ void MainWindow::on_fixed_accept_pushButton_2_clicked()
 void MainWindow::on_random_phenotype_pr_TableView_clicked(const QModelIndex &index)
 {
     change_select_exclude_Button(1,selected_random_flag,ui->random_select_Button,ui->random_exclude_Button);
+    qDebug()<< "random_phenotype index:" << index ;
     return;
 }
 void MainWindow::on_random_selected_TableView_clicked(const QModelIndex &index)
@@ -739,6 +724,7 @@ void MainWindow::classical_method_Init()
     QString runPath = QDir::currentPath();
     Alphamate_running_path =  runPath;
     Alphamate_running_path.append("/AlphaMateLinux");
+    alphmate_disable_all(blup_alphamate_all);//初始化
 
     if(blup_mode.BLUP_mode_ComboBox->currentIndex())
     {
@@ -943,12 +929,16 @@ void MainWindow::on_classical_mate_Button_4_clicked()
 
 }
 
+//点击底部终端输出按钮
+void MainWindow::on_toolButton_clicked()
+{
 
-
-
-
-
-
-
-
-
+    Terminal_log->setModal(false);
+    Terminal_log->clearMask();
+    Terminal_log->show();
+}
+//槽函数 将文本打印到终端输出界面
+void MainWindow::sent_massage_to_terminal(QString massage)
+{
+    Terminal_log->append_Terminal_textBrowser(massage);
+}
