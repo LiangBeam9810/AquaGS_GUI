@@ -64,7 +64,7 @@ void MainWindow::on_csv_pushButton_clicked()
 
 void MainWindow::on_vcf_pushButton_clicked()
 {
-    get_select_path("vcf(*vcf);;all(*)",this,vcf_line,2);
+    get_select_path("(*.vcf *.gz)",this,vcf_line,2);
     return;
 }
 
@@ -339,6 +339,7 @@ void MainWindow::on_qc_next_pushButton_clicked()
 
     QFuture<void> fu = QtConcurrent::run(QThreadPool::globalInstance(), [&]()
     {
+        qDebug()<<"genotype path :"<<genotype;
         if (!this->callPlinkGwas(genotype, out))
         {
             emit resetWindowSig();

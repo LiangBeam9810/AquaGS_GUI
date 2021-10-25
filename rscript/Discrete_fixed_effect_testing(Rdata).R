@@ -4,7 +4,7 @@ print("-----------discrete_fixed_effect_testing(Rdata).R output begin-----------
 
 args=commandArgs(T)
 rdata_path = args[1]
-output_path = args[2]
+discrete_effect_path = args[2]
 target_index = as.integer(args[3]) + 1##C++ start at 0, R at 1
 num = as.integer(args[4]) 
 fixed_index = c(0)
@@ -15,7 +15,7 @@ for(i in 1:num){
 }
 
 #rdata_path = "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
-#output_path = "/home/liang/Documents/AquaGS_GUI/Input/fixed_effect.csv"
+#discrete_effect_path = "/home/liang/Documents/AquaGS_GUI/Input/fixed_effect.csv"
 #target_index = 8 + 1  # C++ start at 0, R at 1
 #AnimalID_index = 0 +1 # C++ start at 0, R at 1
 #num = 1
@@ -109,5 +109,5 @@ for(item in col_list){
   table$pr[i] = as.character(pr)
   i = i+1
 }
-write.table(table,output_path, row.names = FALSE,col.names = FALSE,sep=",")
+write.table(table,discrete_effect_path, row.names = FALSE,col.names = FALSE,sep=",")
 print("-----------discrete_fixed_effect_testing(Rdata). output end--------------")

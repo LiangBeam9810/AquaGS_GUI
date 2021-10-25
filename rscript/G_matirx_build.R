@@ -13,8 +13,9 @@ load(rdata_path)
 col_list = colnames(data)
 geno_012_matrix <- as.matrix(geno_012_DT[, -1:-6])
 geno_sommer_matrix <- geno_012_matrix - 1
+id_g = geno_012_DT$IID
 G <- A.mat(geno_sommer_matrix) # additive relationship matrix
-colnames(G) <- rownames(G) <-  id
+colnames(G) <- rownames(G) <-  id_g
 dim(G)
 
 G_dt <- as.data.table(G,keep.rownames = T)

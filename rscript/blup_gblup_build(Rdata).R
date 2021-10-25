@@ -3,7 +3,7 @@ print("-----------blup_gblup_build.R output begin--------------")
 args=commandArgs(T)
 
 input_path = args[1]
-output_path = args[2]
+GEBV_path = args[2]
 
 
 AnimalID_index = as.integer(args[3]) +1  # C++ start at 0, R at 1
@@ -50,21 +50,21 @@ formula_ans_path = (args[j])
 print(paste("formula_ans_path :",formula_ans_path))
 
 ###############################################################################
-#input_path= "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
-#output_path = "/home/liang/Documents/AquaGS_GUI/Output/GEBV.txt"
+#input_path= "/home/liang/Desktop/Rbuffer.Rdata"
+#GEBV_path = "/home/liang/Desktop/GEBV.txt"
 
-#AnimalID_index = 1
-#target_index = 9
+#AnimalID_index = 0+1
+#target_index = 11+1
 #mode_flag = 1   
 #param.append(blup_input.A_matrix_path);//3
 #param.append(" ");
 #param.append(blup_input.G_matrix_path);//4
-#fixed_num = 2
-#fixed_index = c(5,4)
+#fixed_num = 1
+#fixed_index = c(9)
 #random_num = 0
 #random_index = c(0)
 
-#trans_formula = "h2 ~ V1/(V1+V2)"formula
+#trans_formula = "h2 ~ V1/(V1+V2)" 
 
 require(data.table)
 load(input_path)
@@ -140,10 +140,19 @@ if(mode_flag)
     pama = ""
     pama = paste("GEBV <- as.data.table(ans_G$U$`u:",AnimalID_item,"`$",target_item,",keep.rownames = T)",sep = "")
     eval(parse(text = pama))
-
-    setnames(GEBV,"rn","AnimalID")
-    setnames(GEBV,"ans_G$U$`u:AnimalID`$ABT_t","GEBV")
-    fwrite(GEBV,file = output_path,sep = " ",col.names = F)
+    
+    setnames(GEBV,"rn",AnimalID_item)
+    #pama = ""
+    #pama = paste(" setnames(GEBV,\"rn\",",AnimalID_item,")",sep = "")
+    #eval(parse(text = pama))
+    
+    
+    #setnames(GEBV,"ans_G$U$`u:AnimalID`$ABT_t","GEBV")
+    pama = ""
+    pama = paste("setnames(GEBV,\"ans_G$U$`u:",AnimalID_item,"`$",target_item,"\",\"GEBV\")",sep = "")
+    eval(parse(text = pama))
+    
+    fwrite(GEBV,file = GEBV_path,sep = " ",col.names = F)
     
     
     
@@ -186,7 +195,7 @@ if(mode_flag)
     pama = paste("setnames(GEBV,\"ans_G$U$`u:",AnimalID_item,"`$",target_item,"\",\"GEBV\")",sep = "")
     print(pama)
     eval(parse(text = pama))
-    fwrite(GEBV,file = output_path,sep = " ",col.names = F)
+    fwrite(GEBV,file = GEBV_path,sep = " ",col.names = F)
   }
 }
 
@@ -203,12 +212,13 @@ pama = ""
 pama = paste("ans_vpredict[2] = vpredict(ans_G,",formula,")$SE[1]",sep = "")
 eval(parse(text = pama))
 print(ans_vpredict)
-write.table (ans_vpredict,formula_ans_path, sep =",", row.names =FALSE, col.names =FALSE, quote =FALSE)
+write.table(ans_vpredict,formula_ans_path, sep =",", row.names =FALSE, col.names =FALSE, quote =FALSE)
 
-if(file.exists(output_path)){
+if(file.exists(GEBV_path)){
   print("GEBV building is completed.")
 }
 #######################    ##################################################
-##save(file = "/home/liang/Documents/GEBVRbuffer.Rdata")
+save.image(file = rdata_path)
 
 print("-----------blup_gblup_build.R output end--------------")
+

@@ -19,12 +19,13 @@ Sire_item = col_list[Sire_index]
 data_A <-data.frame(ID = data[,..AnimalID_index],Dam = data[,..Dam_index],sire = data[,..Sire_index])
 colnames(data_A) <- c("ID", "Dam","Sire")
 data_A = data_A[data_A$ID %in% id,]
+id_A = data_A$ID
 ########################  A  #################################################
 ped_prepPed <- prepPed(data_A, gender = NULL, check = TRUE)  
 A_makeA <- makeA(ped_prepPed)
 A_dense <- as.matrix(A_makeA)
 colnames(A_dense) <-rownames(A_dense) <-  ped_prepPed[,1]
-A <- A_dense[id,id]
+A <- A_dense[id_A,id_A]
 dim(A)
 A[1:5,1:5]
 A_dt <- as.data.table(A,keep.rownames = T)

@@ -3,7 +3,7 @@ print("-----------hblup_build.R output begin--------------")
 args=commandArgs(T)
 
 input_path = args[1]
-output_path = args[2]
+GEBV_path = args[2]
 AnimalID_index = as.integer(args[3]) +1  # C++ start at 0, R at 1
 target_index = as.integer(args[4]) + 1  # C++ start at 0, R at 1
 mode_flag = as.integer(args[5])#1:A BLUP  2:G GBLUP 3:HBLUP
@@ -48,7 +48,7 @@ print(paste("formula_ans_path :",formula_ans_path))
 
 ###############################################################################
 #input_path= "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
-#output_path = "/home/liang/Documents/AquaGS_GUI/Output/GEBV.txt"
+#GEBV_path = "/home/liang/Documents/AquaGS_GUI/Output/GEBV.txt"
 
 #AnimalID_index = 1
 #target_index = 9
@@ -139,7 +139,7 @@ if(mode_flag == 3)
     
     setnames(GEBV,"rn","AnimalID")
     setnames(GEBV,"ans_G$U$`u:AnimalID`$ABT_t","GEBV")
-    fwrite(GEBV,file = output_path,sep = " ",col.names = F)
+    fwrite(GEBV,file = GEBV_path,sep = " ",col.names = F)
   }
 }
 #######################    ##################################################

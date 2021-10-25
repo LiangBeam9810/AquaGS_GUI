@@ -4,8 +4,8 @@ args=commandArgs(T)
 
 input_path = args[1]
 print(paste("input_path :",input_path))
-output_path = args[2]
-print(paste("output_path :",output_path))
+v_output_path = args[2]
+print(paste("v_output_path :",v_output_path))
 AnimalID_index = as.integer(args[3]) +1  # C++ start at 0, R at 1
 print(paste("AnimalID_index :",AnimalID_index))
 target_index = as.integer(args[4]) + 1  # C++ start at 0, R at 1
@@ -46,18 +46,16 @@ j=j+1
 formula = args[j]
 print(paste("formula :",formula))
 ################################################################################
-#input_path= "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
-#output_path = "/home/liang/Documents/AquaGS_GUI/Output/classical_accuracy.csv"
-#AnimalID_index = 1
-#target_index = 9
-#method_flag = 1
-#fixed_num = 2
-#fixed_index = c(5,6)
-#random_num = 1
-#random_index = c(8)
-#rep = 2
-#fold_num = 1
-#formula = "h2 ~ V1/(V1+V2)"#formula
+#input_path= "/home/liang/Desktop/Rbuffer.Rdata"
+#v_output_path = "/home/liang/Desktop/classical_accuracy.csv"
+#AnimalID_index = 0+1
+#target_index = 11+1
+#mode_flag = 1   
+#fixed_num = 1
+#fixed_index = c(9)
+#random_num = 0
+#random_index = c(0)
+#trans_formula = "h2 ~ V1/(V1+V2)" 
 
 require(data.table)
 #data = read.csv(input_path)
@@ -170,7 +168,7 @@ for(i in 1:rep) {
     print(pama)
     eval(parse(text = pama))
     
-    #rownames(ans_A$U$`u:AnimalID`$ABT_t) <-gsub("AnimalID", "", rownames(ans_A$U$`u:AnimalID`$ABT_t))
+    #rownames(ans_A$U$`u:AnimalIst csv_list;D`$ABT_t) <-gsub("AnimalID", "", rownames(ans_A$U$`u:AnimalID`$ABT_t))
     pama = paste("rownames(ans_A$U$`u:",AnimalID_item,"`$",target_item,")","<-gsub(\"AnimalID\",","\"\",","rownames(ans_A$U$`u:",AnimalID_item,"`$",target_item,"))",sep = "")
     print(pama)
     eval(parse(text = pama))
@@ -188,15 +186,17 @@ for(i in 1:rep) {
 } 
 meanaccuracy  <- cbind(mean(apply(rep_accuracyA,2,mean)),mean(apply(rep_accuracyA,2,sd)))
 meanreg <- cbind(mean(apply(reg_A,2,mean)),mean(apply(reg_A,2,sd)))
+print("meanaccuracy:")
 meanaccuracy
+print("meanreg:")
 meanreg
 ans = c(0,0)
 ans[1] = meanaccuracy[1]
 ans[2] = meanreg[1]
-write.table (ans, output_path, sep =",", row.names =FALSE, col.names =FALSE, quote =FALSE)
 
+write.table(ans,v_output_path, sep =",", row.names =FALSE, col.names =FALSE, quote =FALSE)
 #######################    ##################################################
-save(file = "/home/liang/Documents/Rbuffer.Rdata")
+#save.image(file = rdata_path)
 #######################  G  ##################################################
 print("-----------classical_cross_validation(Rdata).R output end--------------")
 

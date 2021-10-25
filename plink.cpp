@@ -22,7 +22,7 @@ bool MainWindow::callPlinkGwas(QString genotype, QString out)
     //这里修改生成的中间文件和输出raw的路径
     QString file2=plinkpath+"files/"+"file2";
     QString file3=plinkpath+"files/"+"file3";
-    QString file4=plinkpath+"A_G_matirx_build();files/"+"file4";
+    QString file4=plinkpath+"files/"+"file4";
     QString file5=plinkpath+"files/"+"file5";
     QString outfile=out+"/raw_output";
     raw_path = outfile+".raw";

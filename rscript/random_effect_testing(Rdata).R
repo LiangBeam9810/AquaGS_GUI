@@ -4,8 +4,8 @@ args=commandArgs(T)
 
 input_path = args[1]
 print(paste("input_path :",input_path))
-output_path = args[2]
-print(paste("output_path :",output_path))
+random_effect_path = args[2]
+print(paste("random_effect_path :",random_effect_path))
 #A_matrix_path = args[3]
 #G_matrix_path = args[4]
 
@@ -46,7 +46,7 @@ print(paste("random_index :",random_index))
 
 ################################################################################
 #input_path= "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
-#output_path = "/home/liang/Documents/AquaGS_GUI/Output/random_effect.csv"
+#random_effect_path = "/home/liang/Documents/AquaGS_GUI/Output/random_effect.csv"
 #A_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/A_matrix.txt"
 #G_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/G_matrix.txt"
 #AnimalID_index = 1
@@ -249,6 +249,6 @@ if(!method_flag) # using lmer to test
     print("Fixed_list  are null!")
   }
 }
-write.table(table,output_path, row.names = FALSE,col.names = FALSE,sep=",")
+write.table(table,random_effect_path, row.names = FALSE,col.names = FALSE,sep=",")
 print("-----------random_effect_testing (Rdata).R output end--------------")
 
