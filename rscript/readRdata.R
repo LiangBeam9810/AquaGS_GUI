@@ -2,7 +2,19 @@ rm(list = ls())
 rdata_path = "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
 load(rdata_path)
 
-require(sommer)
+#require(sommer)
+if(require(sommer)){
+  print("sommer is loaded correctly")
+} else {
+  print("trying to install sommer")
+  install.packages("sommer")
+  if(require(sommer)){
+    print("sommer installed and loaded")
+  } else {
+    stop("could not install sommer")
+  }
+}
+
 data$poolID <- as.factor(data$poolID)
 data$shell_color <- as.factor(data$shell_color)
 ans_G <- mmer(ABT_t ~  poolID+shell_color,

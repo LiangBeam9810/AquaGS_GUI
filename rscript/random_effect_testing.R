@@ -45,7 +45,18 @@ print(paste("random_index :",random_index))
 #random_num = 0
 #random_index = c(0)
 
-require(data.table)
+
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
 #data = read.csv(input_path)
 data <- fread(
   input = input_path,
@@ -96,8 +107,32 @@ paste("random_part_pama:",random_part_pama)
 
 if(!method_flag) # using lmer to test 
 {
-  require(lmerTest)
-  require(lme4)
+  #require(lmerTest)
+  
+  if(require(lmerTest)){
+    print("lmerTest is loaded correctly")
+  } else {
+    print("trying to install lmerTest")
+    install.packages("lmerTest")
+    if(require(lmerTest)){
+      print("lmerTest installed and loaded")
+    } else {
+      stop("could not install lmerTest")
+    }
+  }
+  #require(lme4)
+  
+  if(require(lme4)){
+    print("lme4 is loaded correctly")
+  } else {
+    print("trying to install lme4")
+    install.packages("lme4")
+    if(require(lme4)){
+      print("lme4 installed and loaded")
+    } else {
+      stop("could not install lme4")
+    }
+  }
   i = 1
   for(item in col_list[]){
     print(paste("=================== ==",item,"===================",sep = ''))
@@ -140,7 +175,18 @@ if(!method_flag) # using lmer to test
     i = i+1
   }
 }else if(method_flag == 1){
-  require(sommer)
+  #require(sommer)
+  if(require(sommer)){
+    print("sommer is loaded correctly")
+  } else {
+    print("trying to install sommer")
+    install.packages("sommer")
+    if(require(sommer)){
+      print("sommer installed and loaded")
+    } else {
+      stop("could not install sommer")
+    }
+  }
   if(fixed_num){#######################################################fixed_list  list is not empty
     fixed_part_pama = substr(fixed_part_pama,1,nchar(fixed_part_pama)-1)#delete the final "+"
     ######################################################################################

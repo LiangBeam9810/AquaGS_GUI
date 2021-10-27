@@ -33,21 +33,32 @@ for(i in 1:random_num){
 }
 print(paste("random_index :",random_index))
 ###############################################################################
-input_path= "/home/liang/Documents/AquaGS_GUI/Input/ABT20210617.csv"
-output_path = "/home/liang/Documents/AquaGS_GUI/Output/GEBV.csv"
-A_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/A_matrix.txt"
-G_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/G_matrix.txt"
-AnimalID_index = 1
-target_index = 9
-mode_flag = 1
-fixed_num = 2
-fixed_index = c(5,4)
-random_num = 0
-random_index = c(0)
+#input_path= "/home/liang/Documents/AquaGS_GUI/Input/ABT20210617.csv"
+#output_path = "/home/liang/Documents/AquaGS_GUI/Output/GEBV.csv"
+#A_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/A_matrix.txt"
+#G_matrix_path = "/home/liang/Documents/AquaGS_GUI/Output/G_matrix.txt"
+#AnimalID_index = 1
+#target_index = 9
+#mode_flag = 1
+#fixed_num = 2
+#fixed_index = c(5,4)
+#random_num = 0
+#random_index = c(0)
 
 #trans_formula = "h2 ~ V1/(V1+V2)"
 
-require(data.table)
+#require(data.table)
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
 #data = read.csv(input_path)
 data <- fread(
   input = input_path,
@@ -100,7 +111,18 @@ paste("random_part_pama:",random_part_pama)
 ################################################################################################
 
 ###############################################################################
-library(sommer)
+#require(sommer)
+if(require(sommer)){
+  print("sommer is loaded correctly")
+} else {
+  print("trying to install sommer")
+  install.packages("sommer")
+  if(require(sommer)){
+    print("sommer installed and loaded")
+  } else {
+    stop("could not install sommer")
+  }
+}
 if(mode_flag)
 {
   if(random_num==0)

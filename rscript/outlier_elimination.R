@@ -12,7 +12,7 @@ print("-----------outiler_eliminatuon.R output begin--------------")
 paste("input_path:",input_path)
 paste("outlier_flag:",outlier_flag)
 paste("index:",index)
-output_path = gsub(".csv", "_outlier.csv", input_path)
+output_path = gsub(".csv", "_outlier.csv", input_path)#替换后缀名
 paste("output_path: ",output_path)
 
 require(data.table)
@@ -37,7 +37,7 @@ if(outlier_flag){
     write.csv(outlier_list,outlier_list_output_path, row.names = TRUE)
   }
 }else{
-  print("Do not change original data")
+  print("Don't outlier original data")
   data_outlier =  data
 }
 write.csv(data_outlier,output_path, row.names = FALSE)

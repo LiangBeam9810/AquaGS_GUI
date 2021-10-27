@@ -19,7 +19,17 @@ paste("fixed_index :",fixed_index)
 # output_path = "E:/AquaGS/process/Input/fixed_effect.csv"
 #index = 7
 
-require(data.table)
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
 #data = read.csv(input_path)
 data <- fread(
   input = input_path,

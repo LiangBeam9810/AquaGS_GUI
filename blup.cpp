@@ -164,12 +164,18 @@ void display_vpredict(blup blup_input)
         csv_list = str.split("\n");//
         csv_file.close();
         qDebug()<<endl<< "Estimate&SE: " << csv_list << endl;
-        if(csv_list.empty())
+        if(csv_list.length()>1)
         {
-            return;
+            blup_input.classical_Estimate_textBrowser->setText((csv_list[0].mid(0,5)));
+            blup_input.classical_SE_textBrowser->setText(csv_list[1].mid(0,5));
         }
-        blup_input.classical_Estimate_textBrowser->setText((csv_list[0].mid(0,5)));
-        blup_input.classical_SE_textBrowser->setText(csv_list[1].mid(0,5));
+        else
+        {
+            blup_input.classical_Estimate_textBrowser->setText("NA");
+            blup_input.classical_SE_textBrowser->setText("NA");
+            QMessageBox::warning(NULL, "File error:", "Can't open the validate file!");
+            return ;
+        }
     }
 }
 
@@ -383,6 +389,8 @@ bool classical_method_cross_validation_and_display(blup blup_mode,fold_validate 
         }
         else
         {
+            blup_fold_validate.ACC_lineEdit->setText("NA");
+            blup_fold_validate.STD_lineEdit->setText("NA");
             QMessageBox::warning(NULL, "File error:", "Can't open the validate file!");
             return false;
         }

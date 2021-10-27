@@ -20,8 +20,30 @@ print(paste("AnimalID_index:",AnimalID_index))
 #AnimalID_index = 0 +1 # C++ start at 0, R at 1
 #AnimalID_index = 1
 
-require(data.table)
-require(nadiv)
+#require(data.table)
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
+#require(nadiv)
+if(require(nadiv)){
+  print("nadiv is loaded correctly")
+} else {
+  print("trying to install nadiv")
+  install.packages("nadiv")
+  if(require(nadiv)){
+    print("nadiv installed and loaded")
+  } else {
+    stop("could not install nadiv")
+  }
+}
 
 data <- fread(
   input = csv_path,
@@ -36,7 +58,7 @@ geno_012_DT <-fread(
   header = TRUE,
   stringsAsFactors = FALSE
 )
-geno_012_DT$IID
+#geno_012_DT$IID
 
 col_list = colnames(data)
 target_item = col_list[target_index]

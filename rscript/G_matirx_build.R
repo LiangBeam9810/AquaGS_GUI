@@ -3,14 +3,47 @@ print("-----------G_matirx_build.R output begin--------------")
 args=commandArgs(T)
 rdata_path = args[1]
 G_matrix_path = args[2]
-#rdata_path = "/home/liang/Desktop/Rbuffer.Rdata"
-#G_matrix_path = "/home/liang/Desktop/G_matrix.txt"
-require(data.table)
-require(nadiv)
-require(sommer)
+rdata_path = "/home/liang/Desktop/Rbuffer.Rdata"
+G_matrix_path = "/home/liang/Desktop/G_matrix.txt"
+
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
+#require(nadiv)
+if(require(nadiv)){
+  print("nadiv is loaded correctly")
+} else {
+  print("trying to install nadiv")
+  install.packages("nadiv")
+  if(require(nadiv)){
+    print("nadiv installed and loaded")
+  } else {
+    stop("could not install nadiv")
+  }
+}
+#require(sommer)
+if(require(sommer)){
+  print("sommer is loaded correctly")
+} else {
+  print("trying to install sommer")
+  install.packages("sommer")
+  if(require(sommer)){
+    print("sommer installed and loaded")
+  } else {
+    stop("could not install sommer")
+  }
+}
 
 load(rdata_path)
-col_list = colnames(data)
+#col_list = colnames(data)
 geno_012_matrix <- as.matrix(geno_012_DT[, -1:-6])
 geno_sommer_matrix <- geno_012_matrix - 1
 id_g = geno_012_DT$IID

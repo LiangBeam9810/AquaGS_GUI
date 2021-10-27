@@ -20,13 +20,35 @@ paste("output_path:",output_path)
 paste("index:",index)
 paste("type:",type)
 
-require(data.table)
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
+
 data = read.csv(input_path)
 
 x = data[,index]
 target_name = colnames(data)[index]
 
-library(ggplot2)
+if(require(ggplot2)){
+  print("ggplot2 is loaded correctly")
+} else {
+  print("trying to install ggplot2")
+  install.packages("ggplot2")
+  if(require(ggplot2)){
+    print("ggplot2 installed and loaded")
+  } else {
+    stop("could not install ggplot2")
+  }
+}
+
 ggplot(data = data,aes_string(x= target_name))+
   theme_linedraw()+
   geom_histogram(aes(,y=..density..),colour="black",fill="white")+

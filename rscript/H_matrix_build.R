@@ -3,8 +3,33 @@ print("-----------H_matirx_build.R output begin--------------")
 args=commandArgs(T)
 rdata_path = args[1]
 H_matrix_path =  args[2]                    
-require(data.table)
-require('ASRgenomics')
+
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
+
+#require(ASRgenomics)
+
+if(require(ASRgenomics)){
+  print("ASRgenomics is loaded correctly")
+} else {
+  print("trying to install ASRgenomics")
+  install.packages("ASRgenomics")
+  if(require(ASRgenomics)){
+    print("ASRgenomics installed and loaded")
+  } else {
+    stop("could not install ASRgenomics")
+  }
+}
+
 load(rdata_path)
 rownames(geno_012_matrix) <- geno_012_DT$IID
 # Reading genotypic data and making some filters

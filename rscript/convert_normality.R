@@ -29,7 +29,18 @@ data = read.csv(input_path)
 phnotype = data[,index]
 target_name = colnames(data)[index]
 
-library(bestNormalize)
+#require(bestNormalize)
+if(require(bestNormalize)){
+  print("bestNormalize is loaded correctly")
+} else {
+  print("trying to install bestNormalize")
+  install.packages("bestNormalize")
+  if(require(bestNormalize)){
+    print("bestNormalize installed and loaded")
+  } else {
+    stop("could not install bestNormalize")
+  }
+}
 (orderNorm_obj <- orderNorm(phnotype))
 
 data$new = orderNorm_obj$x.t;

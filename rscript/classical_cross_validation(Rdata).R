@@ -57,7 +57,18 @@ print(paste("formula :",formula))
 #random_index = c(0)
 #trans_formula = "h2 ~ V1/(V1+V2)" 
 
-require(data.table)
+#require(data.table)
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
 #data = read.csv(input_path)
 load(input_path)
 col_list = colnames(data)
@@ -95,7 +106,18 @@ paste("random_part_pama:",random_part_pama)
 
 
 pheno <- copy(data)
-library(sommer)
+#require(sommer)
+if(require(sommer)){
+  print("sommer is loaded correctly")
+} else {
+  print("trying to install sommer")
+  install.packages("sommer")
+  if(require(sommer)){
+    print("sommer installed and loaded")
+  } else {
+    stop("could not install sommer")
+  }
+}
 rep_accuracyA <-  matrix(nrow=fold_num, ncol=rep)
 reg_A <- matrix(nrow=fold_num, ncol=rep)
 

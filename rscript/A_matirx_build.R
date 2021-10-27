@@ -6,8 +6,31 @@ A_matrix_path = args[2]
 Dam_index =  as.integer(args[3]) + 1
 Sire_index = as.integer(args[4]) + 1
 
-require(data.table)
-require(nadiv)
+#require(data.table)
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
+
+#require(nadiv)
+if(require(nadiv)){
+  print("nadiv is loaded correctly")
+} else {
+  print("trying to install nadiv")
+  install.packages("nadiv")
+  if(require(nadiv)){
+    print("nadiv installed and loaded")
+  } else {
+    stop("could not install nadiv")
+  }
+}
 
 load(rdata_path)
 

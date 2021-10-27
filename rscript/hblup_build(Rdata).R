@@ -64,6 +64,19 @@ print(paste("formula_ans_path :",formula_ans_path))
 #trans_formula = "h2 ~ V1/(V1+V2)"formula
 
 require(data.table)
+
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
+
 load(input_path)
 col_list = colnames(data)
 target_item = col_list[target_index]
