@@ -6,6 +6,7 @@ Terminal_Dialog::Terminal_Dialog(QWidget *parent) :
     ui(new Ui::Terminal_Dialog)
 {
     ui->setupUi(this);
+    this->setWindowTitle("OUTPUT MESSAGE LOG");
     init();
 }
 

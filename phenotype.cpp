@@ -2,6 +2,35 @@
 
 
 /*--------------------------phenotype index------------------------------------*/
+bool install_ASRgenomics()
+{
+    QString file_path = QDir::currentPath();
+    file_path.append("/rscript/ASRgenomics_1.0.0_R_x86_64-pc-linux-gnu.tar.gz");
+    qDebug() << endl <<"ASRgenomics_file_path:" << file_path << endl;
+    QString param;
+    // The sequence of param is not changeable
+    param.clear();
+    param.append("R CMD INSTALL");
+    param.append(" ");
+    param.append(file_path);
+    qDebug()<< endl<<"display param :"<<param<< endl;
+    Process* install_ASRgenomics_process;
+    install_ASRgenomics_process = new Process;
+    if(!(install_ASRgenomics_process->runRscript(param,"Installing ASRgenomics.")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the install ASRgenomics process !");
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+void check_all_package(QStringList Rpackage)
+{
+    install_ASRgenomics();
+}
+
 void phenotype_select_line_init(phenotype_select phenotype_select_line,QString csv_path,QStringList* phenotype_list)
 {
     prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.AnimalID_ComboBox);

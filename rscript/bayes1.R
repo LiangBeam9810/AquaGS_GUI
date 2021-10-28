@@ -32,9 +32,22 @@ for(i in 1:num){
 #fixed_index[1] = 4
 #fixed_index[2] = 5
 
-setwd("/home/zhi/Desktop/test")#这里需要修改
-#setwd(output_path)
-require(BGLR)
+#setwd("/home/zhi/Desktop/test")#这里需要修改
+setwd(output_path)
+#require(BGLR)
+
+if(require(BGLR)){
+  print("BGLR is loaded correctly")
+} else {
+  print("trying to install BGLR")
+  install.packages("BGLR")
+  if(require(BGLR)){
+    print("BGLR installed and loaded")
+  } else {
+    stop("could not install BGLR")
+  }
+}
+
 require(data.table)
 
 abt_data <- fread(

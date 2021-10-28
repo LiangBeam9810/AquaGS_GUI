@@ -2,46 +2,44 @@ rm(list = ls())
 print("-----------random_effect_testing (Rdata).R output begin--------------")
 args=commandArgs(T)
 
-input_path = args[1]
-print(paste("input_path :",input_path))
-random_effect_path = args[2]
-print(paste("random_effect_path :",random_effect_path))
-#A_matrix_path = args[3]
-#G_matrix_path = args[4]
+input_path_bf = args[1]
+print(paste("input_path :",input_path_bf))
+random_effect_path_bf = args[2]
+print(paste("random_effect_path :",random_effect_path_bf))
 
-AnimalID_index = as.integer(args[3]) +1  # C++ start at 0, R at 1
-print(paste("AnimalID_index :",AnimalID_index))
+AnimalID_index_bf = as.integer(args[3]) +1  # C++ start at 0, R at 1
+print(paste("AnimalID_index :",AnimalID_index_bf))
 
-target_index = as.integer(args[4]) + 1  # C++ start at 0, R at 1
-print(paste("target_index :",target_index))
+target_index_bf = as.integer(args[4]) + 1  # C++ start at 0, R at 1
+print(paste("target_index :",target_index_bf))
 
-method_flag = as.integer(args[5])
-print(paste("method_flag :",method_flag))
+method_flag_bf = as.integer(args[5])
+print(paste("method_flag :",method_flag_bf))
 ##########################fixed#################################################
 j = 6
-fixed_num = as.integer(args[j]) 
-print(paste("fixed_num :",fixed_num))
-fixed_index = c(0)
-if(fixed_num){
-  for(i in 1:fixed_num){
+fixed_num_bf = as.integer(args[j]) 
+print(paste("fixed_num :",fixed_num_bf))
+fixed_index_bf = c(0)
+if(fixed_num_bf){
+  for(i in 1:fixed_num_bf){
   j = j+1
-  fixed_index[i]  =  as.integer(args[j])+1  # C++ start at 0, R at 1
+  fixed_index_bf[i]  =  as.integer(args[j])+1  # C++ start at 0, R at 1
 }
-print(paste("fixed_index :",fixed_index))
+print(paste("fixed_index :",fixed_index_bf))
 }
 
 ##########################random################################################
 j = j+1
-random_num = as.integer(args[j]) 
-print(paste("random_num :",random_num))
-random_index = c(0)
-if(random_num)
+random_num_bf = as.integer(args[j]) 
+print(paste("random_num :",random_num_bf))
+random_index_bf = c(0)
+if(random_num_bf)
 {
-  for(i in 1:random_num){
+  for(i in 1:random_num_bf){
   j = j+1
-  random_index[i]  =  as.integer(args[j])+1 # C++ start at 0, R at 1
+  random_index_bf[i]  =  as.integer(args[j])+1 # C++ start at 0, R at 1
 }
-print(paste("random_index :",random_index))
+print(paste("random_index :",random_index_bf))
 }
 
 ################################################################################
@@ -56,10 +54,34 @@ print(paste("random_index :",random_index))
 #fixed_index = c(2)
 #random_num = 0
 #random_index = c(0)
+#require(data.table)
+################################################################################
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
 
-require(data.table)
+load(input_path_bf)
+input_path = input_path_bf
+random_effect_path = random_effect_path_bf
+AnimalID_index = AnimalID_index_bf
+target_index = target_index_bf
+method_flag = method_flag_bf
+fixed_num = fixed_num_bf
+fixed_index  =  fixed_index_bf
+random_num = random_num_bf
+random_index = random_index_bf
+rm(input_path_bf,random_effect_path_bf,AnimalID_index_bf,target_index_bf,method_flag_bf,fixed_num_bf,fixed_index_bf,random_num_bf,random_index_bf)
+
+
 #data = read.csv(input_path)
-load(input_path)
 col_list = colnames(data)
 target_item = col_list[target_index]
 AnimalID_item = col_list[AnimalID_index]
@@ -98,8 +120,33 @@ paste("random_part_pama:",random_part_pama)
 
 if(!method_flag) # using lmer to test 
 {
-  require(lmerTest)
-  require(lme4)
+  #require(lmerTest)
+
+  if(require(lmerTest)){
+  print("lmerTest is loaded correctly")
+  } else {
+  print("trying to install lmerTest")
+  install.packages("lmerTest")
+  if(require(lmerTest)){
+    print("lmerTest installed and loaded")
+  } else {
+    stop("could not install lmerTest")
+  }
+  }
+
+  #require(lme4)
+  if(require(lme4)){
+  print("lme4 is loaded correctly")
+  } else {
+  print("trying to install lme4")
+  install.packages("lme4")
+  if(require(lme4)){
+    print("lme4 installed and loaded")
+  } else {
+    stop("could not install lme4")
+  }
+  }
+
   i = 1
   for(item in col_list[]){
     print(paste("=================== ==",item,"===================",sep = ''))

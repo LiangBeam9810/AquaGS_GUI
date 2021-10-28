@@ -1,10 +1,11 @@
 rm(list = ls())
 print("-----------G_matirx_build.R output begin--------------")
 args=commandArgs(T)
-rdata_path = args[1]
-G_matrix_path = args[2]
-rdata_path = "/home/liang/Desktop/Rbuffer.Rdata"
-G_matrix_path = "/home/liang/Desktop/G_matrix.txt"
+rdata_path_bf = args[1]
+G_matrix_path_bf = args[2]
+
+#rdata_path = "/home/liang/Desktop/Rbuffer.Rdata"
+#G_matrix_path = "/home/liang/Desktop/G_matrix.txt"
 
 if(require(data.table)){
   print("data.table is loaded correctly")
@@ -17,6 +18,13 @@ if(require(data.table)){
     stop("could not install data.table")
   }
 }
+
+load(rdata_path_bf)
+
+rdata_path =rdata_path_bf
+G_matrix_path = G_matrix_path_bf
+
+rm(rdata_path_bf,G_matrix_path_bf)
 #require(nadiv)
 if(require(nadiv)){
   print("nadiv is loaded correctly")
@@ -42,7 +50,7 @@ if(require(sommer)){
   }
 }
 
-load(rdata_path)
+
 #col_list = colnames(data)
 geno_012_matrix <- as.matrix(geno_012_DT[, -1:-6])
 geno_sommer_matrix <- geno_012_matrix - 1

@@ -2,70 +2,56 @@ rm(list = ls())
 print("-----------blup_gblup_build.R output begin--------------")
 args=commandArgs(T)
 
-input_path = args[1]
-GEBV_path = args[2]
+input_path_bf = args[1]
+
+GEBV_path_bf = args[2]
 
 
-AnimalID_index = as.integer(args[3]) +1  # C++ start at 0, R at 1
+AnimalID_index_bf = as.integer(args[3]) +1  # C++ start at 0, R at 1
 
-target_index = as.integer(args[4]) + 1  # C++ start at 0, R at 1
+target_index_bf = as.integer(args[4]) + 1  # C++ start at 0, R at 1
 
-mode_flag = as.integer(args[5])#1:A BLUP  2:G GBLUP
+mode_flag_bf = as.integer(args[5])+1#1:A BLUP  2:G GBLUP
+print(paste("mode_flag:",mode_flag_bf))
 ##########################fixed#################################################
 j = 6
-fixed_num = as.integer(args[j]) 
-print(paste("fixed_num :",fixed_num))
-fixed_index = c(0)
-if(fixed_num)
+fixed_num_bf = as.integer(args[j]) 
+print(paste("fixed_num :",fixed_num_bf))
+fixed_index_bf = c(0)
+if(fixed_num_bf)
 {
-  for(i in 1:fixed_num){
+  for(i in 1:fixed_num_bf){
   j = j+1
-  fixed_index[i]  =  as.integer(args[j])+1  # C++ start at 0, R at 1
+  fixed_index_bf[i]  =  as.integer(args[j])+1  # C++ start at 0, R at 1
 }
 }
 
-print(paste("fixed_index :",fixed_index))
+print(paste("fixed_index :",fixed_index_bf))
 ##########################random################################################
 j = j+1
-random_num = as.integer(args[j]) 
-print(paste("random_num :",random_num))
-random_index = c(0)
-if(random_num){
-  for(i in 1:random_num){
+random_num_bf = as.integer(args[j]) 
+print(paste("random_num :",random_num_bf))
+random_index_bf = c(0)
+if(random_num_bf){
+  for(i in 1:random_num_bf){
   j = j+1
-  random_index[i]  =  as.integer(args[j])+1 # C++ start at 0, R at 1
+  random_index_bf[i]  =  as.integer(args[j])+1 # C++ start at 0, R at 1
   }
-  print(paste("random_index :",random_index))
+  print(paste("random_index :",random_index_bf))
 }
 j=j+1
-formula = args[j]
-print(paste("formula :",formula))
+formula_bf = args[j]
+print(paste("formula :",formula_bf))
 
 j = j+1
-varcomp_path = (args[j]) 
-print(paste("varcomp_path :",varcomp_path))
+varcomp_path_bf = (args[j]) 
+print(paste("varcomp_path :",varcomp_path_bf))
 
 j = j+1
-formula_ans_path = (args[j]) 
-print(paste("formula_ans_path :",formula_ans_path))
+formula_ans_path_bf = (args[j]) 
+print(paste("formula_ans_path :",formula_ans_path_bf))
 
-###############################################################################
-#input_path= "/home/liang/Desktop/Rbuffer.Rdata"
-#GEBV_path = "/home/liang/Desktop/GEBV.txt"
-
-#AnimalID_index = 0+1
-#target_index = 11+1
-#mode_flag = 1   
-#param.append(blup_input.A_matrix_path);//3
-#param.append(" ");
-#param.append(blup_input.G_matrix_path);//4
-#fixed_num = 1
-#fixed_index = c(9)
-#random_num = 0
-#random_index = c(0)
-
-#trans_formula = "h2 ~ V1/(V1+V2)" 
-
+################################################################################
 #require(data.table)
 if(require(data.table)){
   print("data.table is loaded correctly")
@@ -78,7 +64,49 @@ if(require(data.table)){
     stop("could not install data.table")
   }
 }
-load(input_path)
+load(input_path_bf)
+###############################################################################
+input_path = input_path_bf
+GEBV_path = GEBV_path_bf
+AnimalID_index = AnimalID_index_bf
+mode_flag = mode_flag_bf
+target_index = target_index_bf
+fixed_num = fixed_num_bf
+fixed_index = fixed_index_bf
+random_num = random_num_bf
+random_index = random_index_bf
+formula = formula_bf
+varcomp_path = varcomp_path_bf
+formula_ans_path = formula_ans_path_bf
+#####################delete the buff###########################################
+rm(input_path_bf)
+rm(GEBV_path_bf)
+rm(AnimalID_index_bf)
+rm(mode_flag_bf)
+rm(target_index_bf)
+rm(fixed_num_bf)
+rm(fixed_index_bf)
+rm(random_num_bf)
+rm(random_index_bf)
+rm(formula_bf)
+rm(varcomp_path_bf)
+rm(formula_ans_path_bf)
+###############################################################################
+
+#input_path= "/home/liang/Desktop/Rbuffer.Rdata"
+#GEBV_path = "/home/liang/Desktop/GEBV.txt"
+#AnimalID_index = 0+1
+#target_index = 11+1
+#mode_flag = 1   
+#fixed_num = 1
+#fixed_index = c(9)
+#random_num = 0
+#random_index = c(0)
+
+#trans_formula = "h2 ~ V1/(V1+V2)" 
+
+
+
 col_list = colnames(data)
 target_item = col_list[target_index]
 AnimalID_item = col_list[AnimalID_index]
@@ -131,8 +159,8 @@ if(require(sommer)){
   }
 }
 
-
-if(mode_flag)
+print(paste("mode_flag:",mode_flag))
+if(mode_flag == 2)#GBLUP
 {
   if(random_num==0)
   {
@@ -144,7 +172,7 @@ if(mode_flag)
                 ,"random = ~ vs(",AnimalID_item,",Gu = G)+",random_part_pama,","
                 ,"rcov = ~ units,data = data))",sep="")
   }
-  print(paste("pama:",pama))
+  print(paste("GBLUP pama:",pama))
   eval(parse(text = pama))
   if("try-error" %in% class(ans_G))####################### ans_G is broken
   {
@@ -179,7 +207,7 @@ if(mode_flag)
     
     
   }
-}else{
+}else if(mode_flag == 1){  #BLUP
   if(random_num==0)
   {
     pama =paste(" ans_G <- try(mmer(",target_item,"~",fixed_part_pama,","
@@ -191,7 +219,7 @@ if(mode_flag)
                 ,"rcov = ~ units,data = data))",sep="")
     
   }
-  print(paste("pama:",pama))
+  print(paste("BLUP pama:",pama))
   eval(parse(text = pama))
   if("try-error" %in% class(ans_G))####################### ans_G is broken
   {
@@ -220,7 +248,6 @@ if(mode_flag)
     fwrite(GEBV,file = GEBV_path,sep = " ",col.names = F)
   }
 }
-
 ans_varcomp = summary(ans_G)$varcomp
 write.table (ans_varcomp, varcomp_path, sep =",", row.names =TRUE, col.names =FALSE, quote =FALSE)
 print(ans_varcomp)
@@ -240,6 +267,7 @@ if(file.exists(GEBV_path)){
   print("GEBV building is completed.")
 }
 #######################    ##################################################
+
 save.image(file = rdata_path)
 
 print("-----------blup_gblup_build.R output end--------------")

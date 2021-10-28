@@ -1,8 +1,8 @@
 #H matrix
 print("-----------H_matirx_build.R output begin--------------")
 args=commandArgs(T)
-rdata_path = args[1]
-H_matrix_path =  args[2]                    
+rdata_path_bf = args[1]
+H_matrix_path_bf =  args[2]                    
 
 if(require(data.table)){
   print("data.table is loaded correctly")
@@ -15,13 +15,20 @@ if(require(data.table)){
     stop("could not install data.table")
   }
 }
+load(rdata_path_bf)
+rdata_path = rdata_path_bf
+H_matrix_path = H_matrix_path_bf
+rm(rdata_path_bf,H_matrix_path_bf)
 
 #require(ASRgenomics)
-
 if(require(ASRgenomics)){
   print("ASRgenomics is loaded correctly")
 } else {
   print("trying to install ASRgenomics")
+  install.packages('factoextra')
+  install.packages('scattermore')
+  install.packages('AGHmatrix')
+  install.packages('superheat')
   install.packages("ASRgenomics")
   if(require(ASRgenomics)){
     print("ASRgenomics installed and loaded")
@@ -30,7 +37,7 @@ if(require(ASRgenomics)){
   }
 }
 
-load(rdata_path)
+
 rownames(geno_012_matrix) <- geno_012_DT$IID
 # Reading genotypic data and making some filters
 M_filter <- qc.filtering(M=geno_012_matrix, base=FALSE, ref=NULL, maf=0.05, marker.callrate=0.2,

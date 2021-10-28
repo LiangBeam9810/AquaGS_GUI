@@ -230,14 +230,15 @@ void blup_fold_validate_Init(fold_validate fold_validate_input)
 {
     fold_validate_input.k_flod_times_ComboBox->setEnabled(false);
     fold_validate_input.cross_validation_pushbutton->setEnabled(false);
+    fold_validate_input.cross_validation_checkBox->setCheckState(Qt::Unchecked);
 }
 
 bool blup_build(blup blup_input)
 {
     unsigned int mode_flag = blup_input.BLUP_mode_ComboBox->currentIndex();
-    if((!(mode_flag == GBLUP))&&(!(blup_input.blup_hblup_flag)))
+    if((!(mode_flag == GBLUP))&&(!(blup_input.blup_hblup_flag)))//
     {
-        QMessageBox::warning( NULL,"Condition error:","\"Dam\" and \"Sire\" is missing.\n Please select \"GBlup\" in the \"Classical method \"");
+        QMessageBox::information(NULL, "Notice ", "\"Dam\" and \"Sire\" is missing.\n Please select \"GBlup\" in the \"Classical method \"");
         return false;
     }
     QString runPath = QDir::currentPath();

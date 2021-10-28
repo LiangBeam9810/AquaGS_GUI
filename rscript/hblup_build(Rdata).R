@@ -2,51 +2,94 @@ rm(list = ls())
 print("-----------hblup_build.R output begin--------------")
 args=commandArgs(T)
 
-input_path = args[1]
-GEBV_path = args[2]
-AnimalID_index = as.integer(args[3]) +1  # C++ start at 0, R at 1
-target_index = as.integer(args[4]) + 1  # C++ start at 0, R at 1
-mode_flag = as.integer(args[5])#1:A BLUP  2:G GBLUP 3:HBLUP
+input_path_bf = args[1]
+GEBV_path_bf = args[2]
+AnimalID_index_bf = as.integer(args[3]) +1  # C++ start at 0, R at 1
+target_index_bf = as.integer(args[4]) + 1  # C++ start at 0, R at 1
+mode_flag_bf = as.integer(args[5])#1:A BLUP  2:G GBLUP 3:HBLUP
 
 ##########################fixed#################################################
 j = 6
-fixed_num = as.integer(args[j]) 
-print(paste("fixed_num :",fixed_num))
-fixed_index = c(0)
-if(fixed_num)
+fixed_num_bf = as.integer(args[j]) 
+print(paste("fixed_num :",fixed_num_bf))
+fixed_index_bf = c(0)
+if(fixed_num_bf)
 {
-  for(i in 1:fixed_num){
+  for(i in 1:fixed_num_bf){
     j = j+1
-    fixed_index[i]  =  as.integer(args[j])+1  # C++ start at 0, R at 1
+    fixed_index_bf[i]  =  as.integer(args[j])+1  # C++ start at 0, R at 1
   }
 }
 
-print(paste("fixed_index :",fixed_index))
+print(paste("fixed_index :",fixed_index_bf))
 ##########################random################################################
 j = j+1
-random_num = as.integer(args[j]) 
-print(paste("random_num :",random_num))
-random_index = c(0)
-if(random_num){
-  for(i in 1:random_num){
+random_num_bf = as.integer(args[j]) 
+print(paste("random_num :",random_num_bf))
+random_index_bf = c(0)
+if(random_num_bf){
+  for(i in 1:random_num_bf){
     j = j+1
-    random_index[i]  =  as.integer(args[j])+1 # C++ start at 0, R at 1
+    random_index_bf[i]  =  as.integer(args[j])+1 # C++ start at 0, R at 1
   }
-  print(paste("random_index :",random_index))
+  print(paste("random_index :",random_index_bf))
 }
 j=j+1
-formula = args[j]
-print(paste("formula :",formula))
+formula_bf = args[j]
+print(paste("formula :",formula_bf))
 
 j = j+1
-varcomp_path = (args[j]) 
-print(paste("varcomp_path :",varcomp_path))
+varcomp_path_bf = (args[j]) 
+print(paste("varcomp_path :",varcomp_path_bf))
 
 j = j+1
-formula_ans_path = (args[j]) 
-print(paste("formula_ans_path :",formula_ans_path))
+formula_ans_path_bf = (args[j]) 
+print(paste("formula_ans_path :",formula_ans_path_bf))
 
 ###############################################################################
+require(data.table)
+
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
+load(input_path_bf)
+###############################################################################
+input_path = input_path_bf
+GEBV_path = GEBV_path_bf
+AnimalID_index = AnimalID_index_bf
+mode_flag = mode_flag_bf
+target_index = target_index_bf
+fixed_num = fixed_num_bf
+fixed_index = fixed_index_bf
+random_num = random_num_bf
+random_index = random_index_bf
+formula = formula_bf
+varcomp_path = varcomp_path_bf
+formula_ans_path = formula_ans_path_bf
+#####################delete the buff###########################################
+rm(input_path_bf)
+rm(GEBV_path_bf)
+rm(AnimalID_index_bf)
+rm(mode_flag_bf)
+rm(target_index_bf)
+rm(fixed_num_bf)
+rm(fixed_index_bf)
+rm(random_num_bf)
+rm(random_index_bf)
+rm(formula_bf)
+rm(varcomp_path_bf)
+rm(formula_ans_path_bf)
+###############################################################################
+
+
 #input_path= "/home/liang/Documents/AquaGS_GUI/Output/Rbuffer.Rdata"
 #GEBV_path = "/home/liang/Documents/AquaGS_GUI/Output/GEBV.txt"
 
@@ -63,21 +106,8 @@ print(paste("formula_ans_path :",formula_ans_path))
 
 #trans_formula = "h2 ~ V1/(V1+V2)"formula
 
-require(data.table)
 
-if(require(data.table)){
-  print("data.table is loaded correctly")
-} else {
-  print("trying to install data.table")
-  install.packages("data.table")
-  if(require(data.table)){
-    print("data.table installed and loaded")
-  } else {
-    stop("could not install data.table")
-  }
-}
 
-load(input_path)
 col_list = colnames(data)
 target_item = col_list[target_index]
 AnimalID_item = col_list[AnimalID_index]

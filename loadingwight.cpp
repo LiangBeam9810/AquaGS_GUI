@@ -37,10 +37,10 @@ void LoadingDialog::initUi()
     m_pTipsLabel->setText("加载中,请稍候...");
     m_pTipsLabel->setStyleSheet("QLabel#tips{font-family:\"Microsoft YaHei\";font-size: 15px;color: #333333;}");
 
-    //显示命令行哦按钮
+    //显示命令行按钮
     m_pCancelBtn = new QPushButton(m_pCenterFrame);
     m_pCancelBtn->setObjectName("TerminalBtn");
-    m_pCancelBtn->setText("Terminal output");
+    m_pCancelBtn->setText("OUTPUT MESSAGE LOG");
     m_pCancelBtn->setStyleSheet("QPushButton#TerminalBtn{"
                                     "background-color: #edeef6;"
                                     "border-radius: 4px;"

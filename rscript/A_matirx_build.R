@@ -1,10 +1,10 @@
 rm(list = ls())
 print("-----------A_matirx_build.R output begin--------------")
 args=commandArgs(T)
-rdata_path = args[1]
-A_matrix_path = args[2]
-Dam_index =  as.integer(args[3]) + 1
-Sire_index = as.integer(args[4]) + 1
+rdata_path_bf = args[1]
+A_matrix_path_bf = args[2]
+Dam_index_bf =  as.integer(args[3]) + 1
+Sire_index_bf = as.integer(args[4]) + 1
 
 #require(data.table)
 if(require(data.table)){
@@ -18,6 +18,17 @@ if(require(data.table)){
     stop("could not install data.table")
   }
 }
+load(rdata_path_bf)
+
+rdata_path = rdata_path_bf
+A_matrix_path = A_matrix_path_bf
+Dam_index =  Dam_index_bf
+Sire_index = Sire_index_bf
+
+rm(rdata_path_bf)
+rm(A_matrix_path_bf)
+rm(Dam_index_bf)
+rm(Sire_index_bf)
 
 #require(nadiv)
 if(require(nadiv)){
@@ -32,7 +43,7 @@ if(require(nadiv)){
   }
 }
 
-load(rdata_path)
+
 
 col_list = colnames(data)
 

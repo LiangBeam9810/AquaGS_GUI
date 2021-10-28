@@ -84,6 +84,9 @@ public:
     QLineEdit* csv_line;
     QLineEdit* vcf_line;
 
+    QStringList Rpackage ;
+
+
     QString csv_path = "";
     QString vcf_path = "";
     QString raw_path = "";

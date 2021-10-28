@@ -3,14 +3,14 @@ rm(list = ls())
 print("-----------discrete_fixed_effect_testing(Rdata).R output begin--------------")
 
 args=commandArgs(T)
-rdata_path = args[1]
-discrete_effect_path = args[2]
-target_index = as.integer(args[3]) + 1##C++ start at 0, R at 1
-num = as.integer(args[4]) 
-fixed_index = c(0)
+rdata_path_bf = args[1]
+continupus_fix_path_bf = args[2]
+target_index_bf = as.integer(args[3]) + 1##C++ start at 0, R at 1
+num_bf= as.integer(args[4]) 
+fixed_index_bf = c(0)
 j = 5
-for(i in 1:num){
-  fixed_index[i]  =  as.integer(args[j])+1
+for(i in 1:num_bf){
+  fixed_index_bf[i]  =  as.integer(args[j])+1
   j = j+1
 }
 
@@ -21,7 +21,27 @@ for(i in 1:num){
 #num = 1
 #fixed_index  =  c(10)
 
-load(rdata_path)
+#require(data.table)
+if(require(data.table)){
+  print("data.table is loaded correctly")
+} else {
+  print("trying to install data.table")
+  install.packages("data.table")
+  if(require(data.table)){
+    print("data.table installed and loaded")
+  } else {
+    stop("could not install data.table")
+  }
+}
+
+load(rdata_path_bf)
+
+rdata_path = rdata_path_bf
+continupus_fix_path = continupus_fix_path_bf
+target_index = target_index_bf
+num = num_bf
+fixed_index  =  fixed_index_bf
+rm(rdata_path_bf,continupus_fix_path_bf,target_index_bf,num_bf,fixed_index_bf)
 
 col_list = colnames(data)
 target_item = col_list[target_index]

@@ -24,6 +24,8 @@ void MainWindow::init()
     out_line = ui->output_lineEdit;
     csv_line = ui->csv_lineEdit;
     vcf_line = ui->vcf_lineEdit;
+    Rpackage.clear();
+    Rpackage<<"data.table"<<"bestNormalize"<<"ggplot2"<<"sommer"<<"lme4"<<"lmerTest"<<"nadiv"<<"ASRgenomics";
     Terminal_log = new Terminal_Dialog(this);
     /*----------StratTAB init---------------------------------------*/
     //ui->csv_input_lineEdit->setText("Enter/Select the csv file.");
@@ -95,6 +97,7 @@ void MainWindow::on_start_next_pushButton_clicked()
 {
     if(check_all_path(ui->output_lineEdit,ui->csv_lineEdit,ui->vcf_lineEdit,&output_path,&csv_path,&vcf_path))
     {
+        check_all_package(Rpackage);
         start_complete_flag = true;
         Phenotype_Init();
         ui->tabWidget->setCurrentIndex(1);//To the next index.
@@ -227,7 +230,7 @@ void MainWindow::on_phenotype_next_pushButton_clicked()
 
          if(blup_Hblup_flag == false)
          {
-             QMessageBox::warning(NULL, "OK", "\"Dam\" and \"Sire\" is missing.\n Please select \"GBlup\" in the \"Classical method \"");
+             QMessageBox::information(NULL, "Notice ", "\"Dam\" and \"Sire\" is missing.\n Please select \"GBlup\" in the \"Classical method \"");
          }
          ui->tabWidget->setCurrentIndex(2);//显示下一页
     }
@@ -287,6 +290,7 @@ void MainWindow::on_qc_next_pushButton_clicked()
         QString newvcf = ui->genofill_output_lineEdit->text();
 
         QString param0 = "source /etc/profile";
+        qDebug()<<"param: "<<param0;
         QProcess display_process0;
         display_process0.execute(param0);
 
@@ -856,21 +860,13 @@ void MainWindow::on_bayesrunpushButton_clicked()
 
     qDebug()<< endl<<"display param :"<<param<< endl;
 
-    QProcess display_process;
-
-    display_process.execute(param);
-    if(display_process.waitForStarted())
+    Process* bayes_process;
+    bayes_process = new Process;
+    if(!(bayes_process->runRscript(param,"Building rdata")))
     {
-        qDebug()<<"OUTLIER PROCESS STRATED";
-        display_process.close();
-
+        QMessageBox::warning(NULL, "Process error:", "Can't open the rdata init process!");
+        return;
     }
-    if(display_process.waitForFinished())
-    {
-        qDebug()<<"OUTLIER PROCESS FINISHED";
-        display_process.close();
-    }
-    display_process.close();
 
     QFile f(output_path+"/bayes_output.txt");
     if(!f.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -913,7 +909,7 @@ void MainWindow::on_classical_more_Button_4_clicked()
 
 void MainWindow::on_GenderFile_checkBox_4_stateChanged(int arg1)
 {
-    if((ui->alphmate_checkBox->checkState() == Qt::Checked)&& arg1 == 2)
+    if(arg1 == 2)
     {
         alphmate_able_gender(bayes_alphamate_all,true);
     }else
@@ -924,9 +920,7 @@ void MainWindow::on_GenderFile_checkBox_4_stateChanged(int arg1)
 
 void MainWindow::on_classical_mate_Button_4_clicked()
 {
-
-    running_alphamate(bayes_alphamate_all,Alphamate_running_path,output_path);
-
+     running_alphamate(bayes_alphamate_all,Alphamate_running_path,output_path);
 }
 
 //点击底部终端输出按钮
