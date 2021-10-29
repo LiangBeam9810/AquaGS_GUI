@@ -7,8 +7,9 @@ There are 3 main sections to this guide:
 There are only two pieces of software you'll need to get started.
 -  [Install R](Install_R.md)
 - [Install Java](Install_Java.md)
-# 2.Install packages for R
+# 2.[Install packages for R](./Md/../Install_packages_for%20R.md)
 We’ve tried to make AquaGS_GUI as easy to set up as possible.Some of the packages required in AquaGS_GUI can be installed automatically when AquaGS_GUI first run.
+
 # 3.Download AquaGS_GUI
 Download AquaGS_GUI to local from GitHub .
 
