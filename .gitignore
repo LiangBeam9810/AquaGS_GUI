@@ -95,3 +95,10 @@ rscript/.RData
 snp_abt_630_imput_out_select48K.vcf
 Output/blup_formula_ans.txt
 Output/blup_varcomp.csv
+Input/testdemo_num_as_name_outlier.csv
+Input/data1120.csv
+Input/data1120_outlier.csv
+Input/data1120_outlier_list.csv
+Input/MBD202010026-02P03.mSNP.vcf.gz
+Input/testdemo_num_as_name.csv
+Input/testdemo_num_as_name_outlier_converted.csv
