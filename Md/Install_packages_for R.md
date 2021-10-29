@@ -3,7 +3,7 @@
 - As user friendly tool,the Function of " install all  package for R in one click " has been integrated in AquaGS_GUI.A stable network connection  is still essential for Automatic installation.
 
 - You'll see such like this in the window named "Information output log"  when you first use AquaGS GUI and haven't installed the extension pack for R in advance.This is  installing the required  packages automatically.
-![[Pasted image 20211027172213.png]]
+![[Pasted_image_20211027172213.png]]
 ![[Pasted image 20211027184711.png]]
 
 - when the error occurs during automatic installation,you will see this. Then you have to install packages manually.

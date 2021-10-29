@@ -35,7 +35,7 @@
 	R -version
 ```
 if  R is installed ,you will see such like this.
-```
+```shell
 YingWanglab@ubuntu:~$ R -version
 WARNING: unknown option '-version'
 
