@@ -52,7 +52,7 @@
          <enum>QTabWidget::South</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>5</number>
         </property>
         <widget class="QWidget" name="Start">
          <attribute name="title">
@@ -4279,7 +4279,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab_2">
+        <widget class="QWidget" name="Bayes">
          <attribute name="title">
           <string>Bayes method</string>
          </attribute>
@@ -4321,6 +4321,12 @@
                    </item>
                    <item>
                     <widget class="QComboBox" name="modelcomboBox">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
+                      </size>
+                     </property>
                      <item>
                       <property name="text">
                        <string>BayesA</string>
@@ -4389,7 +4395,7 @@
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
-                       <height>16777215</height>
+                       <height>40</height>
                       </size>
                      </property>
                      <property name="font">
@@ -4482,6 +4488,12 @@
                    </item>
                    <item>
                     <widget class="QSpinBox" name="iterationspinBox">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
+                      </size>
+                     </property>
                      <property name="minimum">
                       <number>1</number>
                      </property>
@@ -4519,6 +4531,12 @@
                    </item>
                    <item>
                     <widget class="QSpinBox" name="dropoutspinBox">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
+                      </size>
+                     </property>
                      <property name="maximum">
                       <number>5000</number>
                      </property>

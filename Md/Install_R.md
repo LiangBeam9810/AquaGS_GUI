@@ -1,12 +1,13 @@
 
-# install R(4.1.1)
+# Install R(4.1.1)
  
-- You can reference  the [Official Installation Guide](https://cran.r-project.org/bin/linux/ubuntu/).
-	- open the terminal  and run commands like this:
+- You can reference  the [Official Installation Guide](https://cran.r-project.org/bin/linux/ubuntu/) to install the newest R.
+	- open the Terminal(Alt+Ctrl+T) and run commands :
 
 	```r
 	# get the root permission
 	su root 
+	#enter your password of root
 	sudo apt update
 	# update indices
 	apt update -qq

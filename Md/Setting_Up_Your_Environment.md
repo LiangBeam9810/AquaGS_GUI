@@ -11,7 +11,7 @@ There are only two pieces of software you'll need to get started.
 We’ve tried to make AquaGS_GUI as easy to set up as possible.Some of the packages required in AquaGS_GUI can be installed automatically when AquaGS_GUI first run.
 
 # 3.Download AquaGS_GUI
-Download AquaGS_GUI to local from GitHub .
+Download AquaGS_GUI to local from GitHub [(Download here)]().
 
 ---
-At this point, the installation is complete.You are now ready to create your own mate plans ! Enjoy it !
+At this point, the installation is complete.You are now ready to create your own mate plans.Enjoy it!
