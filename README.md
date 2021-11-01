@@ -7,8 +7,13 @@ AquaGS offers click-by-click running from inputting variant call file (.vcf) to 
 Everything Genomic Selection(GS) workflow needs are contained by AquaGS, such as preprocessing,effect testing,breeding-value calculating and mate allocating.Users no longer need to switch between software on different platforms. At the sametime, we also provide [a simple way](./Md/Setting_Up_Your_Environment.md) to install, try to put a lot of power into your hands by making easy things easy, and hard things possible. 
 
 ## How to start?
-Following [this tutorial](./Md/Setting_Up_Your_Environment.md), AquaGS can be easily installed by anyone even without programming experience.
+1. Installation step-by-step 
+   
+   Following [this tutorial(Setting Up Your Environment)](./Md/Setting_Up_Your_Environment.md), AquaGS can be easily installed by anyone even without programming experience.
 
+2. Runing
+
+    Following [this tutorial()]()
 ## Functions 
 1.Phenotype Preprocessing
   - [Outlier Elimination](./MD/Outlier_elimination.md)
