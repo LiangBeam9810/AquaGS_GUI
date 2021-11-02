@@ -2,11 +2,12 @@
 >问题描述：缺少openssl/opensslv.h文件
 >
 >ERROR: configuration failed for package ‘openssl’
->![[Pasted image 20211027173536.png]]
+>
+>![Image]('/../Pasted%20image%2020211027173536.png)
 >
 >  解决方案：
 >```shell
->sudo apt-get install libssl-dev
+>sudo apt-get install openssl-devel
 >```
 
 >问题描述：缺少libcurl4-openssl-dev
@@ -17,7 +18,7 @@
 > * rpm: libcurl-devel (Fedora, CentOS, RHEL)
 > * csw: libcurl_dev (Solaris)
 >```
->![[Pasted image 20211027173536.png]]
+>![Image](./Pasted%20image%2020211027175705.png)
 > 
 > 解决方案：
 >```shell

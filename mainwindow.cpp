@@ -31,9 +31,9 @@ void MainWindow::init()
     //ui->csv_input_lineEdit->setText("Enter/Select the csv file.");
     //ui->vcf_input_lineEdit->setText("Enter/Select the vcf file.");
     //ui->out_lineEdit->setText("Enter/Select the output folder.");
-    csv_line->setText("/home/liang/Documents/AquaGS_GUI/Input/ABT20210617.csv");
-    vcf_line->setText("/home/liang/Documents/AquaGS_GUI/snp_abt_630_imput_out_select48K.vcf");
-    out_line->setText("/home/liang/Desktop");
+    csv_line->setText("Enter/Select the csv file.");
+    vcf_line->setText("Enter/Select the vcf file.");
+    out_line->setText("Select the output folder.");
     ui->tabWidget->setCurrentIndex(0);//Start index
     /*--------------------------------------------------------------*/
 
@@ -75,23 +75,7 @@ void MainWindow::on_output_pushButton_clicked()
     return;
 }
 
-void MainWindow::on_csv_lineEdit_editingFinished()
-{
-    get_enter_path( csv_line,1);
-    return;
-}
 
-void MainWindow::on_vcf_lineEdit_editingFinished()
-{
-    get_enter_path( vcf_line,2);
-    return;
-}
-
-void MainWindow::on_output_lineEdit_editingFinished()
-{
-    get_enter_path( out_line,0);
-    return;
-}
 
 void MainWindow::on_start_next_pushButton_clicked()
 {

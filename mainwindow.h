@@ -150,12 +150,6 @@ private slots:
 
     void on_vcf_pushButton_clicked();
 
-    void on_csv_lineEdit_editingFinished();
-
-    void on_vcf_lineEdit_editingFinished();
-
-    void on_output_lineEdit_editingFinished();
-
     void on_start_next_pushButton_clicked();
 
     void on_outlier_swith_stateChanged(int arg1);

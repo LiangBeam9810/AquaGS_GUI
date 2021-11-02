@@ -3,4 +3,4 @@
  ```shell
  sudo apt-get install openjdk-17-jre
  ```
-Using ```Java version``` can check the version of OpenJDK.
+Using ```java version``` can check the version of OpenJDK.

@@ -9,33 +9,59 @@ Everything Genomic Selection(GS) workflow needs are contained by AquaGS, such as
 ## How to start?
 1. Installation step-by-step 
    
-   Following [this tutorial(Setting Up Your Environment)](./Md/Setting_Up_Your_Environment.md), AquaGS can be easily installed by anyone even without programming experience.
+   Download the zip of AquaGS to local from [releases page](https://github.com/LiangBeam9810/AquaGS_GUI/releases).
 
-2. Runing
+   Following [the install tutorial(Setting Up Your Environment)](./Md/Setting_Up_Your_Environment.md), AquaGS can be easily installed by anyone even without programming experience.
+   
+2. <span id="RunningInstructions"> Runing </span>
+   
+    Make sure  [the install tutorial](./Md/Setting_Up_Your_Environment.md) is completed before you run AquaGS.Then you will start using AquaGS normally.
 
-    Following [this tutorial()]()
-## Functions 
-1.Phenotype Preprocessing
-  - [Outlier Elimination](./MD/Outlier_elimination.md)
-  - [Normality Testing and Converting](./MD/Normality.md)
+    1. Launched AquaGS
+    
+        AquaGS can be launched by simply double-clicking the "AquaGS_GUI" ,which in the decompressed folder.
+    
+    1. Select/Enter input and output
+   
+        In this page,you should select the path of phenotype file(.csv) , variant call file(.vcf) and output folder.
 
-2.Genotype Preprocessing(Quality Control)
+    2. Phenotype Preprocessing
+
+        All Preprocessing of phentype will be completed in this page.Here contain 
+
+    3. Genotype Preprocessing(Quality Control)
+
+## Functions detail
+1. Phenotype Preprocessing
+  - [Outlier Elimination](./Md/Outlier_elimination.md)
+  - [Normality Testing and Converting](./Md/Normality.md)
+
+2. Genotype Preprocessing(Quality Control)
   - [Genotype Filling]()
   - [HW Balance]()
   - [Plink]()
 
-3.Effect Testing
+3. A/G/H matirx build
+
+4. Effect Testing
   - [Fixed Effect]()
     - [Discrete Effect]()
     - [Continuous Effect]()
-  - [Random Rffect]()
+  - [Random Effect]()
 
-4.Classical method
+5. Classical method
 - [BLUP]()
 - [GLUP]()
 - [HLUP]()
   
-5.Bayes method
+6.Bayes method
+
+
+---
+# Feedback
+If you have any doubt, you can ask us for Email.
+
+You can also open an [issue on GitHub](https://github.com/LiangBeam9810/AquaGS_GUI/issues). This is especially handy when your issue will require long-term discussion or debugging.
 
 
 
