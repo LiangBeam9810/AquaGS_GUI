@@ -4,7 +4,7 @@ print("-----------discrete_fixed_effect_testing(Rdata).R output begin-----------
 
 args=commandArgs(T)
 rdata_path_bf = args[1]
-continupus_fix_path_bf = args[2]
+discrete_effect_path_bf = args[2]
 target_index_bf = as.integer(args[3]) + 1##C++ start at 0, R at 1
 num_bf= as.integer(args[4]) 
 fixed_index_bf = c(0)
@@ -37,7 +37,7 @@ if(require(data.table)){
 load(rdata_path_bf)
 
 rdata_path = rdata_path_bf
-continupus_fix_path = continupus_fix_path_bf
+discrete_effect_path = discrete_effect_path_bf
 target_index = target_index_bf
 num = num_bf
 fixed_index  =  fixed_index_bf

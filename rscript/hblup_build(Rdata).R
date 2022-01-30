@@ -6,7 +6,7 @@ input_path_bf = args[1]
 GEBV_path_bf = args[2]
 AnimalID_index_bf = as.integer(args[3]) +1  # C++ start at 0, R at 1
 target_index_bf = as.integer(args[4]) + 1  # C++ start at 0, R at 1
-mode_flag_bf = as.integer(args[5])#1:A BLUP  2:G GBLUP 3:HBLUP
+mode_flag_bf = as.integer(args[5])+1#1:A BLUP  2:G GBLUP 3:HBLUP
 
 ##########################fixed#################################################
 j = 6
@@ -47,7 +47,7 @@ formula_ans_path_bf = (args[j])
 print(paste("formula_ans_path :",formula_ans_path_bf))
 
 ###############################################################################
-require(data.table)
+#require(data.table)
 
 if(require(data.table)){
   print("data.table is loaded correctly")
@@ -145,7 +145,7 @@ if(random_num)
 random_part_pama = substr(random_part_pama,1,nchar(random_part_pama)-1)#delete the final "+"
 paste("random_part_pama:",random_part_pama)
 ################################################################################################
-
+paste("mode_flag:",mode_flag)
 ###############################################################################
 library(sommer)
 
@@ -181,7 +181,11 @@ if(mode_flag == 3)
     eval(parse(text = pama))
     
     setnames(GEBV,"rn","AnimalID")
-    setnames(GEBV,"ans_G$U$`u:AnimalID`$ABT_t","GEBV")
+    #setnames(GEBV,"ans_G$U$`u:AnimalID`$ABT_t","GEBV")
+    pama = ""
+    pama = paste("setnames(GEBV,\"ans_G$U$`u:",AnimalID_item,"`$",target_item,"\",\"GEBV\")",sep = "")
+    print(pama)
+    eval(parse(text = pama))
     fwrite(GEBV,file = GEBV_path,sep = " ",col.names = F)
   }
 }

@@ -10,7 +10,7 @@ AnimalID_index_bf = as.integer(args[3]) +1  # C++ start at 0, R at 1
 print(paste("AnimalID_index :",AnimalID_index_bf))
 target_index_bf = as.integer(args[4]) + 1  # C++ start at 0, R at 1
 print(paste("target_index :",target_index_bf))
-method_flag_bf = as.integer(args[5])
+method_flag_bf = as.integer(args[5])+1
 print(paste("method_flag :",method_flag_bf))
 ##########################fixed#################################################
 j = 6
@@ -168,29 +168,39 @@ for(i in 1:rep) {
     #              rcov =  ~ units,
     #              data = y)
     if(random_num){
-      if(method_flag)
+      if(method_flag == 2)
       {
           pama =paste(" ans_A <- mmer(",target_item,"~1+",fixed_part_pama,","
                     ,"random =~vs(",AnimalID_item,",Gu=G)+",random_part_pama,","
                     ,"rcov =~units, data= y)",sep="")
         
-      }else
+      }else if(method_flag == 1)
       {
         pama =paste(" ans_A <- mmer(",target_item,"~ 1+",fixed_part_pama,","
                     ,"random=~vs(",AnimalID_item,", Gu=A)+",random_part_pama,","
                     ,"rcov=~units, data= y)",sep="")
+      }else 
+      {
+        pama =paste(" ans_A <- mmer(",target_item,"~ 1+",fixed_part_pama,","
+                    ,"random=~vs(",AnimalID_item,", Gu=H)+",random_part_pama,","
+                    ,"rcov=~units, data= y)",sep="")
       }
     }else{
-      if(method_flag)
+      if(method_flag == 2)
       {
         pama =paste(" ans_A<- mmer(",target_item,"~1+",fixed_part_pama,","
                     ,"random=~vs(",AnimalID_item,", Gu=G),"
                     ,"rcov=~units, data= y)",sep="")
         
-      }else
+      }else if(method_flag == 1)
       {
         pama =paste(" ans_A <-mmer(",target_item,"~1+",fixed_part_pama,","
                     ,"random =~vs(",AnimalID_item,",Gu=A),"
+                    ,"rcov =~units,data = y)",sep="")
+      }else
+      {
+        pama =paste(" ans_A <-mmer(",target_item,"~1+",fixed_part_pama,","
+                    ,"random =~vs(",AnimalID_item,",Gu=H),"
                     ,"rcov =~units,data = y)",sep="")
       }
     }
