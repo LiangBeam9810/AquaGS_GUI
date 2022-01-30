@@ -26,9 +26,36 @@ bool install_ASRgenomics()
         return true;
     }
 }
-void check_all_package(QStringList Rpackage)
+void check_all_package()
 {
-    install_ASRgenomics();
+    //install_ASRgenomics();
+    QString run_path = QDir::currentPath();
+    run_path.append("/rscript/check_all_pack.R");
+    qDebug() << endl <<"check_all_pack.R:" << run_path << endl;
+    QString file_path = QDir::currentPath();
+    file_path.append("/rscript/ASRgenomics_1.0.0_R_x86_64-pc-linux-gnu.tar.gz");
+    qDebug() << endl <<"ASRgenomics_file_path:" << file_path << endl;
+    QString param;
+    // The sequence of param is not changeable
+    param.clear();
+    param.append("Rscript");
+    param.append(" ");
+    param.append(run_path);
+    param.append(" ");
+    param.append(file_path);
+    qDebug()<< endl<<"display param :"<<param<< endl;
+    Process* install_ASRgenomics_process;
+    install_ASRgenomics_process = new Process;
+    if(!(install_ASRgenomics_process->runRscript(param,"Installing packages.")))
+    {
+        QMessageBox::warning(NULL, "Process error:", "Can't open the install packages process !");
+        return ;
+    }
+    else
+    {
+        return ;
+    }
+
 }
 
 void phenotype_select_line_init(phenotype_select phenotype_select_line,QString csv_path,QStringList* phenotype_list)

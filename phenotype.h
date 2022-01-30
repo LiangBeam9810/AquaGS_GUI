@@ -21,7 +21,7 @@ struct phenotype_display{
     QLabel* horizontallabel = NULL;
 };
 
-void check_all_package(QStringList Rpackage);
+void check_all_package();
 void phenotype_select_line_init(phenotype_select phenotype_select_line,QString csv_path,QStringList* phenotype_list);
 void phenotype_select_line_get_index(phenotype_select phenotype_select_line,unsigned int * target_index,
                                      unsigned int * ID_index,

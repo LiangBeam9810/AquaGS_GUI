@@ -9,7 +9,6 @@ bool MainWindow::callPlinkGwas(QString genotype, QString out)
 {
 
     QString runPath1 = QDir::currentPath();
-//    runPath.append("/rscript/fixed_effect_testing.R");
     qDebug() << endl <<"runPath1:" << runPath1 << endl;
 
     QString maf = ui->mafcheckBox->isChecked()? ui->mafdoubleSpinBox->text():nullptr;
@@ -18,7 +17,6 @@ bool MainWindow::callPlinkGwas(QString genotype, QString out)
     QString hwe = ui->hwcheckBox->isChecked()? ui->hwdoubleSpinBox->text():nullptr;
 
     QString plinkpath = runPath1.append("/plink/");
-//    QString plinkpath = "/home/zhi/Desktop/AquaGS_GUI-main/plink/";
     //这里修改生成的中间文件和输出raw的路径
     QString file2=plinkpath+"files/"+"file2";
     QString file3=plinkpath+"files/"+"file3";
@@ -32,6 +30,7 @@ bool MainWindow::callPlinkGwas(QString genotype, QString out)
     plink.part1(genotype, file2);
     if (!(plink_process->runExTool(plinkpath+"plink", plink.getParamList())))
     {
+        qDebug() << endl <<"plink part1 error:"  << endl;
         return false;
     }
 

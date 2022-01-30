@@ -19,6 +19,40 @@ MainWindow::~MainWindow()
 
 
 /*------------------------------------------------------------------------ */
+QString executeLinuxCmd(QString strCmd)
+{
+    QProcess p;
+    p.start("bash", QStringList() <<"-c" << strCmd);
+    p.waitForFinished();
+    QString strResult = p.readAllStandardOutput();
+    return strResult;
+}
+
+bool Init_tool()
+{
+    QString param;
+    QString runPath = QDir::currentPath();
+    QString plink_Path = runPath+"/plink/plink";
+    // The sequence of param is not changeable
+    param.clear();
+    param.append("chmod a+x");
+    param.append(" ");
+    param.append(plink_Path);
+    qDebug()<<"Init_tool_process param :"<<param;
+    executeLinuxCmd(param);
+
+    QString Alphamate_Path = runPath+"/AlphaMateLinux/AlphaMate";
+    // The sequence of param is not changeable
+    param.clear();
+    param.append("chmod a+x");
+    param.append(" ");
+    param.append(Alphamate_Path);
+    qDebug()<<"Init_tool_process param :"<<param;
+    executeLinuxCmd(param);
+
+    return true;
+
+}
 void MainWindow::init()
 {
     out_line = ui->output_lineEdit;
@@ -53,9 +87,15 @@ void MainWindow::init()
 
     /*----------Effect init-----------------------------------------*/
     //Effect_Init();
-
+    /*----------tool init-----------------------------------------*/
+    if(Init_tool())
+    {
+        sent_massage_to_terminal("plink and AlphaMate initted!");
+    }
     return;
+
 }
+
 /*-------------------------------------- start -----------------------------------------*/
 void MainWindow::on_csv_pushButton_clicked()
 {
@@ -81,7 +121,7 @@ void MainWindow::on_start_next_pushButton_clicked()
 {
     if(check_all_path(ui->output_lineEdit,ui->csv_lineEdit,ui->vcf_lineEdit,&output_path,&csv_path,&vcf_path))
     {
-        check_all_package(Rpackage);
+        check_all_package();
         start_complete_flag = true;
         Phenotype_Init();
         ui->tabWidget->setCurrentIndex(1);//To the next index.
