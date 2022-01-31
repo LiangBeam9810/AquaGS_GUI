@@ -1,7 +1,15 @@
 # Install packages for R
 ### Automatic installation
 - As user friendly tool,the Function of " install all  package for R in one click " has been integrated in AquaGS_GUI.A stable network connection  is still essential for Automatic installation.
-
+  
+Automatic installation works fine if the following dependent libraries are installed:
+* libcurl (lme4 needs)
+* openssl (sommer needs)
+* CMake  (lmerTest needs)
+* lnlopt (lme4 needs)
+* libgit2 (bestNormalize needs)
+  
+**Make sure these dependency libraries are installed in your linux! ! !**   
 - You'll see such like this in the window named "Information output log"  when you first use AquaGS GUI and haven't installed the extension pack for R in advance.This is  installing the required  packages automatically.
 
 **Please be patient, this will only happen once the first time you use AquaGS.**
@@ -20,14 +28,14 @@
 		| **package** |**version** |
 		|---|---|
 		|  data.table | |
-		| bestNormalize | |
-		| ggplot2| |
-		| sommer | |
-		| lme4 | |
-		| lmerTest | |
 		| nadiv | |
+		| BGLR| |
+		| BGLR | |
+		| ggplot2 | |
+		| bestNormalize | |
+		| lmerTest | |
 		| ASRgenomics | |
-		|BGLR|
+		| lme4 |
 
 ---
 ### Notice 

@@ -15,7 +15,7 @@
 	# update indices
 	apt update -qq
 	# install two helper packages we need
-	apt install --no-install-recommends software-properties-common dirmngr
+	apt install software-properties-common dirmngr
 	# add the signing key (by Michael Rutter) for these repos
 	# To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc 
 	# Fingerprint: 298A3A825C0D65DFD57CBB651716619E084DAB9
@@ -25,8 +25,13 @@
 	# install R and its dependencies.
 	apt install --no-install-recommends r-base
 	# install R base dev
-	sudo apt-get install r-base-dev
-	sudo apt-get install libcurl4-openssl-dev 
+	apt-get install r-base-dev
+	# Be sure to install the following dependent libraries
+	apt-get install libcurl4-openssl-dev 
+	apt-get install libgit2-dev
+	apt-get install nloptr.so
+	apt-get install cmake
+	apt-get install libssl-dev
 	```
 	- If you see like this ,please run =="su root"== to get the root permission firstly .
 		```shell
