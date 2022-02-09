@@ -41,7 +41,7 @@ discrete_effect_path = discrete_effect_path_bf
 target_index = target_index_bf
 num = num_bf
 fixed_index  =  fixed_index_bf
-rm(rdata_path_bf,continupus_fix_path_bf,target_index_bf,num_bf,fixed_index_bf)
+rm(rdata_path_bf,discrete_effect_path_bf,target_index_bf,num_bf,fixed_index_bf)
 
 col_list = colnames(data)
 target_item = col_list[target_index]

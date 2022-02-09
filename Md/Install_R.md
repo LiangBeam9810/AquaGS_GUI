@@ -1,6 +1,30 @@
 
 # Install R(4.1.1)
- 
+- We highly recommend using Conda to manage R environments, especially without root permission.
+	```r
+	conda create -n r411env # create a new env for R 4.1.1 named "r411env"
+	conda activate r411env  # activate the env
+	conda install r-base=4.1.1 # install R 4.1.1
+	conda install cmake # install cmake
+	conda install libgit2 # install libgit2
+
+	```
+	- Before using AquaGS for the first time, edit `~/.bashrc`
+ to make this environment the default environment for Conda.(You only have to do it once).Add `conda activate r411env` to the end of   `~/.bashrc`.
+		```r
+		echo "conda activate r411env" >>  ~/.bashrc 
+		source ~/.bashrc
+		```
+		
+	- add the source of Tsinghua  in mainland China.
+  	```r
+		conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+		conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge 
+		conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/msys2/
+		conda config --set show_channel_urls yes
+		```
+----
+### Not recommended
 - You can reference  the [Official Installation Guide](https://cran.r-project.org/bin/linux/ubuntu/) to install the newest R.
 	- open the Terminal(Alt+Ctrl+T) and run commands :
 
