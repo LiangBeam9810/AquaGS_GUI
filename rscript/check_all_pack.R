@@ -12,7 +12,7 @@ packages=c("data.table","nadiv","sommer","BGLR","ggplot2","bestNormalize","lmerT
 ipak <- function(pkg){
     new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
     if (length(new.pkg)) 
-        install.packages(new.pkg, lib = Sys.getenv("R_LIBS_USER"),dependencies = TRUE)
+        install.packages(new.pkg, lib = Sys.getenv("R_LIBS_USER"),dependencies = TRUE,repos="https://mirrors.tuna.tsinghua.edu.cn/CRAN/")
     sapply(pkg, require, character.only = TRUE)
 }
 ipak(packages)
