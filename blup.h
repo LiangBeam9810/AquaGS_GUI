@@ -39,10 +39,12 @@ struct fold_validate{
    QLineEdit* ACC_lineEdit = NULL;
    QLineEdit* STD_lineEdit = NULL;
    QPushButton* cross_validation_pushbutton = NULL;
+   QSpinBox*  k_flod_rep_SpinBox = NULL;
 
    QString Rdata_path = "";
    QString output_path = "";
    QStringList fixed_effect_list ;
+   QStringList fixed_effect_input_Discrete ;
    QStringList random_effect_list;
 };
 

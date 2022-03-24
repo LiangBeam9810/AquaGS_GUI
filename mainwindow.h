@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+
+
 #include <QMainWindow>
 #include <iostream>
 #include <QMainWindow>
@@ -113,7 +115,7 @@ public:
     unsigned int fist_convert_flag = 1;
     QStringList fixed_effect_list ;
     QStringList Discrete_fixed_effect_list ;
-    //QStringList Continuous_fixed_effect_list ;
+    QStringList Continuous_fixed_effect_list ;
     QStringList random_effect_list ;
 
     bool phenotype_converted_flag = false;
@@ -248,3 +250,4 @@ private:
     volatile bool runningFlag = false;
 };
 #endif // MAINWINDOW_H
+

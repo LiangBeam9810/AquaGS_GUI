@@ -53,6 +53,7 @@ bool Init_tool()
     return true;
 
 }
+
 void MainWindow::init()
 {
     out_line = ui->output_lineEdit;
@@ -114,8 +115,6 @@ void MainWindow::on_output_pushButton_clicked()
     get_select_path(" ",this,out_line,0);
     return;
 }
-
-
 
 void MainWindow::on_start_next_pushButton_clicked()
 {
@@ -408,6 +407,12 @@ void MainWindow::on_qc_next_pushButton_clicked()
 //Fixed effect part
 void MainWindow::Effect_Init()
 {
+    //empty all list of effect testing
+    fixed_effect_list.clear();
+    Discrete_fixed_effect_list.clear();
+    Continuous_fixed_effect_list.clear();
+    random_effect_list.clear();
+
     fixed_effect_input_Discrete.input_path = Rdata_path;
     fixed_effect_input_Discrete.output_path = output_path;
     fixed_effect_input_Discrete.A_matrix_path = A_matrix_path;
@@ -420,7 +425,7 @@ void MainWindow::Effect_Init()
     fixed_effect_input_Discrete.process_flag = 1;
     fixed_effect_input_Discrete.fixed_effect_list = &fixed_effect_list;
     fixed_effect_input_Discrete.Discrete_fixed_effect_list = &Discrete_fixed_effect_list;
-    //fixed_effect_input_Discrete.Continuous_fixed_effect_list = &Continuous_fixed_effect_list;
+    fixed_effect_input_Discrete.Continuous_fixed_effect_list = &Continuous_fixed_effect_list;
     fixed_effect_input_Discrete.random_effect_list = &random_effect_list;
 
     fixed_effect_input_Continuous.input_path = Rdata_path;
@@ -435,7 +440,7 @@ void MainWindow::Effect_Init()
     fixed_effect_input_Continuous.process_flag = 2;
     fixed_effect_input_Continuous.fixed_effect_list = &fixed_effect_list;
     fixed_effect_input_Continuous.Discrete_fixed_effect_list = &Discrete_fixed_effect_list;
-    //fixed_effect_input_Continuous.Continuous_fixed_effect_list = &Continuous_fixed_effect_list;
+    fixed_effect_input_Continuous.Continuous_fixed_effect_list = &Continuous_fixed_effect_list;
     fixed_effect_input_Continuous.random_effect_list = &random_effect_list;
 
     random_effect_input.input_path = Rdata_path;
@@ -452,9 +457,7 @@ void MainWindow::Effect_Init()
     random_effect_input.fixed_effect_list = &fixed_effect_list;
     random_effect_input.random_effect_list = &random_effect_list;
 
-    fixed_effect_list.clear();
-    Discrete_fixed_effect_list.clear();
-    random_effect_list.clear();
+
 
     Discrete_selected_fixed_flag = false;
     Continuous_selected_fixed_flag = false;
@@ -499,8 +502,10 @@ void MainWindow::on_fixed_select_Button_clicked()
     add_item2effect_list(ui->fixed_phenotype_pr_TableView,
                          phenotype_list,&fixed_effect_list);
     prepare_effect(fixed_effect_input_Discrete);
-    //ui->fixed_accept_pushButton->setEnabled(true);qDebug()<<endl<<"Discrete_fixed_effect_list  is "<<fixed_effect_list<<endl;
+    //ui->fixed_accept_pushButton->setEnabled(true);
+    qDebug()<<endl<<"Discrete_fixed_effect_list  is "<<fixed_effect_list<<endl;
 }
+
 void MainWindow::on_fixed_exclude_Button_clicked()
 {
     remove_item_from_effect_list(ui->fixed_selected_TableView, &fixed_effect_list);
@@ -522,7 +527,7 @@ void MainWindow::on_fixed_accept_pushButton_clicked()
     change_select_exclude_Button(0,Discrete_selected_fixed_flag,ui->fixed_select_Button,ui->fixed_exclude_Button);
     ui->fixed_accept_pushButton->setEnabled(false);
     Discrete_fixed_effect_list = fixed_effect_list;//将离散型效应列表记录下来
-    qDebug()<<"Discrete fixed effect was accepted ,fixed_effect_list: "<<fixed_effect_list;
+    qDebug()<<endl<<"Discrete fixed effect was accepted ,Discrete_fixed_effect_list: "<<Discrete_fixed_effect_list;
     prepare_effect(fixed_effect_input_Continuous);//准备刷新连续型固定效应
 }
 
@@ -532,7 +537,9 @@ void MainWindow::on_fixed_phenotype_pr_TableView_2_clicked(const QModelIndex &in
     change_select_exclude_Button(1,Continuous_selected_fixed_flag,ui->fixed_select_Button_2,ui->fixed_exclude_Button_2);
     return;
 }
-
+/****************************
+* 点击了continuce型已选框（右侧）
+*****************************/
 void MainWindow::on_fixed_selected_TableView_2_clicked(const QModelIndex &index)
 {
     qDebug()<<endl<<"Continuous_fixed_tableview_clicked:" <<index<<endl;
@@ -703,7 +710,9 @@ void MainWindow::classical_method_Init()
     blup_fold_validate.STD_lineEdit = ui->class_val_std_lineEdit;
     blup_fold_validate.cross_validation_checkBox = ui->cross_validation_checkBox;
     blup_fold_validate.k_flod_times_ComboBox = ui->k_flod_times_ComboBox;
+    blup_fold_validate.k_flod_rep_SpinBox = ui->k_flod_rep_spinBox;
     blup_fold_validate.fixed_effect_list = fixed_effect_list;
+    blup_fold_validate.fixed_effect_input_Discrete = Discrete_fixed_effect_list;
     blup_fold_validate.random_effect_list = random_effect_list;
     blup_fold_validate.cross_validation_pushbutton = ui->classical_validate_pushButtom;
 
@@ -798,6 +807,7 @@ void MainWindow::on_cross_validation_checkBox_stateChanged(int arg1)
     {
         blup_fold_validate.k_flod_times_ComboBox->setEnabled(true);
         blup_fold_validate.cross_validation_pushbutton->setEnabled(true);
+        blup_fold_validate.k_flod_rep_SpinBox->setEnabled(true);
     }
 }
 

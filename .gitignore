@@ -105,3 +105,16 @@ Input/testdemo_num_as_name_outlier_converted.csv
 Input/data1120_outlier_converted.csv
 Input/ABT20210617_outlier_converted.csv
 Input/ABT20210617_outlier_list.csv
+plink/files/file5.prune.in
+plink/files/file5.ped
+*.out
+*.nosex
+plink/files/file5.log
+*.map
+*.ped
+plink/files/file2.log
+plink/files/file3.log
+plink/files/file4.log
+rscript/.Rhistory
+rscript/.Rhistory
+rscript/.Rhistory

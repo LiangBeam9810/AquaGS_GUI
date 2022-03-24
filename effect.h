@@ -19,7 +19,7 @@ struct prepare_effect_input
     QStringList* fixed_effect_list ;
     QStringList* random_effect_list;
     QStringList* Discrete_fixed_effect_list = NULL;
-    //QStringList* Continuous_fixed_effect_list  = NULL;
+    QStringList* Continuous_fixed_effect_list  = NULL;
 };
 void clean_tablevie(QTableView* tableview);
 bool prepare_effect(prepare_effect_input effect_input);

@@ -231,6 +231,7 @@ void blup_fold_validate_Init(fold_validate fold_validate_input)
     fold_validate_input.k_flod_times_ComboBox->setEnabled(false);
     fold_validate_input.cross_validation_pushbutton->setEnabled(false);
     fold_validate_input.cross_validation_checkBox->setCheckState(Qt::Unchecked);
+    fold_validate_input.k_flod_rep_SpinBox->setEnabled(false);
 }
 
 bool blup_build(blup blup_input)
@@ -349,6 +350,13 @@ bool classical_method_cross_validation_and_display(blup blup_mode,fold_validate 
         param.append(blup_fold_validate.fixed_effect_list[i]);
         param.append(" ");
     }
+    param.append(QString::number(blup_fold_validate.fixed_effect_input_Discrete.length()));
+    qDebug()<< endl<<"display fixed_effect_input_Discrete :"<<blup_fold_validate.fixed_effect_input_Discrete<< endl;
+    param.append(" ");
+    for(int i = 0;i < blup_fold_validate.fixed_effect_input_Discrete.length();i++){
+        param.append(blup_fold_validate.fixed_effect_input_Discrete[i]);
+        param.append(" ");
+    }
     param.append(QString::number(blup_fold_validate.random_effect_list.length()));
     qDebug()<< endl<<"display random_effect_list :"<<blup_fold_validate.random_effect_list<< endl;
     param.append(" ");
@@ -356,10 +364,9 @@ bool classical_method_cross_validation_and_display(blup blup_mode,fold_validate 
         param.append(blup_fold_validate.random_effect_list[i]);
         param.append(" ");
     }
-    param.append(QString::number(1));//rep
+    param.append(QString::number(blup_fold_validate.k_flod_rep_SpinBox->value()));//rep
     param.append(" ");
-    param.append(QString::number(blup_fold_validate.k_flod_times_ComboBox->currentIndex()));//k_num
-    param.append(" ");
+    param.append(blup_fold_validate.k_flod_times_ComboBox->currentText());//k_num
     param.append(" ");
     param.append(formula);
     qDebug()<< endl<<"display param :"<<param<< endl;
