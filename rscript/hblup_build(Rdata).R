@@ -185,10 +185,33 @@ if(mode_flag == 3)
     pama = ""
     pama = paste("setnames(GEBV,\"ans_G$U$`u:",AnimalID_item,"`$",target_item,"\",\"GEBV\")",sep = "")
     print(pama)
-    eval(parse(text = pama))
+    eval
+    print(GEBV)
     fwrite(GEBV,file = GEBV_path,sep = " ",col.names = F)
   }
 }
+ans_varcomp = summary(ans_G)$varcomp
+write.table (ans_varcomp, varcomp_path, sep =",", row.names =TRUE, col.names =FALSE, quote =FALSE)
+print(ans_varcomp)
+
+ans_vpredict =c(0,0)
+pama = ""
+pama = paste("ans_vpredict[1] = vpredict(ans_G,",formula,")$Estimate[1]",sep = "")
+eval(parse(text = pama))
+
+pama = ""
+pama = paste("ans_vpredict[2] = vpredict(ans_G,",formula,")$SE[1]",sep = "")
+eval(parse(text = pama))
+
+print(ans_vpredict)
+write.table(ans_vpredict,formula_ans_path, sep =",", row.names =FALSE, col.names =FALSE, quote =FALSE)
+
+if(file.exists(GEBV_path)){
+  print("GEBV building is completed.")
+}
+#######################    ##################################################
+
+save.image(file = rdata_path)
 #######################    ##################################################
 ##save(file = "/home/liang/Documents/GEBVRbuffer.Rdata")
 

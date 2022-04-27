@@ -6,15 +6,17 @@ void clean_tablevie(QTableView* tableview)
      tableview->setModel(model);
      tableview->show();
 }
-void display_effect(QString pr_csv_path,QTableView* original_tableview,QTableView* selected_tableview,QStringList effect_list)
+void display_effect(QString pr_csv_path,QTableView* original_tableview,QTableView* selected_tableview,
+                    QLabel* original_label,QLabel* selected_label,QString target_effect_name,
+                    QStringList effect_list,QStringList factor_list,QStringList numeric_list)
 {
     QStandardItemModel* original_model = new QStandardItemModel();
     QStandardItemModel* selected_model = new QStandardItemModel();
-    original_model->setHorizontalHeaderLabels({"Phenotype", "P value"});
-    selected_model->setHorizontalHeaderLabels({"Effect", "P value"});
+    original_model->setHorizontalHeaderLabels({"Phenotype", "Type","P value"});
+    selected_model->setHorizontalHeaderLabels({"Effect", "Type","P value"});
 
-    original_tableview->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    selected_tableview->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    QString original_label_conment = target_effect_name;
+    QString selected_label_conment = target_effect_name;
 
     QFile csv_file(pr_csv_path);
     QStringList csv_list;
@@ -33,8 +35,8 @@ void display_effect(QString pr_csv_path,QTableView* original_tableview,QTableVie
     qDebug()<<endl<<"csv_list:"<<csv_list<<endl;
 
     unsigned count = 0;
-    unsigned int i =0;//右侧已经选择的计数
-    unsigned int j =0;//左侧为选择的计数
+    int i =0;//右侧已经选择的计数
+    int j =0;//左侧为选择的计数
     Q_FOREACH(QString str, csv_list)
     {
        QStringList valsplit = str.split(",");
@@ -42,40 +44,58 @@ void display_effect(QString pr_csv_path,QTableView* original_tableview,QTableVie
        valsplit[1] = (valsplit[1].mid(1,valsplit[1].length()-2));
        //qDebug()<<"valsplit[0]"<<valsplit[0]<<"--"<<"valsplit[1]"<<valsplit[1];
        //qDebug()<<"count:"<<count;
+
        if((!(-1 == effect_list.indexOf(QString::number(count)))))  // if the effect in the fixed_effect_list already
        {
            qDebug()<<endl<<"find the effect in the fixed_effect_list already,index is "<<effect_list.indexOf(QString::number(count))<<endl;
            selected_model->setItem(i, 0, new QStandardItem(valsplit[0]));//deleted ""
-           //if((!valsplit[1].count())||(valsplit[1] == "NA")||(valsplit[1] == "Err")||(valsplit[1] == "Fixed")||(valsplit[1] == "NA"))//NA or error happend,can't convert to double class
-           //{
-           //    selected_model->setItem(i, 1, new QStandardItem("-"+valsplit[1]+"-"));
-           // }
-           // else {//inpu : number type value //str->double->str
-           //    selected_model->setItem(i, 1, new QStandardItem(QString::number(valsplit[1].toDouble(),'f',6)));
-           // }
-           selected_model->setItem(i, 1, new QStandardItem(valsplit[1]));
-
+           if((!(-1 == factor_list.indexOf(QString::number(count)))))// if the effect in the factor_list already
+           {
+                selected_model->setItem(i, 1, new QStandardItem("factor"));
+           }
+           else if ((!(-1 == numeric_list.indexOf(QString::number(count))))) {//else if the effect in the numeric_list already
+               selected_model->setItem(i, 1, new QStandardItem("numeric"));
+           }
+           selected_model->setItem(i, 2, new QStandardItem(valsplit[1]));
            i++;
+           original_label_conment.append(valsplit[0]+"+");
+           selected_label_conment.append(valsplit[0]+"+");
        }
        else
        {
            original_model->setItem(j, 0, new QStandardItem(valsplit[0]));
-           //if((!valsplit[1].count())||valsplit[1] == "NA"||(valsplit[1] == "Err")||(valsplit[1] == "Fixed")||(valsplit[1] == "NaN"))
-           //{
-           //    original_model->setItem(j, 1, new QStandardItem("-"+valsplit[1]+"-"));
-           //}
-           //else {
-           //    original_model->setItem(j, 1, new QStandardItem(QString::number(valsplit[1].toDouble(),'f',6)));
-           //}
-           original_model->setItem(j, 1, new QStandardItem(valsplit[1]));
+
+           if((!(-1 == factor_list.indexOf(QString::number(count)))))// if the effect in the factor_list already
+           {
+                original_model->setItem(j, 1, new QStandardItem("factor"));
+           }
+           else if ((!(-1 == numeric_list.indexOf(QString::number(count))))) {//else if the effect in the numeric_list already
+               original_model->setItem(j, 1, new QStandardItem("numeric"));
+           }
+           original_model->setItem(j, 2, new QStandardItem(valsplit[1]));
            j++;
        }
        count++;
     }
     original_tableview->setModel(original_model);
+    original_tableview->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents) ;
+    original_tableview->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents) ;
+    original_tableview->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Stretch) ;
     selected_tableview->setModel(selected_model);
+    selected_tableview->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents) ;
+    selected_tableview->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents) ;
+    selected_tableview->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Stretch) ;
     original_tableview->show();
     selected_tableview->show();
+
+    selected_label_conment = original_label_conment.left(original_label_conment.size()-1);//delete the last "+"
+    original_label_conment = original_label_conment.append("XXX");
+    original_label->setText(original_label_conment);
+    selected_label->setText(selected_label_conment);
+    original_label->setAlignment(Qt::AlignRight);
+    selected_label->setAlignment(Qt::AlignRight);
+    original_label->show();
+    selected_label->show();
 }
 
 void clean_effect_table(QTableView* tableview)
@@ -115,7 +135,7 @@ bool Discrete_fixed_effect_testing(QString Rdata_path,QString output_path,unsign
     fixed_effect_process = new Process;
     if(!(fixed_effect_process->runRscript(param,"Fixed effect testing")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the fixed effect process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the fixed effect process!");
         return false;
     }
     return true;
@@ -150,7 +170,7 @@ bool Continuous_fixed_effect_testing(QString Rdata_path,QString output_path,unsi
     fixed_effect_process = new Process;
     if(!(fixed_effect_process->runRscript(param,"Fixed effect testing")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the fixed effect process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the fixed effect process!");
         return false;
     }
     return true;
@@ -206,7 +226,7 @@ bool random_effect_testing(QString input_path,QString output_path,QString A_matr
     random_effect_process = new Process;
     if(!(random_effect_process->runRscript(param," Random effect testing")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the random effect process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the random effect process!");
         return false;
     }
     return true;
@@ -228,7 +248,10 @@ bool prepare_effect(prepare_effect_input effect_input)
                                           *(effect_input.fixed_effect_list),*(effect_input.random_effect_list));
         if(callbake)
         {
-            display_effect(effect_path,effect_input.original_tableview,effect_input.selected_tableview,*(effect_input.random_effect_list));
+            display_effect(effect_path,(effect_input.original_tableview),(effect_input.selected_tableview),
+                           effect_input.original_label,effect_input.selected_label,
+                           "Test Model: "+effect_input.target_effect_name+"~"+effect_input.AnimalID_name+"+",
+                           *(effect_input.random_effect_list),effect_input.factor_list,effect_input.numeric_list);
         }
     }
     else if(effect_input.process_flag == 1)//flag = 1 进入离散固定效应检验
@@ -238,8 +261,10 @@ bool prepare_effect(prepare_effect_input effect_input)
         callbake =  Discrete_fixed_effect_testing(effect_input.input_path,effect_path,effect_input.target_index,*(effect_input.fixed_effect_list));
         if(callbake)
         {
-            display_effect(effect_path,effect_input.original_tableview,
-                           effect_input.selected_tableview,*(effect_input.fixed_effect_list));
+            display_effect(effect_path,effect_input.original_tableview,effect_input.selected_tableview,
+                           effect_input.original_label,effect_input.selected_label,
+                           "Test Model: "+effect_input.target_effect_name+"~",
+                           *(effect_input.fixed_effect_list),effect_input.factor_list,effect_input.numeric_list);
         }
     }
     else if(effect_input.process_flag == 2)//flag = 2 进入连续固定效应检验
@@ -249,7 +274,10 @@ bool prepare_effect(prepare_effect_input effect_input)
         callbake =  Continuous_fixed_effect_testing(effect_input.input_path,effect_path,effect_input.target_index,*(effect_input.fixed_effect_list));
         if(callbake)
         {
-            display_effect(effect_path,effect_input.original_tableview,effect_input.selected_tableview,*(effect_input.fixed_effect_list));
+            display_effect(effect_path,effect_input.original_tableview,effect_input.selected_tableview,
+                           effect_input.original_label,effect_input.selected_label,
+                           "Test Model: "+effect_input.target_effect_name+"~",
+                           *(effect_input.fixed_effect_list),effect_input.factor_list,effect_input.numeric_list);
         }
     }
     return callbake;
@@ -284,7 +312,10 @@ void add_item2effect_list(QTableView* original_tableview,QStringList phenotypeli
     qDebug()<<endl<<"selected row of  effect is"<<selected_row;
     qDebug()<<endl<<"selected index of phenotypelist is "<<select_phenotype_index;
     qDebug()<<endl<<"the num of effect_list:"<<count_effect_list;
-
+    if(selected_row == -1)
+    {
+        return;
+    }
     if(count_effect_list) //check the new effect is selected already?
     {
         for(int i = 0;i < ((*effect_list).length());i++)
@@ -306,7 +337,7 @@ void add_item2effect_list(QTableView* original_tableview,QStringList phenotypeli
 
 void remove_item_from_effect_list(QTableView* select_tableview,QStringList* fixed_effect_list)
 {
-    unsigned int fixed_remove_index = select_tableview->currentIndex().row();
+    int fixed_remove_index = select_tableview->currentIndex().row();
     qDebug()<<endl<<"remove row of effect is"<<fixed_remove_index;
     (*fixed_effect_list).removeAt(fixed_remove_index);
     qDebug()<<endl<<"effect_list:"<<*fixed_effect_list;

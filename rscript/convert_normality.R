@@ -46,6 +46,6 @@ if(require(bestNormalize)){
 data$new = orderNorm_obj$x.t;
 
 names(data)[names(data) == 'new'] <- paste(target_name,"_converted",sep = "")
-write.csv(data,output_path, row.names = FALSE)
+write.csv(data,output_path, row.names = FALSE,quote=F)
 print("converted!")
 print("-----------convert_normality.R output end--------------")

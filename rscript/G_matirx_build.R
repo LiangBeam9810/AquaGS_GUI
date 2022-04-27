@@ -63,8 +63,9 @@ G_dt <- as.data.table(G,keep.rownames = T)
 setnames(G_dt,"rn",AnimalID_item)
 fwrite(G_dt,file = G_matrix_path,sep = " ",col.names = F)
 #######################   ##################################################
-G[1:5,1:5]
+print(G[1:5,1:5])
 #######################    ##################################################
+rm(geno_sommer_matrix,G_dt,id_g)
 save.image(file = rdata_path)
 rdata_path
 

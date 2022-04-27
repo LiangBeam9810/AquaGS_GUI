@@ -8,7 +8,7 @@ print(lib_r)
 # create local user library path (not present by default)
 dir.create(path = Sys.getenv("R_LIBS_USER"), showWarnings = FALSE,recursive = TRUE)
 # install to local user library path
-packages=c("data.table","nadiv","sommer","BGLR","ggplot2","bestNormalize","lmerTest","lme4","factoextra","scattermore","AGHmatrix","superheat")
+packages=c("DataExplorer","data.table","nadiv","sommer","gert","BGLR","ggplot2","bestNormalize","lmerTest","lme4","factoextra","scattermore","AGHmatrix","superheat")
 ipak <- function(pkg){
     new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
     if (length(new.pkg)) 

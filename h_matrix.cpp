@@ -2,6 +2,8 @@
 
 bool bilud_H_matrix(QString Rdata_path ,QString output_path,QString* H_matrix_path)
 {
+    QStringList files_name_of_qc_produce = {"H_matrix.txt"};
+    init_file(output_path,files_name_of_qc_produce);
     *H_matrix_path = output_path+"/H_matrix.txt";
     QString runPath = QDir::currentPath();
     runPath.append("/rscript/H_matrix_build.R");
@@ -22,8 +24,16 @@ bool bilud_H_matrix(QString Rdata_path ,QString output_path,QString* H_matrix_pa
     H_matirx_build_process = new Process;
     if(!H_matirx_build_process->runRscript(param," Building H matirx "))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the H matirx build process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the H matirx build process!");
         return false;
     }
+    if(!(isFileExist(*H_matrix_path)))
+    {
+        QMessageBox::warning(nullptr, "Process error:", "Can't find the H matirx file! "+*H_matrix_path);
+        return false;
+    }
+    qDebug()<< endl<<"H matirx done! :"<<param<< endl;
+
+
     return true;
 }

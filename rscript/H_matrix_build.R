@@ -55,6 +55,7 @@ H_dt <- as.data.table(A,keep.rownames = T)
 setnames(H_dt,"rn",AnimalID_item)
 fwrite(H_dt,file = H_matrix_path,sep = " ",col.names = F)
 #######################    ##################################################
+rm(check,check_G,Ginv,G_align,H_dt)
 save.image(file = rdata_path)
 rdata_path
 #######################  G  ##################################################

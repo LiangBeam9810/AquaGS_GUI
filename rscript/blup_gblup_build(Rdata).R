@@ -69,8 +69,8 @@ load(input_path_bf)
 input_path = input_path_bf
 GEBV_path = GEBV_path_bf
 AnimalID_index = AnimalID_index_bf
-mode_flag = mode_flag_bf
 target_index = target_index_bf
+mode_flag = mode_flag_bf
 fixed_num = fixed_num_bf
 fixed_index = fixed_index_bf
 random_num = random_num_bf
@@ -93,18 +93,30 @@ rm(varcomp_path_bf)
 rm(formula_ans_path_bf)
 ###############################################################################
 
-#input_path= "/home/liang/Desktop/Rbuffer.Rdata"
-#GEBV_path = "/home/liang/Desktop/GEBV.txt"
+#input_path= "E:/OneDrive - mail.hfut.edu.cn/AquaGS/Output/Rbuffer.Rdata"
+#GEBV_path = "E:/OneDrive - mail.hfut.edu.cn/AquaGS/Output/GEBV.txt"
 #AnimalID_index = 0+1
-#target_index = 11+1
-#mode_flag = 1   
+#target_index = 8+1
+#mode_flag = 0   
 #fixed_num = 1
-#fixed_index = c(9)
+#fixed_index = c(5)
 #random_num = 0
 #random_index = c(0)
-
 #trans_formula = "h2 ~ V1/(V1+V2)" 
-
+#varcomp_path = "E:/OneDrive - mail.hfut.edu.cn/AquaGS/Output/blup_varcomp.csv"
+#formula_ans_path = "E:/OneDrive - mail.hfut.edu.cn/AquaGS/Output/blup_formula_ans.txt"
+#input_path = "E:/OneDrive - mail.hfut.edu.cn/AquaGS/Output/Rbuffer.Rdata"
+#load(input_path)
+#GEBV_path = "E:/OneDrive - mail.hfut.edu.cn/AquaGS/Output/GEBV_test.txt"
+#AnimalID_index = 0+1
+#target_index = 13+1
+#mode_flag = 1+1
+#fixed_num = 2
+#fixed_index = c(4,12)
+#random_num = 0
+#random_index = c(0)
+#formula = h2~(V1+V2)
+#varcomp_path = "E:/OneDrive - mail.hfut.edu.cn/AquaGS/Output/blup_varcomp.csv"formula_ans_path = "E:/OneDrive - mail.hfut.edu.cn/AquaGS/Output/blup_formula_ans.txt"
 
 
 col_list = colnames(data)
@@ -121,10 +133,6 @@ if(fixed_num)
 {
   for(i in fixed_index){
     fixed_part_pama = paste(fixed_part_pama,col_list[i],"+",sep="")
-    pama = ""
-    pama = paste("data$",col_list[i],"<-as.factor(data$",col_list[i],")",sep="")
-    print(pama)
-    eval(parse(text = pama))
   }
 }
 fixed_part_pama = substr(fixed_part_pama,1,nchar(fixed_part_pama)-1)#delete the final "+"
@@ -252,7 +260,7 @@ ans_varcomp = summary(ans_G)$varcomp
 write.table (ans_varcomp, varcomp_path, sep =",", row.names =TRUE, col.names =FALSE, quote =FALSE)
 print(ans_varcomp)
 
-ans_vpredict =  c(0,0)
+ans_vpredict =c(0,0)
 pama = ""
 pama = paste("ans_vpredict[1] = vpredict(ans_G,",formula,")$Estimate[1]",sep = "")
 eval(parse(text = pama))
@@ -260,6 +268,7 @@ eval(parse(text = pama))
 pama = ""
 pama = paste("ans_vpredict[2] = vpredict(ans_G,",formula,")$SE[1]",sep = "")
 eval(parse(text = pama))
+
 print(ans_vpredict)
 write.table(ans_vpredict,formula_ans_path, sep =",", row.names =FALSE, col.names =FALSE, quote =FALSE)
 
@@ -267,7 +276,7 @@ if(file.exists(GEBV_path)){
   print("GEBV building is completed.")
 }
 #######################    ##################################################
-
+rm()
 save.image(file = rdata_path)
 
 print("-----------blup_gblup_build.R output end--------------")

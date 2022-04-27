@@ -1,3 +1,4 @@
+
 #ifndef PROCESS_H
 #define PROCESS_H
 
@@ -7,7 +8,7 @@
 #include <QTimer>
 #include <QtGui/qguiapplication.h>
 #include "loadingwight.h"
-#include "mainwindow.h"
+#include "qmainwindow.h"
 
 class Process : public QProcess
 {

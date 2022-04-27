@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-
 #ifndef PHENOTYPE_H
 #define PHENOTYPE_H
 
@@ -29,11 +28,10 @@ void phenotype_select_line_get_index(phenotype_select phenotype_select_line,unsi
                                      unsigned int * Sire_index,
                                      int * Gender_index);
 
-void prepare_phenotype(QString csv_path,
-                       QStringList* phenotype_list ,
+void prepare_phenotype(QStringList* phenotype_list ,
                        QComboBox*  ComboBox);
 
-void init_ready_for_run(QTextBrowser* skewnessddisplay_1,
+void init_ready_for_run_(QTextBrowser* skewnessddisplay_1,
                         QTextBrowser* kurtosisdisplay_1,
                         QLabel* horizontallabel_1,
                         QTextBrowser* skewnessddisplay_2,

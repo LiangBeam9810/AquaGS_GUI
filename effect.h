@@ -1,7 +1,18 @@
-#include "mainwindow.h"
-
 #ifndef EFFECT_H
 #define EFFECT_H
+#include "qstring.h"
+#include "qtableview.h"
+#include "qcombobox.h"
+#include "qdebug.h"
+#include "qprocess.h"
+#include "qstandarditemmodel.h"
+#include "qdir.h"
+#include "qmessagebox.h"
+#include "process.h"
+#include "qpushbutton.h"
+#include "qheaderview.h"
+
+
 
 struct prepare_effect_input
 {
@@ -9,17 +20,23 @@ struct prepare_effect_input
     QString output_path;
     QString A_matrix_path;
     QString G_matrix_path;
-    QTableView* original_tableview;
-    QTableView* selected_tableview;
-    QComboBox* animal_combobox;
-    QComboBox* randeff_testing_combobox;
-    unsigned int* AnimalID_index;
+    QTableView* original_tableview= nullptr;
+    QTableView* selected_tableview= nullptr;
+    QLabel* original_label = nullptr;
+    QLabel* selected_label = nullptr;
+    QComboBox* animal_combobox= nullptr;
+    QComboBox* randeff_testing_combobox= nullptr;
+    unsigned int* AnimalID_index= nullptr;
     unsigned int target_index;
     unsigned  int process_flag;//0:随机 1：离散固定效应 2：连续固定效应
-    QStringList* fixed_effect_list ;
-    QStringList* random_effect_list;
-    QStringList* Discrete_fixed_effect_list = NULL;
-    QStringList* Continuous_fixed_effect_list  = NULL;
+    QStringList* fixed_effect_list = nullptr;
+    QStringList* random_effect_list= nullptr;
+    QStringList* Discrete_fixed_effect_list = nullptr;
+    QStringList* Continuous_fixed_effect_list  = nullptr;
+    QStringList factor_list;
+    QStringList numeric_list;
+    QString target_effect_name ;
+    QString AnimalID_name ;
 };
 void clean_tablevie(QTableView* tableview);
 bool prepare_effect(prepare_effect_input effect_input);

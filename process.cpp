@@ -1,5 +1,5 @@
 #include "process.h"
-
+#include "mainwindow.h"
 extern MainWindow* m;
 
 
@@ -21,6 +21,9 @@ void Process::on_readProcessOutput()
 {
     QString message = QString::fromLocal8Bit(this->readAllStandardOutput().data());
     qDebug()  <<  message.toStdString().data() ;
+    if((message[0] == '\x8')||(message[0] == '\xd')){// ignore  such as "36%" , "--vcf: 34k variants complete." and "27%"
+        return;
+    }
     emit messageStandardOutput(message);//发送输出信号
     //qApp->processEvents();
     //emit on_outMessageReady(message);
@@ -48,6 +51,7 @@ void Process::Process_runing_gif(QString title)
        loading_page->exec();
     }
     loading_page->cancelWaiting();
+    loading_page->close();
 }
 
 bool  Process::runRscript(QString param,QString title)
@@ -74,7 +78,6 @@ bool Process::runExTool(QString tool, QStringList param)
         this->close();
         return false;
     }
-
     this->Process_runing_gif("plinking ");
     ++runExTool_count;
     qDebug() << "i: " << runExTool_count << endl
@@ -88,7 +91,9 @@ bool Process::runExTool(QString tool, QStringList param)
 bool Process::runAlphamate(QString dir,QString param,QString title)
 {
     this->setWorkingDirectory(dir);
+
     this->start(param);
+
     if (!this->waitForStarted())
     {
         this->close();

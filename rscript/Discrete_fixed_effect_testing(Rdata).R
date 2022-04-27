@@ -7,8 +7,8 @@ rdata_path_bf = args[1]
 discrete_effect_path_bf = args[2]
 target_index_bf = as.integer(args[3]) + 1##C++ start at 0, R at 1
 num_bf= as.integer(args[4]) 
-fixed_index_bf = c(0)
 j = 5
+fixed_index_bf = c(0)
 for(i in 1:num_bf){
   fixed_index_bf[i]  =  as.integer(args[j])+1
   j = j+1
@@ -20,7 +20,6 @@ for(i in 1:num_bf){
 #AnimalID_index = 0 +1 # C++ start at 0, R at 1
 #num = 1
 #fixed_index  =  c(10)
-
 #require(data.table)
 if(require(data.table)){
   print("data.table is loaded correctly")
@@ -82,7 +81,8 @@ for(item in col_list){
         print(paste("!!!error in ",item,sep = ""))
         i = i+1
         next
-      }else
+      }
+      else
       {
         p =  anova(fit)
         selected_in_fixed_index = (which(fixed_index == i))[1]
@@ -90,7 +90,8 @@ for(item in col_list){
         print(p)
       }
       
-    }else{
+    }
+    else{
       pama =paste(" fit <- try(aov(",target_item,"~",fixed_part_pama,item,",data=data))",sep="")#delete the final char "+"
       print(pama)
       eval(parse(text = pama))

@@ -34,7 +34,8 @@ if(require(data.table)){
 
 data = read.csv(input_path)
 
-x = data[,index]
+x1 = data[,index]
+x <- na.omit(x1)
 target_name = colnames(data)[index]
 
 if(require(ggplot2)){

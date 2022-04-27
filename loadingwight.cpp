@@ -4,14 +4,13 @@
 LoadingDialog::LoadingDialog(QWidget *parent) : QDialog(parent)
 {
     //如果需要显示任务栏对话框则删除Qt::Tool
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
     setAttribute(Qt::WA_TranslucentBackground, true);
     initUi();
 }
 
 /**
- * @brief LoadingDialog::initUi UI元素初始化
- */
+ * @brief LoadingDialog::initUi UI元素初始化 */
 void LoadingDialog::initUi()
 {
     this->setFixedSize(250, 250);
@@ -72,6 +71,8 @@ void LoadingDialog::opend_terminal_page(Terminal_Dialog* Terminal_log = nullptr)
 {
     if(Terminal_log)   return;
     Terminal_log->show();
+    Terminal_log->activateWindow();
+    Terminal_log->setWindowState((Terminal_log->windowState()&~Qt::WindowMinimized)|Qt::WindowActive);
 }
 
 
@@ -99,7 +100,7 @@ void LoadingDialog::setCanCancel(bool bCanCancel)
  */
 void LoadingDialog::moveToCenter(QWidget *pParent)
 {
-    if(pParent != nullptr && pParent != NULL)
+    if(pParent != nullptr && pParent != nullptr)
     {
         int nParentWidth = pParent->width();
         int nParentHeigth = pParent->height();
@@ -132,7 +133,8 @@ void LoadingDialog::cancelBtnClicked()
  */
 void LoadingDialog::paintEvent(QPaintEvent *event)
 {
-    QPainter painter(this);
+    QPainter painter ;
+    painter.begin(this);
     painter.setRenderHint(QPainter::Antialiasing); //反锯齿
     painter.setBrush(QBrush(Qt::white));
     painter.setPen(Qt::transparent);
@@ -143,6 +145,7 @@ void LoadingDialog::paintEvent(QPaintEvent *event)
     rect.setHeight(rect.height() - 9);
     painter.drawRoundedRect(rect, 8, 8);
     QWidget::paintEvent(event);
+    painter.end();
 }
 
 LoadingDialog::~LoadingDialog()
