@@ -15,7 +15,7 @@ We’ve tried to make AquaGS as easy to set up as possible.Some of the [packages
 
 2. Download the zip of AquaGS to local from [**releases page**](https://github.com/LiangBeam9810/AquaGS_GUI/releases). Open the path where the zip of AquaGS is,and unzip the package to create a folder. This can be done directly by running the following command or manually.
     ```r
-    wget -c https://gitee.com/cuz-liang/AquaGS_GUI/attach_files/971031/download/AquaGS_GUI_release.zip
+    wget -c https://github.com/LiangBeam9810/AquaGS_GUI/releases/download/Beta/AquaGS_GUI_release.zip
     unzip AquaGS_GUI_release.zip
     ```
 3. Open the path of folder in Terminal(Enter the folder ,clik right key of mouse in the margin,and selet "Open in Terminal",or use ```cd <AquaGS_GUI_release>```).Run such command: (Change ```<AquaGS_GUI_release>``` to the decompressed folder in your device.)
