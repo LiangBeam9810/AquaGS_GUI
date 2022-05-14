@@ -21,7 +21,7 @@ We’ve tried to make AquaGS as easy to set up as possible.Some of the [packages
 3. Open the path of folder in Terminal(Enter the folder ,clik right key of mouse in the margin,and selet "Open in Terminal",or use ```cd <AquaGS_GUI_release>```).Run such command: (Change ```<AquaGS_GUI_release>``` to the decompressed folder in your device.)
     ```R
     cd AquaGS_GUI_release
-    chmod a+x ./Aqua_GUI
+    chmod a+x ./AquaGS_GUI
     ./AquaGS_GUI 
     ```
 ---
