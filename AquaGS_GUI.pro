@@ -21,7 +21,8 @@ SOURCES += \
     process.cpp \
     start.cpp \
     terminal_dialog.cpp \
-    tool.cpp
+    tool.cpp \
+    data_view_dialog.cpp
 
 HEADERS += \
     alphamate.h \
@@ -35,11 +36,13 @@ HEADERS += \
     process.h \
     start.h \
     terminal_dialog.h \
-    tool.h
+    tool.h \
+    data_view_dialog.h
 
 FORMS += \
     mainwindow.ui \
-    terminal_dialog.ui
+    terminal_dialog.ui \
+    data_view_dialog.ui
 
 QMAKE_LFLAGS += -no-pie
 

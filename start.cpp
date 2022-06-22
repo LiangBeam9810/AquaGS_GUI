@@ -89,7 +89,7 @@ void get_enter_path(QLineEdit* lineedit,int type)
             default: break;
         }
        qDebug()  <<endl<<"Error of path:"<< out_info<<endl;
-       QMessageBox::information(NULL, "Error ", out_info);
+       QMessageBox::information(nullptr, "Error ", out_info);
        lineEdit2red(lineedit);
     }
 }
@@ -105,48 +105,99 @@ QStringList get_csv_title(QString path)
         QTextStream stream(&csv_file);
         csv_list.push_back(stream.readLine());//
         Q_FOREACH(QString str, csv_list) //½«QStringlist£¨csv_list£©×ª³É QString£¨str£©
-        csv_list = str.split(",");//·Ö¸ô×Ö·û´®
+        csv_list = str.split(",");//
         csv_file.close();
         qDebug()<< "csv title: " ;
         qDebug()<< csv_list << endl;
     }
     else
     {
-         QMessageBox::about(NULL, "csv file", "Can't open csv file!");
+         QMessageBox::about(nullptr, "csv file", "Can't open csv file!");
     }
     return csv_list;
 }
 
 bool check_all_path(QLineEdit* out_line,QLineEdit* csv_line,QLineEdit* vcf_line,
-                    QString* output_path,QString* csv_path,QString* vcf_path)
+                    QString* output_path,QString* csv_path,QString* vcf_path,QString* plink_log_path)
 {
     *output_path = out_line->text();
     *csv_path = csv_line->text();
     *vcf_path = vcf_line->text();
+
     if(!(isFileExist(*csv_path)) || (*csv_path).isEmpty()||!(isFileExist(*vcf_path)) || (*vcf_path).isEmpty() ||!(isDirExist(*output_path))|| (*output_path).isEmpty())
     {
         if(!(isFileExist(*csv_path)) || (*csv_path).isEmpty())
         {
             qDebug() <<endl << "csv path no exist!"<<endl;
-            QMessageBox::information(NULL, "Error ", "The csv path error!");
+            QMessageBox::information(nullptr, "Error ", "The csv path error!");
             lineEdit2red(csv_line);
         }
         if(!(isFileExist(*vcf_path)) || (*vcf_path).isEmpty() )
         {
             qDebug() <<endl << "vcf path no exist!"<<endl;
-            QMessageBox::information(NULL, "Error ", "The vcf path error!");
+            QMessageBox::information(nullptr, "Error ", "The vcf path error!");
             lineEdit2red(vcf_line);
         }
         if(!(isDirExist(*output_path))|| (*output_path).isEmpty())
         {
             qDebug() <<endl << "output path no exist!"<<endl;
-            QMessageBox::information(NULL, "Error ", "The output path error!");
+            QMessageBox::information(nullptr, "Error ", "The output path error!");
             lineEdit2red(out_line);
         }
         return false;
     }
     else //Let's go to the next page(or called 'index').
     {
+        *plink_log_path = *output_path +"/plink_log/";
+        qDebug() <<"plink_log_path:" << *plink_log_path << endl;
+        init_flode(*plink_log_path);
         return true;
+    }
+}
+void init_file(QString output_path,QStringList filelist)
+{
+    for (int i = 0;i<filelist.length();i++) {
+        QString file_path = output_path+"/"+filelist[i];
+        qDebug()<<"the file path is "<<file_path;
+        if(isFileExist(file_path))
+        {
+            QFile fileTemp(file_path);
+            fileTemp.remove();
+        }
+        else {
+            continue;
+        }
+    }
+}
+
+void init_flode(QString flode_path)
+{
+
+    if(isDirExist(flode_path))//if plink_log_path if exit ,delete it and rebuild
+    {
+        qDebug() <<endl <<"the path :"<<flode_path<<" exists already.";
+        QDir qDir;
+        qDir.setPath(flode_path);
+        qDir.removeRecursively();
+        while(isDirExist(flode_path));
+        QDir qDir1(flode_path);
+        if(qDir1.mkdir((flode_path))) {
+            qDebug() <<flode_path<<" create success";
+        }
+        else
+        {
+            qDebug() <<flode_path<<" create fail";
+        }
+    }
+    else { //if not exist , create plink_log_path
+        QDir qDir(flode_path);
+        if(qDir.mkdir((flode_path))) {
+            qDebug() <<flode_path<<" create success";
+        }
+        else
+        {
+            qDebug() <<flode_path<<" create fail";
+        }
+
     }
 }

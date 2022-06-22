@@ -25,6 +25,7 @@ public:
     //
     void opend_terminal_page(Terminal_Dialog* Terminal_log);
      QPushButton *m_pCancelBtn;
+
 protected:
     void paintEvent(QPaintEvent *event) override;
 private:

@@ -6,14 +6,15 @@
 struct blup
 {
     QComboBox* BLUP_mode_ComboBox = NULL;
-    QLineEdit* fiexd_effect_lineedit = NULL;
-    QLineEdit* random_effect_lineedit = NULL;
     QLineEdit* trans_formula_1_lineEdit = NULL;
     QLineEdit* trans_formula_2_lineEdit = NULL;
     QPushButton* BLUP_accept_pushButtom = NULL;
     QTextBrowser* classical_Estimate_textBrowser = NULL;
     QTextBrowser* classical_SE_textBrowser = NULL;
+    QTextBrowser* classical_Bais_textBrowser = NULL;
+    QTextBrowser* classical_SD_textBrowser = NULL;
     QTableView* classical_varComp_tableView = NULL;
+    QLabel* model_display_label = NULL;
 
 
     QString Rdata_path = "";
@@ -30,6 +31,7 @@ struct blup
     QStringList random_effect_list ;
     QStringList fixed_effect_list2R ;
     QStringList random_effect_list2R ;
+    QStringList phenotype_list ;
     bool blup_hblup_flag = false;
 };
 
@@ -37,7 +39,9 @@ struct fold_validate{
    QCheckBox* cross_validation_checkBox = NULL;
    QComboBox* k_flod_times_ComboBox = NULL;
    QLineEdit* ACC_lineEdit = NULL;
-   QLineEdit* STD_lineEdit = NULL;
+   QLineEdit* ACC_STD_lineEdit = NULL;
+   QLineEdit* Bias_lineEdit = NULL;
+   QLineEdit* Bias_STD_lineEdit = NULL;
    QPushButton* cross_validation_pushbutton = NULL;
    QSpinBox*  k_flod_rep_SpinBox = NULL;
 

@@ -10,7 +10,7 @@ AnimalID_index_bf = as.integer(args[3]) +1  # C++ start at 0, R at 1
 print(paste("AnimalID_index :",AnimalID_index_bf))
 target_index_bf = as.integer(args[4]) + 1  # C++ start at 0, R at 1
 print(paste("target_index :",target_index_bf))
-method_flag_bf = as.integer(args[5])
+method_flag_bf = as.integer(args[5])+1
 print(paste("method_flag :",method_flag_bf))
 ##########################fixed#################################################
 j = 6
@@ -126,14 +126,14 @@ if(fixed_num)
 paste("fixed_part_pama:",fixed_part_pama)
 
 ##把离散固定效应转化为因子型
-if(fixed_num_Discrete)
-{
-  for(i in fixed_index_Discrete){
-    pama = paste("data$",col_list[i],"<-","as.factor(data$",col_list[i],")",sep = "")
-    print(paste("fixed_Discrete_part_pama:",pama))
-   eval(parse(text = pama))
-  }
-}
+#if(fixed_num_Discrete)
+#{
+#  for(i in fixed_index_Discrete){
+#    pama = paste("data$",col_list[i],"<-","as.factor(data$",col_list[i],")",sep = "")
+#    print(paste("fixed_Discrete_part_pama:",pama))
+#   eval(parse(text = pama))
+#  }
+#}
 
 random_part_pama = ""
 if(random_num)
@@ -190,29 +190,40 @@ for(i in 1:rep) {
     #              data = y)
     
     if(random_num){
-      if(method_flag)
+      if(method_flag == 2)
       {
           pama =paste(" ans_A <- mmer(",target_item,"~1+",fixed_part_pama,","
                     ,"random =~vs(",AnimalID_item,",Gu=G)+",random_part_pama,","
                     ,"rcov =~units, data= y)",sep="")
         
-      }else
+      }else if( method_flag == 1)
       {
         pama =paste(" ans_A <- mmer(",target_item,"~ 1+",fixed_part_pama,","
                     ,"random=~vs(",AnimalID_item,", Gu=A)+",random_part_pama,","
                     ,"rcov=~units, data= y)",sep="")
       }
+      else if(method_flag == 3)
+      {
+        pama =paste(" ans_A <- mmer(",target_item,"~ 1+",fixed_part_pama,","
+                    ,"random=~vs(",AnimalID_item,", Gu=H)+",random_part_pama,","
+                    ,"rcov=~units, data= y)",sep="")
+      }
     }else{
-      if(method_flag)
+      if(method_flag == 2)
       {
         pama =paste(" ans_A<- mmer(",target_item,"~1+",fixed_part_pama,","
                     ,"random=~vs(",AnimalID_item,", Gu=G),"
                     ,"rcov=~units, data= y)",sep="")
         
-      }else
+      }else if( method_flag == 1)
       {
         pama =paste(" ans_A <-mmer(",target_item,"~1+",fixed_part_pama,","
                     ,"random =~vs(",AnimalID_item,",Gu=A),"
+                    ,"rcov =~units,data = y)",sep="")
+      }else if(method_flag == 3)
+      {
+        pama =paste(" ans_A <-mmer(",target_item,"~1+",fixed_part_pama,","
+                    ,"random =~vs(",AnimalID_item,",Gu=H),"
                     ,"rcov =~units,data = y)",sep="")
       }
     }
@@ -247,7 +258,7 @@ for(i in 1:rep) {
     eval(parse(text = pama))
 
 
-    #rep_accuracyA[r, i] <- cor(Y_A, pheno[match(test,AnimalID), "ABT_t"], use = "complete")
+    #rep_accuracyA[r, i] <- cor(Y_A, pheno[match(test,AnimalID), "ABT_t"], use = "complete")/sqrt(h2)
     pama = paste("rep_accuracyA[r, i] <- (cor(Y_A,","pheno[match(test,",AnimalID_item,"),\"",target_item,"\"],use = \"complete\")",")/sqrt(h2)",sep = "")
     print(pama)
     eval(parse(text = pama))
@@ -269,9 +280,11 @@ print("meanaccuracy:")
 meanaccuracy
 print("meanreg:")
 meanreg
-ans = c(0,0)
+ans = c(0,0,0,0)
 ans[1] = meanaccuracy[1]
-ans[2] = meanreg[1]
+ans[2] = meanaccuracy[2]
+ans[3] = meanreg[1]
+ans[4] = meanreg[2]
 
 write.table(ans,v_output_path, sep =",", row.names =FALSE, col.names =FALSE, quote =FALSE)
 #######################    ##################################################

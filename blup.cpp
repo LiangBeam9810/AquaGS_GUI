@@ -4,7 +4,9 @@
 #define GBLUP 1
 #define HBLUP 2
 
-bool rdata_init(QString Rdata_path,QString csv_path,QString raw_path,unsigned int  target_index,unsigned int AnimalID_index)
+bool rdata_init(QString Rdata_path,QString csv_path,
+                QString raw_path,unsigned int  target_index,unsigned int AnimalID_index,
+                QStringList factor_phenotype_list,QStringList numeric_phenotype_list)
 {
     QString runPath = QDir::currentPath();
     runPath.append("/rscript/data_init.R");
@@ -26,12 +28,26 @@ bool rdata_init(QString Rdata_path,QString csv_path,QString raw_path,unsigned in
     param.append(QString::number(target_index));
     param.append(" ");
     param.append(QString::number(AnimalID_index));
+    param.append(" ");
+    param.append(QString::number(factor_phenotype_list.length()));
+    param.append(" ");
+    for(int i = 0;i < factor_phenotype_list.length();i++){
+        param.append(factor_phenotype_list[i]);
+        param.append(" ");
+    }
+    param.append(" ");
+    param.append(QString::number(numeric_phenotype_list.length()));
+    param.append(" ");
+    for(int i = 0;i < numeric_phenotype_list.length();i++){
+        param.append(numeric_phenotype_list[i]);
+        param.append(" ");
+    }
     qDebug() <<"param:" << param << endl;
     Process* rdata_init_process;
     rdata_init_process = new Process;
     if(!(rdata_init_process->runRscript(param,"Building rdata")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the rdata init process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the rdata init process!");
         return false;
     }
     return true;
@@ -58,7 +74,7 @@ bool G_matirx_build(QString Rdata_path,QString G_matrix_path)
     G_matirx_build_process = new Process;
     if(!(G_matirx_build_process->runRscript(param,"Building G matirx")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the G matirx build process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the G matirx build process!");
         return false;
     }
     return true;
@@ -88,7 +104,7 @@ bool A_matirx_build(QString Rdata_path,QString A_matrix_path,int Dam_index,int S
     A_matirx_build_process = new Process;
     if(!(A_matirx_build_process->runRscript(param,"Building A matirx")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the A matirx build process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the A matirx build process!");
         return false;
     }
     return true;
@@ -117,7 +133,7 @@ bool Gender_build(QString Rdata_path,QString Gender_path,unsigned Gender_index)
     Gender_build_process = new Process;
     if(!(Gender_build_process->runRscript(param,"Building gender.txt")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the gender build process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the gender build process!");
         return false;
     }
     return true;
@@ -125,7 +141,8 @@ bool Gender_build(QString Rdata_path,QString Gender_path,unsigned Gender_index)
 
 bool MainWindow::A_G_matirx_build()
 {
-
+    QStringList files_name_of_qc_produce = {"A_matrix.txt","G_matrix.txt","Rbuffer.Rdata","gender.txt"};
+    init_file(output_path,files_name_of_qc_produce);                                                                                                                                                                ;
     /*-------------------------------------------*/
     Rdata_path = output_path;
     Rdata_path.append("/Rbuffer.Rdata");
@@ -136,15 +153,22 @@ bool MainWindow::A_G_matirx_build()
     qDebug()<<endl<<"A_matrix_path"<<A_matrix_path;
     qDebug()<<"G_matrix_path"<<G_matrix_path<<endl;
     /*-------------------------------------------*/
-    rdata_init(Rdata_path,csv_path,raw_path,target_phenotype_index,AnimalID_phenotype_index);
-    G_matirx_build(Rdata_path,G_matrix_path);
+    rdata_init(Rdata_path,csv_path,raw_path,target_phenotype_index,AnimalID_phenotype_index,factor_phenotype_list,numeric_phenotype_list);
+    if((!(G_matirx_build(Rdata_path,G_matrix_path)))&&(!(isFileExist(G_matrix_path)))) return false;
+
     if(blup_Hblup_flag)
     {
-        A_matirx_build(Rdata_path,A_matrix_path,Dam_phenotype_index,Sire_phenotype_index);
+        if((!(A_matirx_build(Rdata_path,A_matrix_path,Dam_phenotype_index,Sire_phenotype_index)))&&(!(isFileExist(A_matrix_path))))
+        {
+            return false;
+        }
     }
     if(gender_flag)
     {
-        Gender_build(Rdata_path,Gender_path,Gender_phenotype_index);
+        if((!(Gender_build(Rdata_path,Gender_path,Gender_phenotype_index)))&&(!(isFileExist(Gender_path))))
+        {
+            return false;
+        }
     }
 
     return true;
@@ -166,14 +190,18 @@ void display_vpredict(blup blup_input)
         qDebug()<<endl<< "Estimate&SE: " << csv_list << endl;
         if(csv_list.length()>1)
         {
+            blup_input.classical_Estimate_textBrowser->setEnabled(true);
+            blup_input.classical_SE_textBrowser->setEnabled(true);
             blup_input.classical_Estimate_textBrowser->setText((csv_list[0].mid(0,5)));
             blup_input.classical_SE_textBrowser->setText(csv_list[1].mid(0,5));
         }
         else
         {
+            blup_input.classical_Estimate_textBrowser->setEnabled(true);
+            blup_input.classical_SE_textBrowser->setEnabled(true);
             blup_input.classical_Estimate_textBrowser->setText("NA");
             blup_input.classical_SE_textBrowser->setText("NA");
-            QMessageBox::warning(NULL, "File error:", "Can't open the validate file!");
+            QMessageBox::warning(nullptr, "File error:", "Can't open the validate file!");
             return ;
         }
     }
@@ -183,7 +211,7 @@ void display_varComp(blup blup_input)
 {
     QStandardItemModel* model = new QStandardItemModel();
     /* 设置表格标题行(输入数据为QStringList类型) */
-    model->setHorizontalHeaderLabels({"VarComp", "VarCompSE", "Zratio", "Constraint"});
+    model->setHorizontalHeaderLabels({" ","VarComp", "VarCompSE", "Zratio"});
     blup_input.classical_varComp_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     QFile csv_file(blup_input.blup_varcomp_path);
@@ -202,7 +230,8 @@ void display_varComp(blup blup_input)
     csv_file.close();
     qDebug()<<endl<<"csv_list of varComp:"<<csv_list<<endl;
 
-    unsigned count = 0;
+    int count = 0;
+    blup_input.classical_varComp_tableView->setEnabled(true);
     Q_FOREACH(QString str, csv_list)
     {
         QStringList valsplit = str.split(",");
@@ -219,8 +248,15 @@ void display_varComp(blup blup_input)
 
 void blup_Init(blup blup_input)
 {
-    blup_input.fiexd_effect_lineedit->setText(blup_input.fixed_effect_list.join(","));
-    blup_input.random_effect_lineedit->setText(blup_input.random_effect_list.join(","));
+    QString model_conment = "Model: "+blup_input.phenotype_list[blup_input.target_index]+"~"+
+            blup_input.fixed_effect_list.join("+")+"+"+"("+blup_input.phenotype_list[blup_input.AnimalID_index]+")";
+    if(!blup_input.random_effect_list.isEmpty())//random effect list is no empty that add the "+"
+    {
+        model_conment = model_conment+"+"+blup_input.random_effect_list.join("+");
+    }
+
+    blup_input.model_display_label->setText(model_conment);
+    blup_input.model_display_label->setAlignment(Qt::AlignRight);
     blup_input.classical_SE_textBrowser->clear();
     blup_input.classical_Estimate_textBrowser->clear();
     clean_tablevie(blup_input.classical_varComp_tableView);
@@ -232,20 +268,25 @@ void blup_fold_validate_Init(fold_validate fold_validate_input)
     fold_validate_input.cross_validation_pushbutton->setEnabled(false);
     fold_validate_input.cross_validation_checkBox->setCheckState(Qt::Unchecked);
     fold_validate_input.k_flod_rep_SpinBox->setEnabled(false);
+    fold_validate_input.ACC_lineEdit->setEnabled(false);
+    fold_validate_input.ACC_STD_lineEdit->setEnabled(false);
+    fold_validate_input.Bias_lineEdit->setEnabled(false);
+    fold_validate_input.Bias_STD_lineEdit ->setEnabled(false);
 }
 
 bool blup_build(blup blup_input)
 {
-    unsigned int mode_flag = blup_input.BLUP_mode_ComboBox->currentIndex();
+    int mode_flag = blup_input.BLUP_mode_ComboBox->currentIndex();
+
     if((!(mode_flag == GBLUP))&&(!(blup_input.blup_hblup_flag)))//
     {
-        QMessageBox::information(NULL, "Notice ", "\"Dam\" and \"Sire\" is missing.\n Please select \"GBlup\" in the \"Classical method \"");
+        QMessageBox::information(nullptr, "Notice ", "\"Dam\" and \"Sire\" is missing.\n Please select \"GBlup\" in the \"Classical method \"");
         return false;
     }
     QString runPath = QDir::currentPath();
     if(blup_input.trans_formula_1_lineEdit->text().isEmpty() || blup_input.trans_formula_2_lineEdit->text().isEmpty())
     {
-        QMessageBox::warning(NULL, "Formula error:", "Please enter the formula !");
+        QMessageBox::warning(nullptr, "Formula error:", "Please enter the formula !");
         return false;
     }
     QString formula = "";
@@ -302,7 +343,7 @@ bool blup_build(blup blup_input)
     blup_build_process = new Process;
     if(!(blup_build_process->runRscript(param,"Building")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the blup build process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the blup build process!");
         return false;
     }
     display_vpredict(blup_input);
@@ -313,12 +354,12 @@ bool blup_build(blup blup_input)
 
 bool classical_method_cross_validation_and_display(blup blup_mode,fold_validate blup_fold_validate)
 {
-    unsigned int method_flag = blup_mode.BLUP_mode_ComboBox->currentIndex();
+    int method_flag = blup_mode.BLUP_mode_ComboBox->currentIndex();
     QString runPath = QDir::currentPath();
 
     if(blup_mode.trans_formula_1_lineEdit->text().isEmpty() || blup_mode.trans_formula_2_lineEdit->text().isEmpty())
     {
-        QMessageBox::warning(NULL, "Formula error:", "Please enter the formula !");
+        QMessageBox::warning(nullptr, "Formula error:", "Please enter the formula !");
         return false;
     }
     QString formula = "";
@@ -374,7 +415,7 @@ bool classical_method_cross_validation_and_display(blup blup_mode,fold_validate 
     validate_process = new Process;
     if(!(validate_process->runRscript(param,"Validating")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the validate process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the validate process!");
         return false;
     }
 
@@ -390,18 +431,30 @@ bool classical_method_cross_validation_and_display(blup blup_mode,fold_validate 
         csv_list = str.split("\n");//
         csv_file.close();
         qDebug()<<endl<< "ACC&STD: " << csv_list << endl;
-        if(csv_list.length()>1)
+        blup_fold_validate.ACC_lineEdit->setEnabled(true);
+        blup_fold_validate.ACC_STD_lineEdit->setEnabled(true);
+        blup_fold_validate.Bias_lineEdit->setEnabled(true);
+        blup_fold_validate.Bias_STD_lineEdit ->setEnabled(true);
+        if(csv_list.length()>3)
         {
             blup_fold_validate.ACC_lineEdit->setText((csv_list[0].mid(0,5)));
-            blup_fold_validate.STD_lineEdit->setText(csv_list[1].mid(0,5));
+            blup_fold_validate.ACC_STD_lineEdit->setText(csv_list[1].mid(0,5));
+            blup_fold_validate.Bias_lineEdit->setText((csv_list[2].mid(0,5)));
+            blup_fold_validate.Bias_STD_lineEdit->setText(csv_list[3].mid(0,5));
         }
         else
         {
             blup_fold_validate.ACC_lineEdit->setText("NA");
-            blup_fold_validate.STD_lineEdit->setText("NA");
-            QMessageBox::warning(NULL, "File error:", "Can't open the validate file!");
+            blup_fold_validate.ACC_STD_lineEdit->setText("NA");
+            blup_fold_validate.Bias_lineEdit->setText("NA");
+            blup_fold_validate.Bias_STD_lineEdit->setText("NA");
+            QMessageBox::warning(nullptr, "File error:", "The number of data in the validate file less than 4!");
             return false;
         }
+    }
+    else{
+        QMessageBox::warning(nullptr, "File error:", "Can't open the validate file!");
+        return false;
     }
     return true;
 }

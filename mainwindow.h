@@ -40,6 +40,8 @@
 #include <QDialog>
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
+#include <QtConcurrent>
+#include <QFuture>
 
 #include "start.h"
 #include "effect.h"
@@ -53,9 +55,8 @@
 #include "loadingwight.h"
 #include "h_matrix.h"
 #include "terminal_dialog.h"
+#include "data_view_dialog.h"
 
-#include <QtConcurrent>
-#include <QFuture>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -69,6 +70,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     Terminal_Dialog* Terminal_log = nullptr;
+    data_view_Dialog* data_view_page = nullptr;
     phenotype_select phenotype_select_line ;
     phenotype_display original_display;
     phenotype_display converted_display;
@@ -79,8 +81,7 @@ public:
 
     blup blup_mode ;
     fold_validate blup_fold_validate ;
-    alphamate_edge blup_alphamate_all;
-    alphamate_edge bayes_alphamate_all;
+    alphamate_edge alphamate_all;
 
     QLineEdit* out_line;
     QLineEdit* csv_line;
@@ -91,6 +92,7 @@ public:
 
     QString csv_path = "";
     QString vcf_path = "";
+    QString vcf_QCed_path = "";
     QString raw_path = "";
     QString A_matrix_path = "";
     QString G_matrix_path = "";
@@ -99,6 +101,7 @@ public:
     QString Rdata_path = "";
     QString blup_varcomp_path = "";
     QString blup_formula_ans_path = "";
+    QString plink_log_path = "";
 
     QString classical_GEBV_path = "";
     QString bayes_GEBV_path = "";
@@ -106,6 +109,8 @@ public:
     QString Alphamate_running_path= "";
 
     QStringList phenotype_list ;
+    QStringList factor_phenotype_list;
+    QStringList numeric_phenotype_list;
     unsigned int target_phenotype_index= 0 ;
     unsigned int AnimalID_phenotype_index= 0 ;
     unsigned int Dam_phenotype_index= 0 ;
@@ -135,9 +140,12 @@ public:
     void Effect_Init();
     void classical_method_Init();
     bool A_G_matirx_build();
+    void Alphamate_Init();
+
 
     //for QC
-    bool callPlinkGwas(QString genotype, QString out);
+    bool callPlinkGwas(QString* genotype, QString out);
+    bool plink_convert_format(QString* genotype, QString out);
 public slots:
     void sent_massage_to_terminal(QString message);
 signals:
@@ -146,6 +154,8 @@ signals:
 
 
 private slots:
+    void receive_numeric_factor(QStringList Numeric_list,QStringList factor_list);
+
     void on_csv_pushButton_clicked();
 
     void on_output_pushButton_clicked();
@@ -205,24 +215,13 @@ private slots:
 
     void on_alphmate_checkBox_stateChanged(int arg1);
 
-    void on_classical_more_Button_3_clicked();
-
     void on_BLUP_mode_ComboBox_currentIndexChanged(int index);
 
     void on_GenderFile_checkBox_3_stateChanged(int arg1);
 
     void on_classical_mate_Button_3_clicked();
 
-
     void on_bayesrunpushButton_clicked();
-
-    void on_alphmate_checkBox_2_stateChanged(int arg1);
-
-    void on_classical_more_Button_4_clicked();
-
-    void on_GenderFile_checkBox_4_stateChanged(int arg1);
-
-    void on_classical_mate_Button_4_clicked();
 
     void on_fixed_phenotype_pr_TableView_2_clicked(const QModelIndex &index);
 
@@ -244,6 +243,30 @@ private slots:
 
 
     void on_toolButton_clicked();
+
+    void on_qc_running_pushButton_clicked();
+
+    void on_qc_vie_wlog_pushButton_clicked();
+
+    void on_BLUP_next_pushButton_clicked();
+
+    void on_Bayes_next_pushButton_clicked();
+
+    void on_classical_more_Button_triggered(QAction *arg1);
+
+    void on_bayes_GEBVform_comboBox_currentIndexChanged(int index);
+
+    void on_NrmMatrixFileform_comboBox_currentIndexChanged(int index);
+
+    void on_GEBVform_comboBox_currentIndexChanged(int index);
+
+    void on_OutputFolder_commandLinkButton_clicked();
+
+    void on_tabWidget_currentChanged(int index);
+
+    void on_phenotype_ComboBox_currentIndexChanged(int index);
+
+    void on_genofillcheckBox_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

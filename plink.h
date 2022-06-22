@@ -31,6 +31,7 @@ public:
     bool part4(QString file4, QString winsize, QString steplength, QString r2, QString file5);
     bool part5(QString file5, QString out);
     bool part6(QString file4, QString out);
+    bool part_convert_format(QString vcfFile, QString out);
 
 private:
 

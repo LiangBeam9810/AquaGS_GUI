@@ -46,9 +46,9 @@ void check_all_package()
     qDebug()<< endl<<"display param :"<<param<< endl;
     Process* install_ASRgenomics_process;
     install_ASRgenomics_process = new Process;
-    if(!(install_ASRgenomics_process->runRscript(param,"Installing packages.")))
+    if(!(install_ASRgenomics_process->runRscript(param,"Checking packages.")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the install packages process !");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the install packages process !");
         return ;
     }
     else
@@ -60,11 +60,11 @@ void check_all_package()
 
 void phenotype_select_line_init(phenotype_select phenotype_select_line,QString csv_path,QStringList* phenotype_list)
 {
-    prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.AnimalID_ComboBox);
-    prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.Dam_ComboBox);
-    prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.Sire_ComboBox);
-    prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.target_phenotype_ComboBox);
-    prepare_phenotype(csv_path, phenotype_list , phenotype_select_line.Gender_ComboBox);
+    prepare_phenotype(phenotype_list , phenotype_select_line.AnimalID_ComboBox);
+    prepare_phenotype(phenotype_list , phenotype_select_line.Dam_ComboBox);
+    prepare_phenotype(phenotype_list , phenotype_select_line.Sire_ComboBox);
+    prepare_phenotype(phenotype_list , phenotype_select_line.target_phenotype_ComboBox);
+    prepare_phenotype(phenotype_list , phenotype_select_line.Gender_ComboBox);
     phenotype_select_line.outlier_CheckBox->setCheckState(Qt::Unchecked);
 }
 
@@ -90,19 +90,16 @@ void phenotype_select_line_get_index(phenotype_select phenotype_select_line,unsi
 
 }
 
-void prepare_phenotype(QString csv_path,
-                       QStringList* phenotype_list ,
-                       QComboBox*  ComboBox)
+void prepare_phenotype(QStringList* phenotype_list , QComboBox*  ComboBox)
 {
     qDebug()<<endl<< "All path are correct." << endl;
-    *phenotype_list =(get_csv_title(csv_path)); //Reading  phenotypes.
     ComboBox->clear();
     for(int i =0 ;i< (*phenotype_list).length();i++){
         ComboBox->addItem((*phenotype_list)[i]);
     }
 }
 
-void init_ready_for_run(QTextBrowser* skewnessddisplay_1,
+void init_ready_for_run_(QTextBrowser* skewnessddisplay_1,
                          QTextBrowser* kurtosisdisplay_1,
                          QLabel* horizontallabel_1,
                          QTextBrowser* skewnessddisplay_2,
@@ -174,7 +171,7 @@ bool outlier_elimination(QString* csv_path,
     outlier_process = new Process();
     if(!(outlier_process->runRscript(param,"Reading and handle phenotype")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open outlier process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open outlier process!");
         return false;
     }
     //Check the existion of the file after outlier
@@ -188,7 +185,7 @@ bool outlier_elimination(QString* csv_path,
     }
     else
     {
-        QMessageBox::warning(NULL, "File error:", "Can't find "+path+" !");
+        QMessageBox::warning(nullptr, "File error:", "Can't find "+path+" !");
         return false;
     }
 
@@ -236,7 +233,7 @@ bool display_normality(QString input_path,
     display_process = new Process;
     if(!(display_process->runRscript(param,"Plotting the histogram")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the display process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the display process!");
         return false;
     }
     QString ske_kur_ans_path = output_path;
@@ -267,7 +264,7 @@ bool display_normality(QString input_path,
         }
         else
         {
-             QMessageBox::warning(NULL, "File error", "Can't opend "+ske_kur_ans_path+"!");
+             QMessageBox::warning(nullptr, "File error", "Can't opend "+ske_kur_ans_path+"!");
              return false;
         }
 
@@ -279,7 +276,7 @@ bool display_normality(QString input_path,
     }
     else
     {
-         QMessageBox::warning(NULL, "File error", "Can't find "+ske_kur_ans_path+"!");
+         QMessageBox::warning(nullptr, "File error", "Can't find "+ske_kur_ans_path+"!");
          return false;
     }
     return true;
@@ -309,7 +306,7 @@ bool convert_phenotype(QString input_path,unsigned int target_phenotype_index,un
     convert_process = new Process;
     if(!(convert_process->runRscript(param,"Plotting the histogram")))
     {
-        QMessageBox::warning(NULL, "Process error:", "Can't open the convert process!");
+        QMessageBox::warning(nullptr, "Process error:", "Can't open the convert process!");
         return false;
     }
 
@@ -322,10 +319,9 @@ bool convert_phenotype(QString input_path,unsigned int target_phenotype_index,un
     else
     {
         //qDebug()<<endl<<"convert error :"<<endl;
-        QMessageBox::warning(NULL, "File error", "Can't find "+path+"!");
+        QMessageBox::warning(nullptr, "File error", "Can't find "+path+"!");
         return false;
     }
-    return true;
 }
 
 bool check_convert_path_of_phenotype(bool converted_flag ,QCheckBox* convert_swith)

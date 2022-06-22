@@ -5,7 +5,8 @@
 
 
 struct alphamate_edge{
-    QCheckBox* alphmate_checkBox = NULL;
+    QComboBox* GEBVform_comboBox = NULL;
+    QComboBox* NrmMatrixFileform_comboBox = NULL;
 
     QLineEdit* NrmMatrix_lineEdit = NULL;
     QLineEdit*  SelCriterionFile_lineEdit = NULL;
@@ -16,6 +17,7 @@ struct alphamate_edge{
     QSpinBox*   NumberOfMaleParents_spinBox = NULL;
     QSpinBox*   NumberOfFemaleParents_spinBox = NULL;
     QSpinBox*   TargetDegree_spinBox = NULL;
+    QSpinBox*   NumberOfMatingCandidate_spinBox = NULL;
 
     QCheckBox*  EqualizeMaleContributions_checkBox = NULL;
     QCheckBox*  EqualizeFemaleContributions_checkBox = NULL;
@@ -31,7 +33,7 @@ struct alphamate_edge{
 };
 
 
-void blup_alphamate_Init(alphamate_edge blup_alphamate_all);
+void alphamate_page_Init(alphamate_edge blup_alphamate_all);
 void alphmate_enable_all(alphamate_edge blup_alphamate_all);
 void alphmate_disable_all(alphamate_edge blup_alphamate_all);
 void alphmate_able_gender(alphamate_edge blup_alphamate_all,bool state);
