@@ -7,32 +7,43 @@ AquaGS offers click-by-click running from inputting variant call file (.vcf) to 
 Everything Genomic Selection(GS) workflow needs are contained by AquaGS, such as preprocessing,effect testing,breeding-value calculating and mate allocating.Users no longer need to switch between software on different platforms. At the sametime, we  provide [a simple way](./Md/Setting_Up_Your_Environment.md) to install, try to put a lot of power into your hands by making easy things easy, and hard things possible. 
 
 ## How to start?
+---
+**Update docker support** 2022/10/4    
+1. If you know how to use Docker,a image of all environments and AquaGS is provided [here](https://hub.docker.com/r/liangbeam/aquags). It is based on [dorowu/ubuntu-desktop-lxde-vnc](https://hub.docker.com/r/dorowu/ubuntu-desktop-lxde-vnc/#!) and has built-in SSH, VNC, NOVNC. You can use AquaGS via SSH, VNC Viewer, or even browser.    
+ Following [the install tutorial for docker user](./Md/Setting_Up_by_Docer.md).
+
+
+**Guide for tranditional install** 
 1. Installation step-by-step 
    
    Download the zip of AquaGS to local from [releases page](https://github.com/LiangBeam9810/AquaGS_GUI/releases).
 
    Following [the install tutorial(Setting Up Your Environment)](./Md/Setting_Up_Your_Environment.md), AquaGS can be easily installed by anyone even without programming experience.
+
+---
    
 2. <span id="RunningInstructions"> Runing </span>
    
-    Make sure  [the install tutorial](./Md/Setting_Up_Your_Environment.md) is completed before you run AquaGS.Then you will start using AquaGS normally.
+    Make sure  [the install tutorial](./Md/Setting_Up_Your_Environment.md)or [the install tutorial for docker user](./Md/Setting_Up_by_Docer.md) is completed before you run AquaGS.Then you will start using AquaGS normally.
 
     1. Launched AquaGS
     
-        AquaGS can be launched by simply double-clicking the "AquaGS_GUI",which in the decompressed folder.
+        AquaGS can be launched  the "AquaGS_GUI",which in the decompressed folder (like running `cd ./AquaGS_GUI_releases` and  `./AquaGS_GUI`).
     
-    1. Select/Enter input and output
+    2. Select/Enter input and output **(Do not contain Spaces (' ') in path)**
    
-        In this page,you should select the path of phenotype file(.csv) , variant call file(.vcf) and output folder.
+        In this page,you should select the path of phenotype file(.csv) , variant call file(.vcf / .tar) and output folder.  
+        We provided the test data in [here](https://github.com/LiangBeam9810/AquaGS_GUI/releases)
+        
 
-    2. Phenotype Preprocessing
+    3. Phenotype Preprocessing
 
         All Preprocessing of phentype will be completed in this page.Here contain 
 
-    3. Genotype Preprocessing(Quality Control)
-    4. Effects testing
-    5. Calculation of breeding values
-    6. Mating
+    4. Genotype Preprocessing(Quality Control)
+    5. Effects testing
+    6. Calculation of breeding values
+    7. Mating
 
 ## Functions detail
 1. Preprocessing
