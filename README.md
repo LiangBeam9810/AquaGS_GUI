@@ -6,6 +6,7 @@ AquaGS offers click-by-click running from inputting variant call file (.vcf) to 
 
 Everything Genomic Selection(GS) workflow needs are contained by AquaGS, such as preprocessing,effect testing,breeding-value calculating and mate allocating.Users no longer need to switch between software on different platforms. At the sametime, we  provide [a simple way](./Md/Setting_Up_Your_Environment.md) to install, try to put a lot of power into your hands by making easy things easy, and hard things possible. 
 
+![](./Md/Allpage.png)
 ## How to start?
 ---
 **Update docker support** 2022/10/4    
