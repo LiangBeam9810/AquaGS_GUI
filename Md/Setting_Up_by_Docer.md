@@ -11,7 +11,7 @@ docker pull liangbeam/aquags
 ## 2.Create a container
 Run the following command
 ```
-docker run -d --name ubuntu-desktop-aquags-vnc -p 5901:22 -p 6080:80 -p 5900:5900 -e VNC_PASSWORD=1234 -e liangbeam/aquags
+docker run -d --name aquags-vnc -p 5901:22 -p 6080:80 -p 5900:5900 -e VNC_PASSWORD=1234  liangbeam/aquags
 ```
 Commands  | Explanation|
 ------------- | -------------
