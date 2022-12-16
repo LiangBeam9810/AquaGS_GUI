@@ -4,12 +4,48 @@ AquaGS is an open source tool for Aquaculture breeding programs with friendly gr
 
 AquaGS offers click-by-click running from inputting variant call file (.vcf) to the final mate allocation scheme. No need to prepare anything just except variant call file and phenotype file(.csv).
 
-Everything Genomic Selection(GS) workflow needs are contained by AquaGS, such as preprocessing,effect testing,breeding-value calculating and mate allocating.Users no longer need to switch between software on different platforms. At the sametime, we  provide [a simple way](./Md/Setting_Up_Your_Environment.md) to install, try to put a lot of power into your hands by making easy things easy, and hard things possible. 
+Everything Genomic Selection(GS) workflow needs are contained by AquaGS, such as preprocessing,effect testing,breeding-value calculating and mate allocating.Users no longer need to switch between software on different platforms. At the sametime, we  provide **[detailed tutorial](#jumpInstall)** to install (), try to put a lot of power into your hands by making easy things easy, and hard things possible. 
 
 ![](./Md/Allpage.png)
-## How to start?
----
-**Update docker support** 2022/10/4    
+# How to start?
+**Update docker support** 2022/12/15   
+## <span id="jumpInstall">1. Install AquaGS
+- ## Install by **docker**(Windows/Linux/Mac)   
+    **Make sure the [Docker](https://www.docker.com/)  is installed, Follow these steps (using windows as an example)**
+
+ 
+  1. ### Run the specified image for AquaGS
+
+       - Run the following command to pull the specified image for AquaGS in the Shell (Windows) or Terminal (Linux) of the device on which the Docker is installed.
+        ```
+        docker pull liangbeam/aquags
+        ```
+      
+        - Run the following command to create a container
+
+        ```
+        docker run -d --name aquags-vnc -p 5901:22 -p 6080:80 -p 5900:5900 -e VNC_PASSWORD=1234  liangbeam/aquags
+        ```
+      Commands  | Explanation|
+      ------------- | -------------
+      --name aquags-vnc|container name
+      -p 5901:22  | SSH port
+      -p 6080:80  | NOVNC port (for web)
+      -p 5900:5900 | VNC port 
+      -e VNC_PASSWORD=1234|VNC and NOVNC password
+  2. ### Enter the container by Web
+    Enter the following in the browser.
+        ```
+        <ip>:6080
+        ```
+        or run in cmd
+        ```
+        http://<<ip>:6080
+- ## Install by **conda**(Linux)
+### b. Install by docker
+
+
+
 1. If you know how to use Docker,a image of all environments and AquaGS is provided [here](https://hub.docker.com/r/liangbeam/aquags). It is based on [dorowu/ubuntu-desktop-lxde-vnc](https://hub.docker.com/r/dorowu/ubuntu-desktop-lxde-vnc/#!) and has built-in SSH, VNC, NOVNC. You can use AquaGS via SSH, VNC Viewer, or even browser.    
  Following [the install tutorial for docker user](./Md/Setting_Up_by_Docer.md).
 
