@@ -71,7 +71,7 @@ Then enjoy AquaGS.:smiley:
     
     2. Select/Enter input and output **(Do not contain Spaces (' ') in path)**
    
-        - In this page,you should select the path of phenotype file(.csv) , variant call file(.vcf / .tar) and output folder.  
+        - In this page,you should select the path of **phenotype file(.csv)** , **variant call file(.vcf / .tar)** and output folder.  
           - We provided the test data in [here](https://github.com/LiangBeam9810/AquaGS_GUI/releases). (If you are using Docker, the input file is in the Input folder on the desktop `/root/Desktop/input/` )
         ![](Md/gif/Selectinputandoutput.gif)
 
@@ -79,16 +79,30 @@ Then enjoy AquaGS.:smiley:
         - Select type of phenotypes (Factor / Numeric).
             ![](Md/gif/selectfactortype.gif)
         - All Preprocessing of phentype will be completed in this page
-          - `Dam` `Sire` `gender` is optional phenotype . If you need to use parent-specific method (e.g. ABLUP), you must provide `Dam` and `Sire`. If the breeding program requires gender differentiation, you must provide `gender`.
+          - `Dam` `Sire` `gender` is optional phenotype . If you need to use parent-specific method (e.g. ABLUP), you must provide `Dam` and `Sire` in **phenotype file(.csv)** . If the breeding program requires gender differentiation, you must provide `gender` in **phenotype file(.csv)** .
         ![](Md/gif/filteroutlier.gif)
           - Normality convert
             ![](Md/gif/normalize.gif)
-
     4. Genotype Preprocessing(Quality Control)
+        - AquaGS implements quality control for genotype data by PLINK [1], where GENO and MIND are optional to filter out SNP with low call rate and individuals with low sample genotype call rate. 
+        - The Hardy-Weinberg(HW) balance[2] module is optional to test Hardy-Weinberg Equilibrium.
+        - Genotype imputation is base on BEAGLE [3].
+         ![](Md/gif/qc.gif)
     5. Effects testing
+        - the effects testing in terms of permutations and combinations between multiple variables should be implemented following the steps of testing：
+          - Discrete fixed effects
+            ![](Md/gif/fixeffect1.gif)
+          - Continuous fixed effects
+            ![](Md/gif/fixeffect2.gif)
+          - Random effects
+            ![](Md/gif/randomeffect.gif)
+         Under the combination of user-selected fixed and random effects by simple-click operations, p-values are calculated for each variable to evaluate the reasonability of current linear model. 
     6. Calculation of breeding values
-    7. Mating
+       ![](/MD/gif/Calculation%20of%20breeding%20values.gif)
 
+    7. Mating
+        The breeding scheme of mating allocation based on OCS is produced by AlphaMate.
+        ![](Md/gif/mating.gif)
 - ## Functions detail
     1. Preprocessing
     2. Phenotype Preprocessing
