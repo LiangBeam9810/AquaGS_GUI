@@ -7,14 +7,12 @@ AquaGS offers click-by-click running from inputting variant call file (.vcf) to 
 Everything Genomic Selection(GS) workflow needs are contained by AquaGS, such as preprocessing,effect testing,breeding-value calculating and mate allocating.Users no longer need to switch between software on different platforms. At the sametime, we  provide **[detailed tutorial](#jumpInstall)** to install (), try to put a lot of power into your hands by making easy things easy, and hard things possible. 
 
 ![](./Md/Allpage.png)
-# How to start?
+# <span id="jumpInstall"> How to start?
 **Update docker support** 2022/12/15   
-## <span id="jumpInstall">1. Install AquaGS
-- ## Install by **docker**(Windows/Linux/Mac)   
+- ## Run AquaGS by **docker** (Windows/Linux/Mac)   
     **Make sure the [Docker](https://www.docker.com/)  is installed, Follow these steps (using windows as an example)**
 
- 
-  1. ### Run the specified image for AquaGS
+  1. ### Pull the specified image for AquaGS
 
        - Run the following command to pull the specified image for AquaGS in the Shell (Windows) or Terminal (Linux) of the device on which the Docker is installed.
         ```
@@ -34,13 +32,26 @@ Everything Genomic Selection(GS) workflow needs are contained by AquaGS, such as
       -p 5900:5900 | VNC port 
       -e VNC_PASSWORD=1234|VNC and NOVNC password
   2. ### Enter the container by Web
-    Enter the following in the browser.
+        Enter the following in the browser. 
         ```
         <ip>:6080
         ```
-        or run in cmd
+        >Replace  `<ip>`  with the ip for the device on which the Docker is installed.    
+
+       Enter the password, then you can access the desktop for container in browser.
+
+   3. ###  Run AquaGS
+        AquaGS_GUI download to the desktop  (directory is `/root/Desktop/AquaGS_GUI_release/`).
+
+        **You need to run it in that directory** by run the command on the Terminal(or LXTerminal).
         ```
-        http://<<ip>:6080
+        cd /root/Desktop/AquaGS_GUI_release/
+        ./AquaGS_GUI
+        ```
+        Then enjoy AquaGS.
+
+**Do not contain Spaces (' ') in the output path**
+
 - ## Install by **conda**(Linux)
 ### b. Install by docker
 
