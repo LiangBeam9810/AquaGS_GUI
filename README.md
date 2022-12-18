@@ -85,8 +85,8 @@ Then enjoy AquaGS.:smiley:
             ![](Md/gif/normalize.gif)
     4. Genotype Preprocessing(Quality Control)
         - AquaGS implements quality control for genotype data by PLINK [1], where GENO and MIND are optional to filter out SNP with low call rate and individuals with low sample genotype call rate. 
-        - The Hardy-Weinberg(HW) balance[2] module is optional to test Hardy-Weinberg Equilibrium.
-        - Genotype imputation is base on BEAGLE [3].
+        - The Hardy-Weinberg(HW) balance module is optional to test Hardy-Weinberg Equilibrium.
+        - Genotype imputation is base on BEAGLE [2].
          ![](Md/gif/qc.gif)
     5. Effects testing
         - the effects testing in terms of permutations and combinations between multiple variables should be implemented following the steps of testing：
@@ -99,9 +99,11 @@ Then enjoy AquaGS.:smiley:
          Under the combination of user-selected fixed and random effects by simple-click operations, p-values are calculated for each variable to evaluate the reasonability of current linear model. 
     6. Calculation of breeding values
        ![](/MD/gif/Calculation%20of%20breeding%20values.gif)
+       - K-fold Cross Validation
+        ![](Md/gif/Kvalidate.gif)
 
     7. Mating
-        The breeding scheme of mating allocation based on OCS is produced by AlphaMate.
+        The breeding scheme of mating allocation based on OCS is produced by AlphaMate[3].
         ![](Md/gif/mating.gif)
 - ## Functions detail
     1. Preprocessing
@@ -114,9 +116,9 @@ Then enjoy AquaGS.:smiley:
         2. [HW Balance](./Md/HWBalance.md)
         3. [Plink](./Md/PLink.md)
     4. Matirx Building
-      5. [A Matirx](./Md/A.md)
-      6. [G Matirx](./Md/G.md)
-      7. [H Matrix](./Md/H.md)
+      1. [A Matirx](./Md/A.md)
+      2. [G Matirx](./Md/G.md)
+      3. [H Matrix](./Md/H.md)
 
     5. Effect Testing
         1. Fixed Effect
@@ -140,6 +142,14 @@ Then enjoy AquaGS.:smiley:
 If you have any doubt, you can ask us for Email.
 
 You can also open an [issue on GitHub](https://github.com/LiangBeam9810/AquaGS_GUI/issues). This is especially handy when your issue will require long-term discussion or debugging.
+
+---
+# Citaion
+
+[1] https://zzz.bwh.harvard.edu/plink/
+[2] https://faculty.washington.edu/browning/beagle/beagle.html
+[3] https://alphagenes.roslin.ed.ac.uk/wp/software-2/alphamate/
+
 
 
 
