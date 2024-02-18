@@ -37,7 +37,7 @@ Traditional installation require you to pre-prepare your *R* and *Java* runtime 
   2. Select/Enter input and output **(Do not contain Spaces (' ') in path)**
 
      - In this page,you should select the path of **phenotype file(.csv)** , **variant call file(.vcf / .tar)** and output folder.
-       - We provided the test data in [here](https://github.com/LiangBeam9810/AquaGS_GUI/releases). (If you are using Docker, the input file is in the Input folder on the desktop `/root/Desktop/input/` )
+       - We provided the test data in [here](https://github.com/Ying-Lab/AquaGS/releases/download/data/testdata.rar). (If you are using Docker, the input file is in the Input folder on the desktop `/root/Desktop/input/` )
          ![](AquaGS/Md/gif/Selectinputandoutput.gif)
   3. Phenotype Preprocessing
 
