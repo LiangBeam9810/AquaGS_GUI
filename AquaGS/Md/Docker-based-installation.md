@@ -2,20 +2,19 @@
 
 According to the official [Docker installation tutorial](https://www.docker.com/get-started/), whether on Windows, Linux or Mac systems, docker installation is very simple.
 
+❗️  Make sure the [Docker](https://www.docker.com/get-started/) is installed. Follow these steps
 
-
-
-❗️  Make sure the [Docker](https://www.docker.com/get-started/) is installed. Follow these steps 
 ### 1. Pull the specified image for AquaGS
 
-- Run the following command to pull the specified image for AquaGS in the Shell (Windows) or Terminal (Linux/Mac) of the device on which the Docker is installed.
+- Run the following command to pull the specified image for AquaGS in the Shell (Windows) or Terminal (Mac/Linux) of the device on which the Docker is installed.
 
   ```
   docker pull liangbeam/aquags
   ```
+
   ![Windows demo](/AquaGS/Md/gif/PullAquaGSIamge.gif)
- 
 - Run the following command to create a container
+
   ```
   docker run -d --name aquags-vnc -p 5901:22 -p 6080:80 -p 5902:5900 -e VNC_PASSWORD=1234  liangbeam/aquags
   ```
