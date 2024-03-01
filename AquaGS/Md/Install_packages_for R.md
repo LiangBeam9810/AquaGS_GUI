@@ -23,19 +23,18 @@ Automatic installation works fine if the following dependent libraries are insta
 ## Manual installation
 - Manual installation also works.You can install these packages manually if you want.
 
-	 - The Requirement List show here:
+	 - The requirement List show here:
 
 		| **package** |**version** |
 		|---|---|
-		|  data.table | |
-		| nadiv | |
-		| BGLR| |
-		| BGLR | |
-		| ggplot2 | |
-		| bestNormalize | |
-		| lmerTest | |
-		| ASRgenomics | |
-		| lme4 |
+		| data.table |1.14.2 |
+		| nadiv |2.171. |
+		| BGLR|1.1.0 |
+		| ggplot2 |3.3.6 |
+		| bestNormalize |1.8.3 |
+		| lmerTest |3.1.3 |
+		| ASRgenomics |1.0.0 |
+		| lme4 |1.1.30|
 
 ---
 ### Notice 

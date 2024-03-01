@@ -17,7 +17,7 @@ According to the official [Docker installation tutorial](https://www.docker.com/
  
 - Run the following command to create a container
   ```
-  docker run -d --name aquags-vnc -p 5901:22 -p 6080:80 -p 5900:5900 -e VNC_PASSWORD=1234  liangbeam/aquags
+  docker run -d --name aquags-vnc -p 5901:22 -p 6080:80 -p 5902:5900 -e VNC_PASSWORD=1234  liangbeam/aquags
   ```
 
   ![Windows demo](/AquaGS/Md/gif/CreatContainer.gif)
@@ -27,7 +27,7 @@ According to the official [Docker installation tutorial](https://www.docker.com/
   | --name aquags-vnc    | container name         |
   | -p 5901:22           | SSH port               |
   | -p 6080:80           | NOVNC port (for web)   |
-  | -p 5900:5900         | VNC port               |
+  | -p 5902:5900         | VNC port               |
   | -e VNC_PASSWORD=1234 | VNC and NOVNC password |
 
 ### 2.  Enter the container by Web
