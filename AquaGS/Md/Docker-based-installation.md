@@ -12,10 +12,10 @@ According to the official [Docker installation tutorial](https://www.docker.com/
   docker pull liangbeam/aquags
   ```
 
-  >Windows:
+  Windows:
   >![Windows demo](/AquaGS/Md/gif/PullAquaGSIamge.gif)
 
-  >Mac:
+  Mac:
   >![Mac demo](/AquaGS/Md/gif/PullAquaGSIamge_mac.gif)
 - **Run the following command to create a container**
 
@@ -23,10 +23,10 @@ According to the official [Docker installation tutorial](https://www.docker.com/
   docker run -d --name aquags-vnc -p 5901:22 -p 6080:80 -p 5902:5900 -e VNC_PASSWORD=1234  liangbeam/aquags
   ```
 
-  >Windows:
+  Windows:
   >![Windows demo](/AquaGS/Md/gif/CreatContainer.gif)
 
-  >Mac:
+  Mac:
   >![Mac demo](/AquaGS/Md/gif/CreatContainer_mac.gif)
 
   | Commands             | Explanation            |
@@ -52,10 +52,10 @@ According to the official [Docker installation tutorial](https://www.docker.com/
 
   Enter the password, then you can access the desktop for container in browser.
 
-  >Windows:
+  Windows:
   >![Alt Text](/AquaGS/Md/gif/EnterVNC.gif)
 
-  >Mac:
+  Mac:
   >![Get ip](/AquaGS/Md/gif/find_ip_mac.gif)
   >![Enter the VNC](/AquaGS/Md/gif/EnterVNC_mac.gif)
 
