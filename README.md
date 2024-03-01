@@ -5,7 +5,7 @@ AquaGS is an open source tool for Aquaculture breeding programs with friendly gr
 
 AquaGS offers click-by-click running from inputting variant call file (.vcf) to the final mate allocation scheme. No need to prepare anything just except variant call file and phenotype file(.csv).
 
-Everything Genomic Selection(GS) workflow needs are contained by AquaGS, such as preprocessing,effect testing,breeding-value calculating and mate allocating.Users no longer need to switch between software on different platforms. At the sametime, we  provide **[detailed tutorial](#jumpInstall)** to install (), try to put a lot of power into your hands by making easy things easy, and hard things possible.
+Everything Genomic Selection(GS) workflow needs are contained by AquaGS, such as preprocessing,effect testing,breeding-value calculating and mate allocating.Users no longer need to switch between software on different platforms. At the sametime, we  provide **[detailed tutorial](#jumpInstall)** to install, try to put a lot of power into your hands by making easy things easy, and hard things possible.
 
 ![](./AquaGS/Md/Allpage.png)
 
@@ -87,23 +87,23 @@ Traditional installation require you to pre-prepare your *R* and *Java* runtime 
      3. [Plink](./AquaGS/Md/PLink.md)
   4. Matirx Building
 
-     1. [A Matirx](./AquaGS/Md/A.md)
-     2. [G Matirx](./AquaGS/Md/G.md)
-     3. [H Matrix](./AquaGS/Md/H.md)
+     1. A Matirx
+     2. G Matirx
+     3. H Matrix
   5. Effect Testing
 
      1. Fixed Effect
-        1. [Discrete Effect]()
-        2. [Continuous Effect]()
-     2. [Random Effect]()
-  6. Genotype Seletion(GS) / Calculating [GEBV]()
+        1. Discrete Effect
+        2. Continuous Effect
+     2. Random Effect
+  6. Genotype Seletion(GS) / Calculating GEBV
 
      1. Classical Method
-        1. [BLUP]()
-        2. [GBLUP]()
-        3. [ssGBLUP]()
+        1. BLUP
+        2. GBLUP
+        3. ssGBLUP
      2. Bayes Method
-  7. [Mate Allocation]()
+  7. Mate Allocation
 
 ---
 

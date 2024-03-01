@@ -27,4 +27,4 @@ We’ve tried to make AquaGS as easy to set up as possible.Some of the [packages
 ---
 At this point, the installation is complete.You are now ready to create your own mate plans.Enjoy it!
 
-**Instructions for each step are provided at [here](../README.md).**
+**Instructions for each step are provided at [here](../../README.md).**
