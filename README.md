@@ -77,33 +77,27 @@ Traditional installation require you to pre-prepare your *R* and *Java* runtime 
 
   1. Preprocessing
   2. Phenotype Preprocessing
-
      1. [Outlier Elimination](./AquaGS/Md/Outlier_elimination.md)
      2. [Normality Testing and Converting](./AquaGS/Md/Normality.md)
   3. Genotype Preprocessing(Quality Control)
-
-     1. [Genotype imputation](./AquaGS/Md/imputation.md)
-     2. [HW Balance](./AquaGS/Md/HWBalance.md)
-     3. [Plink](./AquaGS/Md/PLink.md)
+     1. [Genotype imputation](https://faculty.washington.edu/browning/beagle/beagle.html)
+     2. [Plink](https://www.cog-genomics.org/plink/)
   4. Matirx Building
-
      1. A Matirx
      2. G Matirx
      3. H Matrix
   5. Effect Testing
-
      1. Fixed Effect
         1. Discrete Effect
         2. Continuous Effect
      2. Random Effect
   6. Genotype Seletion(GS) / Calculating GEBV
-
      1. Classical Method
         1. BLUP
         2. GBLUP
         3. ssGBLUP
      2. Bayes Method
-  7. Mate Allocation
+  7. [Mate Allocation](https://github.com/AlphaGenes/AlphaMate)
 
 ---
 
