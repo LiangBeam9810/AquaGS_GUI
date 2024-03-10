@@ -27,7 +27,17 @@ Traditional installation require you to pre-prepare your *R* and *Java* runtime 
 
 ---
 
-### Runing AquaGS
+### Test data
+
+  [Test data release page](https://github.com/Ying-Lab/AquaGS/releases/tag/data) provides Test data as a .rar file, which includes 630 adults of Pacific abalone .vcf and .csv phenotypic and genotypic data.
+
+| Name of phenotype | AnimalID      | Sire            | Dam            | shell_col      | poolID     | famID        | ABT                                    | WW         | ABT_t          | gender |
+| ----------------- | ------------- | --------------- | -------------- | -------------- | ---------- | ------------ | -------------------------------------- | ---------- | -------------- | ------ |
+| Illustrate        | Individual ID | ID of the Sire | ID of the Dam | Color of shell | ID of pool | ID of famliy | Heart performance at high temperatures | Wet weight | Normalized ABT |        |
+
+---
+
+### Run AquaGS
 
   Make sure [the tutorial for Docker-based installation](./AquaGS/Md/Docker-based-installation.md) or [the tranditional install tutorial](./AquaGS/Md/Setting_Up_Your_Environment.md) is completed before you run AquaGS. Then you will start using AquaGS normally.
 
