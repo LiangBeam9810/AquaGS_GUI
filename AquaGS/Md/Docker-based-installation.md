@@ -4,38 +4,27 @@ According to the official [Docker installation tutorial](https://www.docker.com/
 
 ❗️  Make sure the [Docker](https://www.docker.com/get-started/) is installed. Follow these steps
 
-### 1. Pull the specified image for AquaGS
+### 1. Pull and run the Docker for AquaGS
 
-- **Run the following command to pull the specified image for AquaGS in the Shell (Windows) or Terminal (Mac/Linux) of the device on which the Docker is installed.**
+- **Open the Shell (Windows) or Terminal (Mac/Linux) of the device on which the Docker is installed.**
 
-  ```
-  docker pull liangbeam/aquags
-  ```
-
-  Windows:
-  >![Windows demo](/AquaGS/Md/gif/PullAquaGSIamge.gif)
-
-  Mac:
-  >![Mac demo](/AquaGS/Md/gif/PullAquaGSIamge_mac.gif)
-- **Run the following command to create a container**
+  - Windows: Press `Win + R`, type `cmd` and press `Enter`
+  - Mac :    Press `Command + S` type `Terminal`, and press `Enter`.
+  - Linux:   Press ` Ctrl + Alt + T` .
+- **Run the following command  in the Shell (Windows) or Terminal (Mac/Linux).**
 
   ```
-  docker run -d --name aquags-vnc -p 5901:22 -p 6080:80 -p 5902:5900 -e VNC_PASSWORD=1234  liangbeam/aquags
+  docker pull liangbeam/aquags # Pull the specified image for AquaGS
+  docker run -d --name aquags-vnc -p 5901:22 -p 6080:80 -p 5902:5900 -e VNC_PASSWORD=1234  liangbeam/aquags # Run the following command to create a container
   ```
 
-  Windows:
-  >![Windows demo](/AquaGS/Md/gif/CreatContainer.gif)
-
-  Mac:
-  >![Mac demo](/AquaGS/Md/gif/CreatContainer_mac.gif)
-
-  | Commands             | Explanation            |
-  | -------------------- | ---------------------- |
-  | --name aquags-vnc    | container name         |
-  | -p 5901:22           | SSH port               |
-  | -p 6080:80           | NOVNC port (for web)   |
-  | -p 5902:5900         | VNC port               |
-  | -e VNC_PASSWORD=1234 | VNC and NOVNC password |
+  | Commands <br /> (Bold as can be customized) | Explanation    | default    |
+  | ------------------------------------------- | -------------- | ---------- |
+  | -e VNC_PASSWORD=**1234**              | Password       | 1234       |
+  | -p  **6080**:80                         | NOVNC_port     | 6080       |
+  | -p  **5902**:5900                       | VNC port       | 5902       |
+  | --name  **aquags-vnc**                  | container name | aquags-vnc |
+  | -p  **5901**:22                         | SSH port       | 5901       |
 
 ---
 
@@ -44,20 +33,14 @@ According to the official [Docker installation tutorial](https://www.docker.com/
 - Enter the following in the browser.
 
   ```
-  <ip>:6080
+  <your_ip>:<NOVNC_port> 
   ```
 
-  > Replace  `<ip>`  with the ip for the device on which the Docker is installed.
+  > Replace  `<your_ip>`  with the ip for the device on which the Docker is installed.
+  > Replace `<NOVNC_port> ` with `NOVNC_port` (default as 6080)
   >
 
-  Enter the password, then you can access the desktop for container in browser.
-
-  Windows:
-  >![Alt Text](/AquaGS/Md/gif/EnterVNC.gif)
-
-  Mac:
-  >![Get ip](/AquaGS/Md/gif/find_ip_mac.gif)
-  >![Enter the VNC](/AquaGS/Md/gif/EnterVNC_mac.gif)
+  Enter the password (default as 1234), then you can access the desktop for container in browser.
 
 ### 3.   Launch AquaGS
 
@@ -73,3 +56,20 @@ According to the official [Docker installation tutorial](https://www.docker.com/
   **Do not contain Spaces (' ') in the output path**
 
 Then enjoy AquaGS.😃
+
+
+
+
+
+
+
+> Windows demo:
+> ![Windows demo](/AquaGS/Md/gif/PullAquaGSIamge.gif)
+> ![Windows demo](/AquaGS/Md/gif/CreatContainer.gif)
+
+
+
+
+> Mac demo:
+> ![Mac demo](/AquaGS/Md/gif/PullAquaGSIamge_mac.gif)
+> ![Mac demo](/AquaGS/Md/gif/CreatContainer_mac.gif)
