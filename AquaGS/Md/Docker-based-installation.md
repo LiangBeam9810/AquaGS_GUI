@@ -60,10 +60,10 @@ According to the official [Docker installation tutorial](https://www.docker.com/
 
 Then enjoy AquaGS.😃
 
-> Windows demo:
-> ![Windows demo](/AquaGS/Md/gif/PullAquaGSIamge.gif)
-> ![Windows demo](/AquaGS/Md/gif/CreatContainer.gif)
+> Windows demo:    
+> ![Windows demo](/AquaGS/Md/gif/PullAquaGSIamge.gif)    
+> ![Windows demo](/AquaGS/Md/gif/CreatContainer.gif)    
 
-> Mac demo:
-> ![Mac demo](/AquaGS/Md/gif/PullAquaGSIamge_mac.gif)
-> ![Mac demo](/AquaGS/Md/gif/CreatContainer_mac.gif)
+> Mac demo:    
+> ![Mac demo](/AquaGS/Md/gif/PullAquaGSIamge_mac.gif)    
+> ![Mac demo](/AquaGS/Md/gif/CreatContainer_mac.gif)    
