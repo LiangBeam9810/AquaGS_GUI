@@ -14,17 +14,26 @@ According to the official [Docker installation tutorial](https://www.docker.com/
 - **Run the following command  in the Shell (Windows) or Terminal (Mac/Linux).**
 
   ```
-  docker pull liangbeam/aquags # Pull the specified image for AquaGS
-  docker run -d --name aquags-vnc -p 5901:22 -p 6080:80 -p 5902:5900 -e VNC_PASSWORD=1234  liangbeam/aquags # Run the following command to create a container
+  docker pull liangbeam/aquags #Pull the specified image for AquaGS
+  docker run -it -v d:\data\:/root/Desktop/Share/ -d --name aquags-vnc -p 5901:22 -p 6080:80 -p 5902:5900 -e VNC_PASSWORD=1234  liangbeam/aquags #Run the following command to create a container
   ```
 
-  | Commands<br /> (Bold as can be customized) | Explanation    | default    |
-  | ------------------------------------------ | -------------- | ---------- |
-  | -e VNC_PASSWORD=**1234**             | Password       | 1234       |
-  | -p**6080**:80                        | NOVNC_port     | 6080       |
-  | -p**5902**:5900                      | VNC port       | 5902       |
-  | --name**aquags-vnc**                 | container name | aquags-vnc |
-  | -p**5901**:22                        | SSH port       | 5901       |
+  | Commands<br /> (Bold as can be customized) | Explanation                                                                | default                                                                   |
+  | ------------------------------------------ | -------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+  | -v **d:\\data** : **/home/data**    |  Share the host folder to the container | Share the host folder D:\data\ to the /root/Desktop/Share/ folder in the docker container |
+  | -e VNC_PASSWORD=**1234**             | Password                                                                   | 1234                                                                      |
+  | -p **6080**:80                        | NOVNC_port                                                                 | 6080                                                                      |
+  | -p **5902**:5900                      | VNC port                                                                   | 5902                                                                      |
+  | --name **aquags-vnc**                 | container name                                                             | aquags-vnc                                                                |
+  | -p **5901**:22                        | SSH port                                                                   | 5901                                                                      |
+
+
+
+If you get the following error:
+```
+  docker: Error response from daemon: user declined directory sharing 
+```
+You have to add your the folder path of the host (defult as  D:\data\\) to Docker Filesharing. Go to docker dashboard -> settings ->Resources -> FileSharing. Add required folder and hit Apply & Restart.
 
 ---
 
@@ -41,7 +50,6 @@ According to the official [Docker installation tutorial](https://www.docker.com/
   >
 
   - **Exsample**: My local IP address is `<192.168.1.12>` , and the `NOVNC_port` is seted as default `6080`. So my input is `<192.168.1.12:6080>`
-
 
   Enter the password (default as 1234), then you can access the desktop for container in browser.
 
@@ -60,10 +68,18 @@ According to the official [Docker installation tutorial](https://www.docker.com/
 
 Then enjoy AquaGS.😃
 
-> Windows demo:    
-> ![Windows demo](/AquaGS/Md/gif/PullAquaGSIamge.gif)    
-> ![Windows demo](/AquaGS/Md/gif/CreatContainer.gif)    
+> Windows demo:
+> ![Windows demo](/AquaGS/Md/gif/PullAquaGSIamge.gif)
+> ![Windows demo](/AquaGS/Md/gif/CreatContainer.gif)
 
-> Mac demo:    
-> ![Mac demo](/AquaGS/Md/gif/PullAquaGSIamge_mac.gif)    
-> ![Mac demo](/AquaGS/Md/gif/CreatContainer_mac.gif)    
+> Mac demo:
+> ![Mac demo](/AquaGS/Md/gif/PullAquaGSIamge_mac.gif)
+> ![Mac demo](/AquaGS/Md/gif/CreatContainer_mac.gif)
+
+### Tips
+
+Copy the host files/folders to the aquags-vnc container
+
+```
+  docker cp d:\data\ aquags-vnc:/home/data/
+```
