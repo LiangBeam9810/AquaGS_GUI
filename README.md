@@ -20,7 +20,7 @@ There are two ways to do this:
 
 - This Docker-based installation ,which requires no environment configuration and is highly recommended if you are trying AquaGS for the first time.
 - [This guide](./AquaGS/Md/Docker-based-installation.md) provides a gif of each step of the process for reference.
-
+- Here is the detailed installation and operation demonstration [video](https://www.youtube.com/watch?v=H4jV-lVUd5E) 
 #### 2. Traditional installation (Linux)
 
 Traditional installation require you to pre-prepare your *R* and *Java* runtime environment follow [the tranditional install tutorial(Setting Up Your Environment)](./AquaGS/Md/Setting_Up_Your_Environment.md)

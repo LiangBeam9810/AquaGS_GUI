@@ -3,7 +3,7 @@
 According to the official [Docker installation tutorial](https://www.docker.com/get-started/), whether on Windows, Linux or Mac systems, docker installation is very simple.
 
 ❗️  Make sure the [Docker](https://www.docker.com/get-started/) is installed. Follow these steps
-
+- Here is the detailed [installation and operation demonstration video](https://www.youtube.com/watch?v=H4jV-lVUd5E) 
 ### 1. Pull and run the Docker for AquaGS
 
 - **Open the Shell (Windows) or Terminal (Mac/Linux) of the device on which the Docker is installed.**
